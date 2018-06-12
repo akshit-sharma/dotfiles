@@ -64,8 +64,8 @@ set tabstop=2         " tab width is 4 spaces
 set shiftwidth=2      " indent also with 4 spaces
 set expandtab         " expand tabs to spaces
 
-" warp lines at 120 chars, 80 is somewhat antiquated with nowadays displays
-set textwidth=120
+" warp lines at 160 chars, 80 is somewhat antiquated with nowadays displays
+set textwidth=160
 
 " turn line numbers on
 set number
@@ -146,7 +146,7 @@ set laststatus=2
 let g:lightline = {
   \   'active': {
   \     'left': [['mode', 'paste'], ['readonly', 'filename', 'modified']],
-  \     'right': [['lineinfo'], ['percent'], ['fileformat', 'fileencoding']]
+  \     'right': [['lineinfo'], ['percent'], ['fileformat', 'fileencoding', 'filetype']]
   \   }
   \ }
 

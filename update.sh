@@ -5,6 +5,9 @@ if [ ! -d "$HOME/.vim/bundle/Vundle.vim" ]; then
   git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
 fi
 
+NEED_PROFILE_REFRESH=0
+NEED_BASH_REFRESH=0
+
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
 if [ ! -L "$HOME/.vimrc" ]; then
@@ -18,6 +21,10 @@ if [ ! -L "$HOME/.my_profile" ]; then
   fi
 fi
 
+if [ ! -L "$HOME/.tmux.conf" ]; then
+  ln -sT $SCRIPTPATH/.tmux.conf $HOME/.tmux.conf
+fi
+
 mkdir -p ~/.vim/tags
 
 # all symlink done (configuration structure established)
@@ -29,11 +36,27 @@ else
   echo "" >> ~/.bashrc
   echo "source ~/.my_profile" >> ~/.bashrc
   echo "" >> ~/.bashrc
-
-  # call the ~/my_profile (it was not in ~/.bashrc in this session
-  source ~/.my_profile  
-
+  NEED_PROFILE_REFRESH=1
 fi
+
+if cat ~/.bashrc | grep -xqFe "#force_color_prompt=yes"
+then
+  sed -i 's/#force_color_prompt/force_color_prompt/g' ~/.bashrc
+  NEED_BASH_REFRESH=1
+else
+  echo "force_color_prompt already set"
+fi
+
+if [ "$NEED_BASH_REFRESH" ] then
+  source ~/.bashrc
+  NEED_PROFILE_REFRESH=0
+fi
+
+if [ "$NEED_PROFILE_REFRESH" ] 
+then
+  source ~/.my_profile
+fi
+
 
 vim +PluginInstall +qall
 
