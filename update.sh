@@ -47,13 +47,12 @@ else
   echo "force_color_prompt already set"
 fi
 
-if [ "$NEED_BASH_REFRESH" ] then
+if [ "$NEED_BASH_REFRESH" ]; then
   source ~/.bashrc
   NEED_PROFILE_REFRESH=0
 fi
 
-if [ "$NEED_PROFILE_REFRESH" ] 
-then
+if [ "$NEED_PROFILE_REFRESH" ]; then
   source ~/.my_profile
 fi
 
