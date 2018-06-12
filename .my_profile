@@ -7,17 +7,17 @@
 #source $HOME/dotfiles/update.sh
 
 changed_files="$(git -C $HOME/dotfiles diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD)"
-update_files="$(git -C $HOME/dotfiles diff-tree -r --name-only --no-commit-id HEAD ORIG_HEAD)"
+#update_files="$(git -C $HOME/dotfiles diff-tree -r --name-only --no-commit-id HEAD ORIG_HEAD)"
 
 if [ "$changed_files" ]; then
   # update available
   git -C $HOME/dotfiles pull origin master
   source $HOME/dotfiles/update.sh PROFILE_REFRESH
 else 
-  if [ "$update_files" ]; then
+#  if [ "$update_files" ]; then
     # have to update files
-    git -C $HOME/dotfiles push origin master
-  fi
+#    git -C $HOME/dotfiles push origin master
+#  fi
 
   PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ '
 
