@@ -11,7 +11,7 @@ changed_files="$(git -C $HOME/dotfiles diff-tree -r --name-only --no-commit-id O
 if [ "$changed_files" ]; then
   # update available
   git -C $HOME/dotfiles pull origin master
-  source $HOME/dotfile/update.sh PROFILE_REFRESH
+  source $HOME/dotfiles/update.sh PROFILE_REFRESH
 else
   PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ '
   source $HOME/.my_vars
