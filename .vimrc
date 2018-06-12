@@ -159,13 +159,10 @@ ab #b /*************************************************************************
 ab #e *******************************************************************************/
 ab #l /******************************************************************************/
 
-"set colorcolumn=81
-"highlight ColorColumn ctermbg=lightgrey guibg=lightgrey
-
 au BufWinEnter * let w:m1=matchadd('ErrorMsg', '\%>80v.\+', -1)
 
 
 " open NERDTree by default
-autocmd VimEnter * NERDTree
-autocmd BufEnter * NERDTreeMirror
-autocmd VimEnter * wincmd w
+"autocmd VimEnter * NERDTree
+"autocmd BufEnter * NERDTreeMirror
+"autocmd VimEnter * wincmd w

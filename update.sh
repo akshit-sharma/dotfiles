@@ -5,7 +5,12 @@ if [ ! -d "$HOME/.vim/bundle/Vundle.vim" ]; then
   git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
 fi
 
-NEED_PROFILE_REFRESH=0
+if [ -z "$1" ]; then
+  NEED_PROFILE_REFRESH=1
+else
+  NEED_PROFILE_REFRESH=0
+fi
+
 NEED_BASH_REFRESH=0
 
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
