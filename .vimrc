@@ -159,7 +159,16 @@ ab #b /*************************************************************************
 ab #e *******************************************************************************/
 ab #l /******************************************************************************/
 
-au BufWinEnter * let w:m1=matchadd('ErrorMsg', '\%>80v.\+', -1)
+highlight TooMuchChars ctermbg=lightblue guibg=d5ffff
+
+" Define autocmd for some highlighting *before* the colorscheme is loaded
+augroup VimrcColors
+au!
+  autocmd ColorScheme * highlight ExtraWhitespace ctermbg=darkgreen   guibg=#444444
+  autocmd ColorScheme * highlight Tab             ctermbg=darkblue    guibg=darkblue
+augroup END
+
+au BufWinEnter * let w:m1=matchadd('TooMuchChars', '\%>80v.\+', -1)
 
 
 " open NERDTree by default
