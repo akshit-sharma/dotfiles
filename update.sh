@@ -22,7 +22,7 @@ if [ ! -L "$HOME/.my_profile" ]; then
 fi
 
 if [ ! -L "$HOME/.tmux.conf" ]; then
-  ln -sT $SCRIPTPATH/.tmux.conf $HOME/.tmux.conf
+#  ln -sT $SCRIPTPATH/.tmux.conf $HOME/.tmux.conf
 fi
 
 mkdir -p ~/.vim/tags
