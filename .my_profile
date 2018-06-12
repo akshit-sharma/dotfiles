@@ -1,0 +1,6 @@
+# configuration file synced across devices
+# don't make any system specific changes in this
+# system specific changes goes in ~/.my_vars
+
+source $HOME/.my_vars
+
