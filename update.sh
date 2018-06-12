@@ -13,7 +13,7 @@ fi
 
 NEED_BASH_REFRESH=0
 
-SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+SCRIPTPATH=$HOME/dotfiles
 
 if [ ! -L "$HOME/.vimrc" ]; then
   ln -sT $SCRIPTPATH/.vimrc $HOME/.vimrc
