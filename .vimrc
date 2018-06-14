@@ -96,8 +96,12 @@ let c_no_curly_error=1
 " for cpp_gcc_7
 set tags+=~/.vim/tags/cpp_gcc_7
 
+" for working project
+set tags+=.git/tags
+
 " build tags of your own project with ctrl-F11
-map <C-F12> :!ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
+map <C-F11> :!ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q --exclude=.git .<CR> 
+map <S-F11> :!cd .git && ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q --exclude=.git .. && cd ..<CR>  
 
 " OmniCppComplete
 let OmniCpp_NamespaceSearch = 1
@@ -175,3 +179,18 @@ au BufWinEnter * let w:m1=matchadd('TooMuchChars', '\%>80v.\+', -1)
 "autocmd VimEnter * NERDTree
 "autocmd BufEnter * NERDTreeMirror
 "autocmd VimEnter * wincmd w
+
+" alias cuz Fn don't go through ssh
+" make 
+map <Leader>m <F7>
+" make clean
+map <Leader>M <S-F7>
+" ctags
+map <Leader>c <C-F11>
+" ctags in ./.git/tags
+map <Leader>C <S-F11>
+" switch between header/source file
+map <Leader>s <F4>
+" goto definition
+map <Leader>d <F12>
+
