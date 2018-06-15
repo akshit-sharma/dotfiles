@@ -142,6 +142,9 @@ nmap <Leader>L <Plug>(easymotion-overwin-line)
 map <Leader>w <Plug>(easymotion-bd-w)
 nmap <Leader>w <Plug>(easymotion-overwin-w)
 
+" toggle scrollbind use `:set scb?` to see current state
+map <Leader>S :set scb!<CR>
+
 " 0 if you want to enable it later via :RainbowToggle
 let g:rainbow_active = 1
 
