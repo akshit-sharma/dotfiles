@@ -1,14 +1,26 @@
 # /bin/bash
 
-# plugin manager for vim
-if [ ! -d "$HOME/.vim/bundle/Vundle.vim" ]; then
-  git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
-fi
-
 if [ -z "$1" ]; then
   NEED_PROFILE_REFRESH=1
 else
   NEED_PROFILE_REFRESH=0
+fi
+
+NEED_VIM_PLUGIN_INSTALL=1
+
+# if called by other script
+if [ $SHLVL -gt 2 ]; then  
+  if [ -z "$2" ]; then
+    NEED_VIM_PLUGIN_INSTALL=1
+  else
+    NEED_VIM_PLUGIN_INSTALL=0
+  fi
+fi 
+
+# plugin manager for vim
+if [ ! -d "$HOME/.vim/bundle/Vundle.vim" ]; then
+  git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
+  NEED_VIM_PLUGIN_INSTALL=1
 fi
 
 NEED_BASH_REFRESH=0
@@ -61,6 +73,7 @@ if [ "$NEED_PROFILE_REFRESH" ]; then
   source ~/.my_profile
 fi
 
-
-vim +PluginInstall +qall
+if [ "$NEED_VIM_PLUGIN_INSTALL" ]; then
+  vim +PluginInstall +qall
+fi
 

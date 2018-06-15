@@ -12,7 +12,7 @@ changed_files="$(git -C $HOME/dotfiles diff-tree -r --name-only --no-commit-id O
 if [ "$changed_files" ]; then
   # update available
   git -C $HOME/dotfiles pull origin master
-  source $HOME/dotfiles/update.sh PROFILE_REFRESH
+  source $HOME/dotfiles/update.sh PROFILE_REFRESH VIM_PLUGIN_REFRESH
 else 
 #  if [ "$update_files" ]; then
     # have to update files
