@@ -128,6 +128,8 @@ map <S-F7> :make clean all<CR>
 " goto definition with <F12>
 map <F12> <C-]>
 
+
+
 " Configuration for easymotion
 let g:EasyMotion_leader_key='\'
 " <Leader>f{char} to move to {char}
@@ -217,4 +219,7 @@ map <Leader>C <S-F11>
 map <Leader>s <F4>
 " goto definition
 map <Leader>d <F12>
+
+" for time being
+map < \
 
