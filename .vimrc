@@ -177,13 +177,34 @@ augroup END
 
 au BufWinEnter * let w:m1=matchadd('TooMuchChars', '\%>80v.\+', -1)
 
+" for tab navigation
+nnoremap <Leader>th :tabfirst<CR>
+nnoremap <Leader>tk :tabnext<CR>
+nnoremap <Leader>tj :tabprev<CR>
+nnoremap <Leader>tl :tablast<CR>
+nnoremap <Leader>tt :tabedit<Space>
+nnoremap <Leader>tn :tabnext<Space>
+nnoremap <Leader>tm :tabm<Space>
+nnoremap <Leader>td :tabclose<CR>
+nnoremap <Leader>tn :tabnew<CR>
+" for navigation with ctrl modifier
+nnoremap <C-S-tab>  :tabprevious<CR>
+nnoremap <C-tab>    :tabnext<CR>
+nnoremap <C-t>      :tabnew<CR>
+inoremap <C-S-tab>  <Esc>:tabprevious<CR>i
+inoremap <C-tab>    <Esc>:tabnext<CR>i
+inoremap <C-t>      <Esc>:tabnew<CR>
+" open files always in new tabs
+"autocmd VimEnter * tab all
+"autocmd BufAdd * exe 'tablast | tabe "' . expand ( "<afile") . '"'
+
 
 " open NERDTree by default
 "autocmd VimEnter * NERDTree
 "autocmd BufEnter * NERDTreeMirror
 "autocmd VimEnter * wincmd w
 
-" alias cuz Fn don't go through ssh
+" alias for some fn commands
 " make 
 map <Leader>m <F7>
 " make clean
