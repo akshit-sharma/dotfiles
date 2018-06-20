@@ -5,20 +5,18 @@
 
 git -C $HOME/dotfiles remote update
 
-UPSTREAM=${1:-'@{u}'}
+UPSTREAM='@{u}'
 #' small work around for cleaner syntax in vim
 LOCAL=$(git -C $HOME/dotfiles rev-parse @)
 REMOTE=$(git -C $HOME/dotfiles rev-parse "$UPSTREAM")
 BASE=$(git -C $HOME/dotfiles merge-base @ "$UPSTREAM")
 
-RUN_ACTUAL_SCRIPT=0
-
-#if not called by other script
-if [[ $SHLVL -lt 2 ]]; then
-  RUN_ACTUAL_SCRIPT=1  
-fi
-
-echo "Run set to  $RUN_ACTUAL_SCRIPT"
+#RUN_ACTUAL_SCRIPT=0
+##if not called by other script
+#if [[ $SHLVL -lt 2 ]]; then
+#  RUN_ACTUAL_SCRIPT=1  
+#fi
+#echo "Run set to  $RUN_ACTUAL_SCRIPT"
 
 if [ $LOCAL = $BASE ] && [[ ! ($LOCAL = $REMOTE) ]]; then
  
@@ -38,8 +36,6 @@ elif [ $REMOTE = $BASE ] || [ $LOCAL = $REMOTE ] || [ $RUN_ACTUAL_SCRIPT -eq 1 ]
     fi
     clear
   fi
-  
-  echo "Inside"
  
   PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ '
 
