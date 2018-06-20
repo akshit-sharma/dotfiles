@@ -11,8 +11,6 @@ LOCAL=$(git -C $HOME/dotfiles rev-parse @)
 REMOTE=$(git -C $HOME/dotfiles rev-parse "$UPSTREAM")
 BASE=$(git -C $HOME/dotfiles merge-base @ "$UPSTREAM")
 
-ifthen
-
 if [ $LOCAL = $BASE ]; then
  
   echo "Need to pull"
