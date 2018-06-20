@@ -6,6 +6,7 @@
 git -C $HOME/dotfiles remote update
 
 UPSTREAM=${1:-'@{u}'}
+#' small work around for cleaner syntax in vim
 LOCAL=$(git -C $HOME/dotfiles rev-parse @)
 REMOTE=$(git -C $HOME/dotfiles rev-parse "$UPSTREAM")
 BASE=$(git -C $HOME/dotfiles merge-base @ "$UPSTREAM")
