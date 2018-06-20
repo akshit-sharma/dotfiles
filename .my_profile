@@ -3,22 +3,17 @@
 # don't make any system specific changes in this
 # system specific changes goes in ~/.my_vars
 
-#git -C $HOME/dotfiles pull origin master
-#source $HOME/dotfiles/update.sh
+git -C $HOME/dotfiles remote update
 
-changed_files="$(git -C $HOME/dotfiles diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD)"
-#update_files="$(git -C $HOME/dotfiles diff-tree -r --name-only --no-commit-id HEAD ORIG_HEAD)"
+UPSTREAM=${1:-'@{u}'}
+LOCAL=$(git -C $HOME/dotfiles rev-parse @)
+REMOTE=$(git -C $HOME/dotfiles rev-parse "$UPSTREAM")
+BASE=$(git -C $HOME/dotfiles merge-base @ "$UPSTREAM")
 
-if [ "$changed_files" ]; then
-  # update available
-  git -C $HOME/dotfiles pull origin master
-  source $HOME/dotfiles/update.sh PROFILE_REFRESH VIM_PLUGIN_REFRESH
-else 
-#  if [ "$update_files" ]; then
-    # have to update files
-#    git -C $HOME/dotfiles push origin master
-#  fi
-
+if [ $LOCAL = $REMOTE ]; then
+ 
+  echo "Up-to-date"
+ 
   PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ '
 
   alias vir='vi -R'
@@ -28,4 +23,22 @@ else
   
   export PS1
 
+elif [ $LOCAL = $BASE ]; then
+ 
+  echo "Need to pull"
+  
+  git -C $HOME/dotfiles pull origin master
+  source $HOME/dotfiles/update.sh PROFILE_REFRESH VIM_PLUGIN_REFRESH
+
+elif [ $REMOTE = $BASE ]; then
+ 
+  echo "Need to push"
+
+  git -C $HOME/dotfiles push origin master
+
+else
+  
+  echo "Diverged"
+
 fi
+
