@@ -11,14 +11,14 @@ LOCAL=$(git -C $HOME/dotfiles rev-parse @)
 REMOTE=$(git -C $HOME/dotfiles rev-parse "$UPSTREAM")
 BASE=$(git -C $HOME/dotfiles merge-base @ "$UPSTREAM")
 
-if [ $LOCAL = $BASE ]; then
+if [ $LOCAL = $BASE ] && [[ ! ($LOCAL = $REMOTE) ]]; then
  
   echo "Need to pull"
   
   git -C $HOME/dotfiles pull origin master
   source $HOME/dotfiles/update.sh "PROFILE_REFRESH" "VIM_PLUGIN_REFRESH"
 
-elif [ $REMOTE = $BASE ] | [ $LOCAL = $REMOTE ]; then
+elif [ $REMOTE = $BASE ] || [ $LOCAL = $REMOTE ]; then
 
   if [ $REMOTE = $BASE ]; then 
     echo "Need to push"
