@@ -11,9 +11,24 @@ LOCAL=$(git -C $HOME/dotfiles rev-parse @)
 REMOTE=$(git -C $HOME/dotfiles rev-parse "$UPSTREAM")
 BASE=$(git -C $HOME/dotfiles merge-base @ "$UPSTREAM")
 
-if [ $LOCAL = $REMOTE ]; then
+ifthen
+
+if [ $LOCAL = $BASE ]; then
  
-  echo "Up-to-date"
+  echo "Need to pull"
+  
+  git -C $HOME/dotfiles pull origin master
+  source $HOME/dotfiles/update.sh "PROFILE_REFRESH" "VIM_PLUGIN_REFRESH"
+
+elif [ $REMOTE = $BASE ] | [ $LOCAL = $REMOTE ]; then
+
+  if [ $REMOTE = $BASE ]; then 
+    echo "Need to push"
+    git -C $HOME/dotfiles push origin master
+  else 
+    echo "Up-to-date"
+  fi
+  clear
  
   PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ '
 
@@ -23,19 +38,6 @@ if [ $LOCAL = $REMOTE ]; then
   source $HOME/.my_vars
   
   export PS1
-
-elif [ $LOCAL = $BASE ]; then
- 
-  echo "Need to pull"
-  
-  git -C $HOME/dotfiles pull origin master
-  source $HOME/dotfiles/update.sh PROFILE_REFRESH VIM_PLUGIN_REFRESH
-
-elif [ $REMOTE = $BASE ]; then
- 
-  echo "Need to push"
-
-  git -C $HOME/dotfiles push origin master
 
 else
   
