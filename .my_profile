@@ -11,7 +11,7 @@ LOCAL=$(git -C $HOME/dotfiles rev-parse @)
 REMOTE=$(git -C $HOME/dotfiles rev-parse "$UPSTREAM")
 BASE=$(git -C $HOME/dotfiles merge-base @ "$UPSTREAM")
 
-#RUN_ACTUAL_SCRIPT=0
+RUN_ACTUAL_SCRIPT=0
 ##if not called by other script
 #if [[ $SHLVL -lt 2 ]]; then
 #  RUN_ACTUAL_SCRIPT=1  
