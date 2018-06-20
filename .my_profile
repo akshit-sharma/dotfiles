@@ -14,7 +14,7 @@ BASE=$(git -C $HOME/dotfiles merge-base @ "$UPSTREAM")
 RUN_ACTUAL_SCRIPT=0
 
 #if not called by other script
-if [[ ! ($SHLVL -gt 2) ]]; then
+if [[ $SHLVL -lt 2 ]]; then
   RUN_ACTUAL_SCRIPT=1  
 fi
 
