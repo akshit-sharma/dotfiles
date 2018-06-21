@@ -168,7 +168,8 @@ ab #b /*************************************************************************
 ab #e *******************************************************************************/
 ab #l /******************************************************************************/
 
-highlight TooMuchChars ctermbg=155 guibg=#afff5f
+"highlight TooMuchChars ctermbg=155 guibg=#afff5f
+highlight TooMuchChars cterm=underline
 
 " Define autocmd for some highlighting *before* the colorscheme is loaded
 augroup VimrcColors
