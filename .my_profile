@@ -28,11 +28,15 @@ if [ $LOCAL = $BASE ] && [[ ! ($LOCAL = $REMOTE) ]]; then
 elif [ $REMOTE = $BASE ] || [ $LOCAL = $REMOTE ] || [ $RUN_ACTUAL_SCRIPT -eq 1 ]; then
 
   if [ $RUN_ACTUAL_SCRIPT -eq 0 ]; then
-    if [ $REMOTE = $BASE ]; then 
+    if [ $LOCAL = $REMOTE ]; then
+    
+      echo "Up-to-date"
+    
+    elif [ $REMOTE = $BASE ]; then 
+   
       echo "Need to push"
       git -C $HOME/dotfiles push origin master
-    else 
-      echo "Up-to-date"
+    
     fi
     clear
   fi
