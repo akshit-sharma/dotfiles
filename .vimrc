@@ -74,10 +74,10 @@ set number
 set showmatch
 
 " NERDTree linked to ctrl-n
-:nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-n> :NERDTree<CR>
 
 " map ctrl-b to ctrl-w (tmux uses ctrl-b)
-:map <C-b> <C-w>
+map <C-b> <C-w>
 
 " can toggle comment with ctrl-t
 ":nnoremap <C-x> :V<CR>:gc<CR>
@@ -127,7 +127,6 @@ map <S-F7> :make clean all<CR>
 
 " goto definition with <F12>
 map <F12> <C-]>
-
 
 
 " Configuration for easymotion
