@@ -189,6 +189,7 @@ nnoremap <Leader>tn :tabnext<Space>
 nnoremap <Leader>tm :tabm<Space>
 nnoremap <Leader>td :tabclose<CR>
 nnoremap <Leader>tn :tabnew<CR>
+nnoremap <Leader>ts :tab<Space> split<CR>
 " for navigation with ctrl modifier
 nnoremap <C-S-tab>  :tabprevious<CR>
 nnoremap <C-tab>    :tabnext<CR>
