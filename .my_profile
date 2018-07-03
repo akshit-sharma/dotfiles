@@ -43,8 +43,9 @@ elif [ $REMOTE = $BASE ] || [ $LOCAL = $REMOTE ] || [ $RUN_ACTUAL_SCRIPT -eq 1 ]
  
   PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ '
 
-  alias vir='vi -R'
   alias vr='vi -R'
+
+  alias venv='source ~/venv/bin/activate'
 
   source $HOME/.my_vars
   
