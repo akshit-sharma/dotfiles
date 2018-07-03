@@ -201,6 +201,8 @@ inoremap <C-t>      <Esc>:tabnew<CR>
 "autocmd VimEnter * tab all
 "autocmd BufAdd * exe 'tablast | tabe "' . expand ( "<afile") . '"'
 
+" mouse does not select line numbers # default is c
+set mouse=a
 
 " open NERDTree by default
 "autocmd VimEnter * NERDTree
