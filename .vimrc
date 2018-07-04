@@ -137,7 +137,7 @@ map <F12> <C-]>
 map <Leader>a :call asyncrun#quickfix_toggle(8)<CR>
 
 " Configuration for easymotion
-let g:EasyMotion_leader_key='\'
+let g:EasyMotion_leader_key='f'
 " <Leader>f{char} to move to {char}
 map <Leader>f <Plug>(easymotion-bd-f)
 map <Leader>f <Plug>(easymotion-overwin-f)
