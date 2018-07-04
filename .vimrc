@@ -38,6 +38,9 @@ Plugin 'airblade/vim-gitgutter'
 " Rainbow brackets
 Plugin 'luochen1990/rainbow'
 
+" Async run commands in shell
+Plugin 'skywind3000/asyncrun.vim'
+
 " All of your Plugins must be added before the following line
 call vundle#end() 		" required
 filetype plugin indent on 	" required
@@ -125,9 +128,13 @@ map <F7> :make<CR>
 " build using makeprg with <S-F7>
 map <S-F7> :make clean all<CR>
 
+" toggle quickfix window with <F9>
+noremap <F9> :call asyncrun#quickfix_toggle(8)<CR>
+
 " goto definition with <F12>
 map <F12> <C-]>
 
+map <Leader>a :call asyncrun#quickfix_toggle(8)<CR>
 
 " Configuration for easymotion
 let g:EasyMotion_leader_key='\'
@@ -201,6 +208,9 @@ inoremap <C-t>      <Esc>:tabnew<CR>
 "autocmd VimEnter * tab all
 "autocmd BufAdd * exe 'tablast | tabe "' . expand ( "<afile") . '"'
 
+"augroup vimrc
+"  autocmd QuickFixCmdPost * botright copen 8
+"augroup END
 
 " open NERDTree by default
 "autocmd VimEnter * NERDTree
