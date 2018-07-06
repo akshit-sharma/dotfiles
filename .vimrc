@@ -200,10 +200,10 @@ nnoremap <Leader>ts :tab<Space> split<CR>
 " for navigation with ctrl modifier
 nnoremap <C-S-tab>  :tabprevious<CR>
 nnoremap <C-tab>    :tabnext<CR>
-nnoremap <C-t>      :tabnew<CR>
+"nnoremap <C-t>      :tabnew<CR>             Ctrl-t used in ctags
 inoremap <C-S-tab>  <Esc>:tabprevious<CR>i
 inoremap <C-tab>    <Esc>:tabnext<CR>i
-inoremap <C-t>      <Esc>:tabnew<CR>
+"inoremap <C-t>      <Esc>:tabnew<CR>        Ctrl-t used in ctags
 " open files always in new tabs
 "autocmd VimEnter * tab all
 "autocmd BufAdd * exe 'tablast | tabe "' . expand ( "<afile") . '"'
