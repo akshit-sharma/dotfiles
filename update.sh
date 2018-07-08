@@ -100,14 +100,22 @@ function home_config_symlink {
   if [[ DEBUG_SCRIPT -ne 0 ]]; then
     echo "value is $SCRIPTPATH/$filename"
   fi
-  return
   if [ ! -f $SCRIPTPATH/$filename ]; then              # pretty much use less after getting files
+    if [[ DEBUG_SCRIPT -ne 0 ]]; then
+      echo "copying $HOME/.config/$filename to $SCRIPTPATH/$filename"
+    fi
     cp $HOME/.config/$filename $SCRIPTPATH/$filename   # usefull to add new files in the script
   fi                                                   # instead of manually moving/copying
   if [ -f "$HOME/.config/$filename" ]; then
+    if [[ DEBUG_SCRIPT -ne 0 ]]; then
+      echo "moving $HOME/.config/$filename to $HOME/.config/$filename.bk"
+    fi
     mv "$HOME/.config/$filename" "$HOME/.config/$filename.bk"
   fi
   if [ ! -L "$HOME/.config/$filename" ]; then
+    if [[ DEBUG_SCRIPT -ne 0 ]]; then
+      echo "linking $SCRIPTPATH/$filename to $HOME/.config/$filename"
+    fi
     ln -sT $SCRIPTPATH/$filename $HOME/.config/$filename
   fi
 }
