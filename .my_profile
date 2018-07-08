@@ -3,13 +3,33 @@
 # don't make any system specific changes in this
 # system specific changes goes in ~/.my_vars
 
-git -C $HOME/dotfiles remote update
+if [ $DOTFILES_SCRIPT_PARENT ]; then
+  SCRIPTPATH=$DOTFILES_SCRIPT_PARENT
+  echo "\$DOTFILES_SCRIPT_PARENT already set to $DOTDFILES_SCRIPT_PARENT"
+else
+# if called by other script
+  if [ $SHLVL -gt 1 ]; then  
+     if [ -z "$2" ]; then
+       SCRIPTPATH=$1
+       echo "\$1 is $1"
+     else 
+       SCRIPTPATH=$DOTFILES_SCRIPT_PARENT
+       echo "\$DOTFILES_SCRIPT_PARENT is $DOTDFILES_SCRIPT_PARENT"
+   fi
+  fi
+fi
+
+REPO_DIR=$SCRIPTPATH
+
+echo "REPO_DIR set to $REPO_DIR"
+
+git -C $REPO_DIR remote update
 
 UPSTREAM='@{u}'
 #' small work around for cleaner syntax in vim
-LOCAL=$(git -C $HOME/dotfiles rev-parse @)
-REMOTE=$(git -C $HOME/dotfiles rev-parse "$UPSTREAM")
-BASE=$(git -C $HOME/dotfiles merge-base @ "$UPSTREAM")
+LOCAL=$(git -C $REPO_DIR rev-parse @)
+REMOTE=$(git -C $REPO_DIR rev-parse "$UPSTREAM")
+BASE=$(git -C $REPO_DIR merge-base @ "$UPSTREAM")
 
 RUN_ACTUAL_SCRIPT=0
 ##if not called by other script
@@ -22,8 +42,8 @@ if [ $LOCAL = $BASE ] && [[ ! ($LOCAL = $REMOTE) ]]; then
  
   echo "Need to pull"
   
-  git -C $HOME/dotfiles pull origin master
-  source $HOME/dotfiles/update.sh "PROFILE_REFRESH" "VIM_PLUGIN_REFRESH"
+  git -C $REPO_DIR pull origin master
+  source $REPO_DIR/update.sh "PROFILE_REFRESH" "VIM_PLUGIN_REFRESH"
 
 elif [ $REMOTE = $BASE ] || [ $LOCAL = $REMOTE ] || [ $RUN_ACTUAL_SCRIPT -eq 1 ]; then
 
