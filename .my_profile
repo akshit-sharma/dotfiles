@@ -68,6 +68,8 @@ elif [ $REMOTE = $BASE ] || [ $LOCAL = $REMOTE ] || [ $RUN_ACTUAL_SCRIPT -eq 1 ]
   alias venv='source ~/venv/bin/activate'
 
   source $HOME/.my_vars
+
+#  setxkbmap -layout us -variant altgr-intl
   
   export PS1
 
