@@ -132,7 +132,7 @@ if [ "$DESKTOP_SESSION" = "plasma" ]; then
     home_config_symlink kglobalshortcutsrc
     home_config_symlink khotkeysrc
     home_config_symlink quicktile.cfg
-    home_config_symlink .Xmodmap
+    home_config_symlink Xmodmap
   else
     echo "Don't know how to handle this plasma version"
     echo "PLASMASHELL_VERSION $PLASMASHELL_VERSION"
