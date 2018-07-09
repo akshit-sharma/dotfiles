@@ -25,7 +25,7 @@ _k_friendly_name=KDE Daemon
 display=Display\tMeta+P,Display\tMeta+P,Switch Display
 
 [khotkeys]
-_k_friendly_name=System Settings
+_k_friendly_name=KDE Daemon
 {271d91b6-2907-46b7-b4f6-f190d4722c76}=Shift+Print,none,Take Full Screen Screenshot
 {2eec2c7c-b3d9-490c-9ad1-43be33332dd9}=Meta+Print,none,Take Active Window Screenshot
 {70563313-2e87-4d84-82d4-9ebf23eb1d72}=Print,none,Start Screenshot Tool
@@ -77,10 +77,10 @@ Invert Screen Colors=none,none,Invert Screen Colors
 Kill Window=Ctrl+Alt+Esc,Ctrl+Alt+Esc,Kill Window
 MoveMouseToCenter=Meta+F6,Meta+F6,Move Mouse to Center
 MoveMouseToFocus=Meta+F5,Meta+F5,Move Mouse to Focus
-MoveZoomDown=Meta+Ctrl+Down\tMeta+Ctrl+J,Meta+Ctrl+Down,Move Zoomed Area Downwards
-MoveZoomLeft=Meta+Ctrl+Left\tMeta+Ctrl+H,Meta+Ctrl+Left,Move Zoomed Area to Left
-MoveZoomRight=Meta+Ctrl+Right\tMeta+Ctrl+L,Meta+Ctrl+Right,Move Zoomed Area to Right
-MoveZoomUp=Meta+Ctrl+Up\tMeta+Ctrl+K,Meta+Ctrl+Up,Move Zoomed Area Upwards
+MoveZoomDown=Meta+Ctrl+Down,Meta+Ctrl+Down,Move Zoomed Area Downwards
+MoveZoomLeft=Meta+Ctrl+Left,Meta+Ctrl+Left,Move Zoomed Area to Left
+MoveZoomRight=Meta+Ctrl+Right,Meta+Ctrl+Right,Move Zoomed Area to Right
+MoveZoomUp=Meta+Ctrl+Up,Meta+Ctrl+Up,Move Zoomed Area Upwards
 Remove Window From Group=none,none,Remove Window From Group
 Setup Window Shortcut=none,none,Setup Window Shortcut
 Show Desktop=none,none,Show Desktop
@@ -209,7 +209,7 @@ Window to Screen 4=none,none,Window to Screen 4
 Window to Screen 5=none,none,Window to Screen 5
 Window to Screen 6=none,none,Window to Screen 6
 Window to Screen 7=none,none,Window to Screen 7
-_k_friendly_name=System Settings
+_k_friendly_name=KWin
 view_actual_size=,Meta+0,Actual Size
 view_zoom_in=Meta+=,Meta+=,Zoom In
 view_zoom_out=Meta+-,Meta+-,Zoom Out
