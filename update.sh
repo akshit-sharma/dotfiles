@@ -152,6 +152,10 @@ if [ ! -L "$HOME/.vimrc" ]; then
   ln -sT $SCRIPTPATH/.vimrc $HOME/.vimrc
 fi
 
+if [ ! -L "$HOME/.profile"]; then
+  ln -sT $SCRIPTPATH/.profile $HOME/.profile
+fi
+
 if [ ! -L "$HOME/.my_profile" ]; then
   ln -sT $SCRIPTPATH/.my_profile $HOME/.my_profile
   if [ ! -f "$HOME/.my_vars" ]; then

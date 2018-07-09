@@ -69,9 +69,6 @@ elif [ $REMOTE = $BASE ] || [ $LOCAL = $REMOTE ] || [ $RUN_ACTUAL_SCRIPT -eq 1 ]
 
   source $HOME/.my_vars
 
-  setxkbmap -layout us -variant altgr-intl
-  xmodmap $HOME/.config/Xmodmap 
-
   export PS1
 
 else
