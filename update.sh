@@ -152,7 +152,7 @@ if [ ! -L "$HOME/.vimrc" ]; then
   ln -sT $SCRIPTPATH/.vimrc $HOME/.vimrc
 fi
 
-if [ ! -L "$HOME/.profile"]; then
+if [ ! -L "$HOME/.profile" ]; then
   ln -sT $SCRIPTPATH/.profile $HOME/.profile
 fi
 
