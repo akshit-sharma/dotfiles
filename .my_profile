@@ -69,7 +69,9 @@ elif [ $REMOTE = $BASE ] || [ $LOCAL = $REMOTE ] || [ $RUN_ACTUAL_SCRIPT -eq 1 ]
 
   source $HOME/.my_vars
 
-#  setxkbmap -layout us -variant altgr-intl
+  setxkbmap -layout us -variant altgr-intl
+  xmodmap -e "remove mod4 = Hyper_L"
+  xmodmap -e "add mod3 = Hyper_L"
   
   export PS1
 
