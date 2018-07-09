@@ -230,6 +230,3 @@ map <Leader>s <F4>
 " goto definition
 map <Leader>d <F12>
 
-" for time being
-map < \
-
