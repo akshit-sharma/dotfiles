@@ -1,0 +1,11 @@
+
+! Unmap capslock
+clear lock
+keycode 66 = Hyper_L
+
+! Leave mod5 as windows key _only_
+remove mod4 = Hyper_L
+
+! Set mod3 to capslock
+add mod3 = Hyper_L
+
