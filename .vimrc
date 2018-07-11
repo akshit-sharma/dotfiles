@@ -56,6 +56,15 @@ filetype plugin indent on 	" required
 " see :h vundle for more details for wifi for FAQ
 " Put your non-Plugin stuff after this line
 
+function! s:DiffWithSaved()
+  let filetype=&ft
+  diffthis
+  vnew | r # | normal! 1Gdd
+  diffthis
+  exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
+endfunction
+com! DiffSaved call s:DiffWithSaved()
+
 " use indentation of previous line
 set autoindent
 
@@ -135,6 +144,7 @@ noremap <F9> :call asyncrun#quickfix_toggle(8)<CR>
 map <F12> <C-]>
 
 map <Leader>a :call asyncrun#quickfix_toggle(8)<CR>
+map <Leader><Space>d :DiffSaved<CR>
 
 " Configuration for easymotion
 let g:EasyMotion_leader_key='f'
