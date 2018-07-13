@@ -1,6 +1,8 @@
 # profile specific changes
 #
 
-setxkbmap -layout us -variant altgr-self
-xmodmap $HOME/.config/Xmodmap 
+# set own keyboard layout
+#setxkbmap -layout us -variant altgr-self
+# configure caps as mod3 instead of mod4
+#xmodmap $HOME/.config/Xmodmap 
 
