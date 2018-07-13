@@ -146,6 +146,10 @@ map <F12> <C-]>
 map <Leader>a :call asyncrun#quickfix_toggle(8)<CR>
 map <Leader><Space>d :DiffSaved<CR>
 
+" for ctags jumps
+map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+map <Leader><C-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
+
 " Configuration for easymotion
 let g:EasyMotion_leader_key='f'
 " <Leader>f{char} to move to {char}
