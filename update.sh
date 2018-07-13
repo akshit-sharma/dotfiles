@@ -129,7 +129,7 @@ if [ "$DESKTOP_SESSION" = "plasma" ]; then
   PLASMASHELL_VERSION=`eval plasmashell --version | sed -nr 's/plasmashell ([0-9][0-9]*\.*)/\1/p'`
   PLASMASHELL_MAJOR=`plasmashell --version | sed -rn 's/plasmashell ([0-9])\.[0-9].*/\1/p'`
   if [ $PLASMASHELL_MAJOR -eq 5 ]; then
-    home_config_symlink kglobalshortcutsrc
+    home_config_symlink kglobalshortcutsrc.kksrc
     home_config_symlink khotkeysrc
     home_config_symlink quicktile.cfg
     home_config_symlink Xmodmap
