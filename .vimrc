@@ -72,8 +72,8 @@ set autoindent
 set smartindent
 
 " configure tabwidth and insert spaces instead of tabs
-set tabstop=2         " tab width is 4 spaces
-set shiftwidth=2      " indent also with 4 spaces
+set tabstop=2         " tab width is 2 spaces
+set shiftwidth=2      " indent also with 2 spaces
 set expandtab         " expand tabs to spaces
 
 " warp lines at 160 chars, 80 is somewhat antiquated with nowadays displays
@@ -109,7 +109,7 @@ let c_no_curly_error=1
 set tags+=~/.vim/tags/cpp_gcc_7
 
 " for working project
-set tags+=.git/tags
+set tags+=.git/tags;./tags;
 
 " build tags of your own project with ctrl-F11
 map <C-F11> :!ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q --exclude=.git .<CR> 
@@ -135,13 +135,10 @@ map <F4> :e %:p:s,.h$,.X123X,:s,:.cpp$,.h,:s,.X123X$,.cpp,<CR>
 map <F7> :make<CR>
 
 " build using makeprg with <S-F7>
-map <S-F7> :make clean all<CR>
+map <S-F7> :make clean<CR>
 
 " toggle quickfix window with <F9>
 noremap <F9> :call asyncrun#quickfix_toggle(8)<CR>
-
-" goto definition with <F12>
-map <F12> <C-]>
 
 map <Leader>a :call asyncrun#quickfix_toggle(8)<CR>
 map <Leader><Space>d :DiffSaved<CR>
@@ -153,16 +150,16 @@ map <Leader><C-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
 " Configuration for easymotion
 let g:EasyMotion_leader_key='f'
 " <Leader>f{char} to move to {char}
-map <Leader>f <Plug>(easymotion-bd-f)
-map <Leader>f <Plug>(easymotion-overwin-f)
+map <Plug>(easymotion-prefix)f <Plug>(easymotion-bd-f)
+map <Plug>(easymotion-prefix)f <Plug>(easymotion-overwin-f)
 " s{char}{char} to move to {char}{char}
-nmap s <Plug>(easymotion-overwin-f2)
+nmap <Plug>(easymotion-prefix)s <Plug>(easymotion-overwin-f2)
 " Move to line
-map <Leader>L <Plug>(easymotion-bd-jk)
-nmap <Leader>L <Plug>(easymotion-overwin-line)
+map <Plug>(easymotion-prefix)L <Plug>(easymotion-bd-jk)
+nmap <Plug>(easymotion-prefix)L <Plug>(easymotion-overwin-line)
 " Move to word
-map <Leader>w <Plug>(easymotion-bd-w)
-nmap <Leader>w <Plug>(easymotion-overwin-w)
+map <Plug>(easymotion-prefix)w <Plug>(easymotion-bd-w)
+nmap <Plug>(easymotion-prefix)w <Plug>(easymotion-overwin-w)
 
 " toggle scrollbind use `:set scb?` to see current state
 map <Leader>S :set scb!<CR>
@@ -221,6 +218,7 @@ inoremap <C-tab>    <Esc>:tabnext<CR>i
 " open files always in new tabs
 "autocmd VimEnter * tab all
 "autocmd BufAdd * exe 'tablast | tabe "' . expand ( "<afile") . '"'
+
 
 " mouse does not select line numbers # default is c
 set mouse=a
