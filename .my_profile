@@ -65,11 +65,17 @@ elif [ $REMOTE = $BASE ] || [ $LOCAL = $REMOTE ] || [ $RUN_ACTUAL_SCRIPT -eq 1 ]
 
   alias vr='vi -R'
 
-  alias venv='source ~/venv/bin/activate'
+  VIRTUAL_ENV="$HOME/venv"
+  alias venv="source $VIRTUAL_ENV/bin/activate"
+  VIRTUAL_ENV_2_7="$HOME/venv2.7"
+  alias venv2="source $VIRTUAL_ENV/bin/activate"
+  alias venv3="venv"
+  #PATH="$HOME/venv/bin:$PATH"
 
   source $HOME/.my_vars
 
   export PS1
+  export PATH
 
 else
   
