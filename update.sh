@@ -159,6 +159,10 @@ if [ ! -L "$HOME/.my_profile" ]; then
   fi
 fi
 
+if [ ! -L "$HOME/.my_bashrc" ]; then
+  ln -sT $SCRIPTPATH/.my_bashrc $HOME/.my_bashrc
+fi
+
 #if [ ! -L "$HOME/.tmux.conf" ]; then
 #  ln -sT $SCRIPTPATH/.tmux.conf $HOME/.tmux.conf
 #fi

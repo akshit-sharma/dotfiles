@@ -1,0 +1,25 @@
+#!/bin/bash
+# configuration file synced across devices
+# don't make any system specific changes in this
+# system specific changes goes in ~/.my_vars
+
+PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ '
+
+alias vr='vi -R'
+
+VIRTUAL_ENV="$HOME/venv"
+VIRTUAL_ENV_2_7="$HOME/venv2.7"
+
+ComputeCpp_DIR=$LIB_HOME/ComputeCpp
+
+alias venv="source $VIRTUAL_ENV/bin/activate"
+
+alias venv2="source $VIRTUAL_ENV_2_7/bin/activate"
+alias venv3="venv"
+
+export ComputeCpp_DIR
+export PS1
+export PATH
+
+source $HOME/.my_vars
+

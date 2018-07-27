@@ -63,19 +63,7 @@ elif [ $REMOTE = $BASE ] || [ $LOCAL = $REMOTE ] || [ $RUN_ACTUAL_SCRIPT -eq 1 ]
  
   PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ '
 
-  alias vr='vi -R'
-
-  VIRTUAL_ENV="$HOME/venv"
-  alias venv="source $VIRTUAL_ENV/bin/activate"
-  VIRTUAL_ENV_2_7="$HOME/venv2.7"
-  alias venv2="source $VIRTUAL_ENV_2_7/bin/activate"
-  alias venv3="venv"
-  #PATH="$HOME/venv/bin:$PATH"
-
-  source $HOME/.my_vars
-
-  export PS1
-  export PATH
+  source $HOME/.my_bashrc
 
 else
   
