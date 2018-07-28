@@ -120,6 +120,37 @@ function home_config_symlink {
   fi
 }
 
+# function for creating symlink to files in $HOME/.vim/syntax
+function vim_syntax_symlink {
+  filename="$1"
+  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+    echo "value is $SCRIPTPATH/$filename"
+  fi
+  if [ ! -d $HOME/.vim/syntax ]; then
+    mkdir -p $HOME/.vim/syntax
+  fi
+  if [ ! -f $SCRIPTPATH/$filename ]; then              # pretty much use less after getting files
+    if [[ DEBUG_SCRIPT -ne 0 ]]; then
+      echo "copying $HOME/.vim/syntax/$filename to $SCRIPTPATH/$filename"
+    fi
+    cp $HOME/.vim/syntax/$filename $SCRIPTPATH/$filename   # usefull to add new files in the script
+  fi                                                       # instead of manually moving/copying
+  if [ -f "$HOME/.vim/syntax/$filename" ]; then
+    if [[ DEBUG_SCRIPT -ne 0 ]]; then
+      echo "moving $HOME/.vim/syntax/$filename to $HOME/.vim/syntax/$filename.bk"
+    fi
+    mv "$HOME/.vim/syntax/$filename" "$HOME/.vim/syntax/$filename.bk"
+  fi
+  if [ ! -L "$HOME/.vim/syntax/$filename" ]; then
+    if [[ DEBUG_SCRIPT -ne 0 ]]; then
+      echo "linking $SCRIPTPATH/$filename to $HOME/.vim/syntax/$filename"
+    fi
+    ln -sT $SCRIPTPATH/$filename $HOME/.vim/syntax/$filename
+  fi
+}
+
+# manual linking of files for ~/.vim/syntax dir
+vim_syntax_symlink vulkan1.0.vim
 
 # if kde plasma get my shortcuts
 if [ "$DESKTOP_SESSION" = "plasma" ]; then

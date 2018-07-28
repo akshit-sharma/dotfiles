@@ -44,6 +44,9 @@ Plugin 'skywind3000/asyncrun.vim'
 " vim-cmake-syntax
 Plugin 'pboettch/vim-cmake-syntax'
 
+" GLFW syntax Highlighting
+Plugin 'bfrg/vim-glfw-syntax'
+
 " All of your Plugins must be added before the following line
 call vundle#end() 		" required
 filetype plugin indent on 	" required
@@ -58,6 +61,13 @@ filetype plugin indent on 	" required
 "
 " see :h vundle for more details for wifi for FAQ
 " Put your non-Plugin stuff after this line
+
+" highlighting with vulkan1.0.vim
+autocmd FileType cpp,c source ~/.vim/syntax/vulkan1.0.vim
+
+" highlighting with opengl.vim
+autocmd FileType cpp,c source ~/.vim/syntax/opengl.vim
+
 
 function! s:DiffWithSaved()
   let filetype=&ft
@@ -236,6 +246,7 @@ set mouse=a
 "autocmd VimEnter * NERDTree
 "autocmd BufEnter * NERDTreeMirror
 "autocmd VimEnter * wincmd w
+
 
 " alias for some fn commands
 " make 
