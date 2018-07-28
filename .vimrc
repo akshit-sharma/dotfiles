@@ -41,6 +41,9 @@ Plugin 'luochen1990/rainbow'
 " Async run commands in shell
 Plugin 'skywind3000/asyncrun.vim'
 
+" vim-cmake-syntax
+Plugin 'pboettch/vim-cmake-syntax'
+
 " All of your Plugins must be added before the following line
 call vundle#end() 		" required
 filetype plugin indent on 	" required
@@ -166,6 +169,12 @@ map <Leader>S :set scb!<CR>
 
 " 0 if you want to enable it later via :RainbowToggle
 let g:rainbow_active = 1
+
+let g:rainbow_conf = {
+  \  'separately': {
+  \       'cmake': 0,
+  \    }
+  \ }
 
 " Always show statusline
 set laststatus=2

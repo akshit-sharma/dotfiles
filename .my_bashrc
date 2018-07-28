@@ -5,21 +5,31 @@
 
 PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ '
 
-alias vr='vi -R'
+LIB_HOME=$HOME/Libraries
 
 VIRTUAL_ENV="$HOME/venv"
 VIRTUAL_ENV_2_7="$HOME/venv2.7"
 
-ComputeCpp_DIR=$LIB_HOME/ComputeCpp
+COMPUTECPP_HOME=$LIB_HOME/computecpp-sdk
+COMPUTECPP_DIR=$LIB_HOME/ComputeCpp
+
+INTEL_OPENCL_LIBRARY=/usr/lib/x86_64-linux-gnu/libOpenCL.so.1
+
+alias vr='vi -R'
 
 alias venv="source $VIRTUAL_ENV/bin/activate"
 
 alias venv2="source $VIRTUAL_ENV_2_7/bin/activate"
 alias venv3="venv"
 
-export ComputeCpp_DIR
+alias iccpp="export CUDA_VISIBLE_DEVICES=\"\""       # not working on nvidia gpu for now
+alias vccpp="export PATH=$COMPUTECPP_DIR:$PATH"
+
 export PS1
 export PATH
+export COMPUTECPP_HOME
+export COMPUTECPP_DIR
+export INTEL_OPENCL_LIBRARY
 
 source $HOME/.my_vars
 
