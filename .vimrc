@@ -66,7 +66,7 @@ filetype plugin indent on 	" required
 autocmd FileType cpp,c source ~/.vim/syntax/vulkan1.0.vim
 
 " highlighting with opengl.vim
-autocmd FileType cpp,c source ~/.vim/syntax/opengl.vim
+"autocmd FileType cpp,c source ~/.vim/syntax/opengl.vim
 
 
 function! s:DiffWithSaved()
@@ -111,9 +111,10 @@ map <C-b> <C-w>
 let g:cpp_class_scope_highlight = 1
 let g:cpp_member_variable_highlight = 1
 let g:cpp_class_decl_highlight = 1
-let g:cpp_experimental_template_highlight = 1
 let g:cpp_concepts_highlight = 1
 let g:cpp_no_function_highlight = 1
+let g:cpp_experimental_template_highlight = 1
+let g:cpp_experimental_simple_template_highlight = 1
 
 " vim have issue with flagging braces as errors (workaround)
 let c_no_curly_error=1
