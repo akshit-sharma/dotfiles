@@ -139,7 +139,11 @@ function vim_syntax_symlink {
     if [[ DEBUG_SCRIPT -ne 0 ]]; then
       echo "moving $HOME/.vim/syntax/$filename to $HOME/.vim/syntax/$filename.bk"
     fi
-    mv "$HOME/.vim/syntax/$filename" "$HOME/.vim/syntax/$filename.bk"
+    if [ ! -f "$HOME/.vim/syntax/$filename.bk" ]; then
+      mv "$HOME/.vim/syntax/$filename" "$HOME/.vim/syntax/$filename.bk"
+    else
+      echo "$HOME/.vim/syntax/$filename.bk already present assuming $filename in $HOME/.vim/syntax is latest"
+    fi
   fi
   if [ ! -L "$HOME/.vim/syntax/$filename" ]; then
     if [[ DEBUG_SCRIPT -ne 0 ]]; then
