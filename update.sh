@@ -179,6 +179,9 @@ if [ ! -d "$HOME/.vim/bundle/Vundle.vim" ]; then
   NEED_VIM_PLUGIN_INSTALL=1
 fi
 
+if [ -f $HOME/.vimrc ] && [ ! -L "$HOME/.vimrc" ]; then
+  mv $HOME/.vimrc $HOME/.vimrc.bk       # backup existing .vimrc
+fi
 if [ ! -L "$HOME/.vimrc" ]; then
   ln -sT $SCRIPTPATH/.vimrc $HOME/.vimrc
 fi
@@ -199,6 +202,68 @@ fi
 #fi
 
 mkdir -p ~/.vim/tags
+
+
+# setup virtualenv for python2 and python3
+function python_virtualenv_setup {
+  VERSION_NUMBER="$1"
+  VIRTUALENV_EXEC="virtualenv"
+
+  if [ -d "$HOME/venv" ]; then
+    if [ "$VERSION_NUMBER" == "3" ]; then
+      echo "virtualenv for python3 exists ($HOME/venv)"
+      return
+    fi
+  fi
+
+  if [ -d "$HOME/venv2" ]; then
+    if [ "$VERSION_NUMBER" == "2" ]; then
+      echo "virtualenv for python2 exists ($HOME/venv2)"
+      return
+    fi
+  fi
+
+  $VIRTUALENV_EXEC --version
+  if [ "$?" != "0" ]; then
+    #virtualenv not in path    
+    if [ ! -f $HOME/.local/bin/virtualenv ]; then
+      # /usr/bin/python3
+      if [ ! -f /usr/bin/python3 ] && [ ! -L /usr/bin/python3 ]; then
+        echo "From python_virtualenv_setup: Cannot find /usr/bin/python3"
+        echo "Cannot create virtualenv"
+        return
+      else
+        /usr/bin/python3 -m pip install --user virtualenv
+      fi
+    fi
+    VIRTUALENV_EXEC="$HOME/.local/bin/virtualenv"
+  fi
+  # virtualenv should be in VIRTUALENV_EXE at this point
+  if [ "$VERSION_NUMBER" != "2" ] && [ "$VERSION_NUMBER" != "3" ]; then
+    echo "From python_virtualenv_setup: $VERSION_NUMBER is not supported"
+    return
+  else
+    if [ "$VERSION_NUMBER" == "2" ]; then
+      # /usr/bin/python2
+      if [ ! -f /usr/bin/python2 ] && [ ! -L /usr/bin/python2 ]; then
+        echo "From python_virtualenv_setup: Cannot find /usr/bin/python2"
+      else
+        $VIRTUALENV_EXEC -p /usr/bin/python2 $HOME/venv2
+      fi
+    elif [ "$VERSION_NUMBER" == "3" ]; then
+      # /usr/bin/python3
+      if [ ! -f /usr/bin/python3 ] && [ ! -L /usr/bin/python3 ]; then
+        echo "From python_virtualenv_setup: Cannot find /usr/bin/python3"
+      else
+        $VIRTUALENV_EXEC -p /usr/bin/python2 $HOME/venv
+      fi
+    fi
+  fi
+}
+
+python_virtualenv_setup 2
+python_virtualenv_setup 3
+
 
 # all symlink done (configuration structure established)
 
