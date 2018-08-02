@@ -259,7 +259,7 @@ function python_virtualenv_setup {
       if [ ! -f /usr/bin/python3 ] && [ ! -L /usr/bin/python3 ]; then
         echo "From python_virtualenv_setup: Cannot find /usr/bin/python3"
       else
-        $VIRTUALENV_EXEC -p /usr/bin/python2 $HOME/venv
+        $VIRTUALENV_EXEC -p /usr/bin/python3 $HOME/venv
       fi
     fi
   fi
