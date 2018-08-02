@@ -110,7 +110,11 @@ function home_config_symlink {
     if [[ DEBUG_SCRIPT -ne 0 ]]; then
       echo "moving $HOME/.config/$filename to $HOME/.config/$filename.bk"
     fi
-    mv "$HOME/.config/$filename" "$HOME/.config/$filename.bk"
+    if [ ! -f "$HOME/.config/$filename.bk" ]; then
+      mv "$HOME/.config/$filename" "$HOME/.config/$filename.bk"
+    else
+      echo "$HOME/.config/$filename.bk already present assuming $filename in $HOME/.config is latest"
+    fi
   fi
   if [ ! -L "$HOME/.config/$filename" ]; then
     if [[ DEBUG_SCRIPT -ne 0 ]]; then
