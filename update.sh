@@ -242,9 +242,15 @@ function python_virtualenv_setup {
         return
       else
         /usr/bin/python3 -m pip install --user virtualenv
+        VIRTUALENV_EXEC="$HOME/.local/bin/virtualenv"
+        if [ "$?" != "0" ]; then
+          echo "Error in installing virtualenv through pip"
+          echo "Command tried"
+          echo "/usr/bin/python3 -m pip install --user virtualenv"
+          return
+        fi
       fi
     fi
-    VIRTUALENV_EXEC="$HOME/.local/bin/virtualenv"
   fi
   # virtualenv should be in VIRTUALENV_EXE at this point
   if [ "$VERSION_NUMBER" != "2" ] && [ "$VERSION_NUMBER" != "3" ]; then
