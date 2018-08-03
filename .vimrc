@@ -50,6 +50,11 @@ Plugin 'bfrg/vim-glfw-syntax'
 " vimwiki
 Plugin 'vimwiki/vimwiki'
 
+" fugitive for git wrapper
+Plugin 'tpope/vim-fugitive'
+" for vim version < 7.2
+Plugin 'tpope/vim-git'
+
 " All of your Plugins must be added before the following line
 call vundle#end() 		" required
 filetype plugin indent on 	" required
@@ -196,8 +201,11 @@ let g:rainbow_conf = {
 set laststatus=2
 let g:lightline = {
   \   'active': {
-  \     'left': [['mode', 'paste'], ['readonly', 'filename', 'modified']],
+  \     'left': [['mode', 'paste'], [ 'readonly', 'filename', 'modified', 'gitbranch' ]],
   \     'right': [['lineinfo'], ['percent'], ['fileformat', 'fileencoding', 'filetype']]
+  \   },
+  \   'component_function' : {
+  \     'gitbranch': 'fugitive#statusline'
   \   }
   \ }
 
