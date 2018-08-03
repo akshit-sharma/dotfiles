@@ -37,6 +37,8 @@ S-F11          # make ctags inside .git of current folder
 <Leader>tn       # open new tab
 <Leader>ts       # tab split
 
+<Leader>Y        # toggle syntastic checking
+
 #d             # for #define
 #i             # for #include
 #b             # for starting of block comment

@@ -264,6 +264,8 @@ inoremap <C-tab>    <Esc>:tabnext<CR>i
 "autocmd VimEnter * tab all
 "autocmd BufAdd * exe 'tablast | tabe "' . expand ( "<afile") . '"'
 
+nnoremap <Leader>Y :SyntasticToggleMode<CR>
+inoremap <Leader>Y :SyntasticToggleMode<CR>
 
 " mouse does not select line numbers # default is c
 set mouse=a
