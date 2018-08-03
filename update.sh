@@ -94,6 +94,41 @@ if [ $SHLVL -gt 2 ]; then
   fi
 fi
 
+# function for creating symlink to files in $HOME/$dir
+function home_dir_symlink {
+  filename="$1"
+  dir="${2:-}"
+  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+    echo "value is $SCRIPTPATH/$filename"
+  fi
+  if [ ! -f $SCRIPTPATH/$filename ] && [ ! -d $SCRIPTPATH/$filename ]; then 
+                                                            # pretty much use less after getting files
+    if [[ DEBUG_SCRIPT -ne 0 ]]; then
+      echo "copying $HOME/$dir/$filename to $SCRIPTPATH/$filename"
+    fi
+    cp $HOME/$dir/$filename $SCRIPTPATH/$filename   # usefull to add new files in the script
+  fi                                                   # instead of manually moving/copying
+  if [ -f "$HOME/$dir/$filename" ] && [ ! -L "$HOME/$dir/$filename" ]; then
+#  script_file_md5=`eval md5sum < $SCRIPTPATH/$filename | cut -d\  -f1`
+#  destination_file_md5=`eval md5sum < $SCRIPTPATH/$filename | cut -d\  -f1`
+    if [ ! -f "$HOME/$dir/$filename.bk" ] && [ ! -d "$HOME/$dir/$filename.bk" ] && [ ! -L "$HOME/$dir/$filename.bk" ]; then
+      if [[ DEBUG_SCRIPT -ne 0 ]]; then
+        echo "backing up $HOME/$dir/$filename to $HOME/$dir/$filename.bk"
+      fi
+      mv "$HOME/$dir/$filename" "$HOME/$dir/$filename.bk"
+    else
+      echo "$HOME/$dir/$filename.bk already present skipping backup"
+    fi
+  fi
+  if [ ! -L "$HOME/$dir/$filename" ]; then
+    if [[ DEBUG_SCRIPT -ne 0 ]]; then
+      echo "linking $SCRIPTPATH/$filename to $HOME/$dir/$filename"
+    fi
+    ln -sT $SCRIPTPATH/$filename $HOME/$dir/$filename
+  fi
+}
+
+
 # function for creating symlink to files in $HOME/.config
 function home_config_symlink {
   filename="$1"
@@ -158,7 +193,10 @@ function vim_syntax_symlink {
 }
 
 # manual linking of files for ~/.vim/syntax dir
-vim_syntax_symlink vulkan1.0.vim
+home_dir_symlink vulkan1.0.vim .vim/syntax
+
+# symlink directory for vimwiki
+home_dir_symlink vimwiki .
 
 # if kde plasma get my shortcuts
 if [ "$DESKTOP_SESSION" = "plasma" ]; then
@@ -168,10 +206,10 @@ if [ "$DESKTOP_SESSION" = "plasma" ]; then
   PLASMASHELL_VERSION=`eval plasmashell --version | sed -nr 's/plasmashell ([0-9][0-9]*\.*)/\1/p'`
   PLASMASHELL_MAJOR=`plasmashell --version | sed -rn 's/plasmashell ([0-9])\.[0-9].*/\1/p'`
   if [ $PLASMASHELL_MAJOR -eq 5 ]; then
-    home_config_symlink kglobalshortcutsrc.kksrc
-    home_config_symlink khotkeysrc
-    home_config_symlink quicktile.cfg
-    home_config_symlink Xmodmap
+    home_dir_symlink kglobalshortcutsrc.kksrc .config
+    home_dir_symlink khotkeysrc .config
+    home_dir_symlink quicktile.cfg .config
+    home_dir_symlink Xmodmap .config
   else
     echo "Don't know how to handle this plasma version"
     echo "PLASMASHELL_VERSION $PLASMASHELL_VERSION"

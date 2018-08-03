@@ -47,6 +47,9 @@ Plugin 'pboettch/vim-cmake-syntax'
 " GLFW syntax Highlighting
 Plugin 'bfrg/vim-glfw-syntax'
 
+" vimwiki
+Plugin 'vimwiki/vimwiki'
+
 " All of your Plugins must be added before the following line
 call vundle#end() 		" required
 filetype plugin indent on 	" required
@@ -68,6 +71,8 @@ autocmd FileType cpp,c source ~/.vim/syntax/vulkan1.0.vim
 " highlighting with opengl.vim
 "autocmd FileType cpp,c source ~/.vim/syntax/opengl.vim
 
+" for vim wiki plugin
+syntax on
 
 function! s:DiffWithSaved()
   let filetype=&ft
