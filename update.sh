@@ -2,7 +2,7 @@
 
 NEED_VIM_PLUGIN_INSTALL=1
 NEED_BASH_REFRESH=0
-NEED_PROFILE_REFRESH=0
+NEED_ENTRY_REFRESH=0
 
 DEBUG_SCRIPT=1
 
@@ -80,9 +80,9 @@ else
 fi
 
 if [ -z "$1" ]; then
-  NEED_PROFILE_REFRESH=1
+  NEED_ENTRY_REFRESH=1
 else
-  NEED_PROFILE_REFRESH=0
+  NEED_ENTRY_REFRESH=0
 fi
 
 # if called by other script
@@ -225,23 +225,30 @@ if [ ! -d "$HOME/.vim/bundle/Vundle.vim" ]; then
   NEED_VIM_PLUGIN_INSTALL=1
 fi
 
-if [ -f $HOME/.vimrc ] && [ ! -L "$HOME/.vimrc" ]; then
-  mv $HOME/.vimrc $HOME/.vimrc.bk       # backup existing .vimrc
-fi
-if [ ! -L "$HOME/.vimrc" ]; then
-  ln -sT $SCRIPTPATH/.vimrc $HOME/.vimrc
-fi
-
-if [ ! -L "$HOME/.my_profile" ]; then
-  ln -sT $SCRIPTPATH/.my_profile $HOME/.my_profile
-  if [ ! -f "$HOME/.my_vars" ]; then
-    touch $HOME/.my_vars
-  fi
+home_dir_symlink .vimrc .
+home_dir_symlink .my_ssh_agent .
+home_dir_symlink .my_profile .
+home_dir_symlink .my_bashrc .
+home_dir_symlink .my_entry .
+  
+if [ ! -f "$HOME/.my_vars" ]; then
+  touch $HOME/.my_vars
 fi
 
-if [ ! -L "$HOME/.my_bashrc" ]; then
-  ln -sT $SCRIPTPATH/.my_bashrc $HOME/.my_bashrc
-fi
+# if [ -f $HOME/.vimrc ] && [ ! -L "$HOME/.vimrc" ]; then
+#   mv $HOME/.vimrc $HOME/.vimrc.bk       # backup existing .vimrc
+# fi
+# if [ ! -L "$HOME/.vimrc" ]; then
+#   ln -sT $SCRIPTPATH/.vimrc $HOME/.vimrc
+# fi
+#
+# if [ ! -L "$HOME/.my_profile" ]; then
+#   ln -sT $SCRIPTPATH/.my_profile $HOME/.my_profile
+# fi
+#
+# if [ ! -L "$HOME/.my_bashrc" ]; then
+#   ln -sT $SCRIPTPATH/.my_bashrc $HOME/.my_bashrc
+# fi
 
 #if [ ! -L "$HOME/.tmux.conf" ]; then
 #  ln -sT $SCRIPTPATH/.tmux.conf $HOME/.tmux.conf
@@ -329,31 +336,34 @@ NEED_BASH_REFRESH=$REFRESH
 update_bashrc "export DOTFILES_SCRIPT_PARENT" $NEED_BASH_REFRESH "DOTFILES_SCRIPT_PARENT env already exported"
 NEED_BASH_REFRESH=$REFRESH
 
-update_bashrc "source ~/.my_profile" $NEED_PROFILE_REFRESH "already calling ~/.my_profile" 
-NEED_PROFILE_REFRESH=$REFRESH
+update_bashrc "source ~/.my_profile" $NEED_ENTRY_REFRESH "removing source ~/.my_bashrc" \
+              "sed -i '/source ~\/.my_profile/d' ~/.bashrc"
+
+update_bashrc "source ~/.my_entry" $NEED_ENTRY_REFRESH "already calling ~/.my_entry" 
+NEED_ENTRY_REFRESH=$REFRESH
 
 
-  echo "bef val of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_PROFILE_REFRESH"
+  echo "bef val of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_ENTRY_REFRESH"
 
 if [[ NEED_BASH_REFRESH -ne 0 ]]; then
   if [[ DEBUG_SCRIPT -ne 0 ]]; then
      echo "sourcing bashrc"
   fi
   #source ~/.bashrc # cannot source bashrc from script
-  source ~/.my_profile "$SCRIPTPATH"
-  NEED_PROFILE_REFRESH=0
+  source ~/.my_entry "$SCRIPTPATH"
+  NEED_ENTRY_REFRESH=0
 fi
 
-echo "after bash of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_PROFILE_REFRESH"
+echo "after bash of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_ENTRY_REFRESH"
 
-if [[ NEED_PROFILE_REFRESH -ne 0 ]]; then
+if [[ NEED_ENTRY_REFRESH -ne 0 ]]; then
   if [[ DEBUG_SCRIPT -ne 0 ]]; then
-     echo "sourcing my_profile $SCRIPTPATH"
+     echo "sourcing my_entry"
   fi
-  source ~/.my_profile "$SCRIPTPATH"
+  source ~/.my_entry
 fi
 
-echo "after prof val of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_PROFILE_REFRESH"
+echo "after prof val of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_ENTRY_REFRESH"
 
 if [[ NEED_VIM_PLUGIN_INSTALL -ne 0 ]]; then
   if [[ DEBUG_SCRIPT -ne 0 ]]; then
