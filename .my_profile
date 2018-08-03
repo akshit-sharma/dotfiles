@@ -5,7 +5,7 @@
 
 if [ $DOTFILES_SCRIPT_PARENT ]; then
   SCRIPTPATH=$DOTFILES_SCRIPT_PARENT
-  echo "\$DOTFILES_SCRIPT_PARENT already set to $DOTDFILES_SCRIPT_PARENT"
+  echo "\$DOTFILES_SCRIPT_PARENT already set to $DOTFILES_SCRIPT_PARENT"
 else
 # if called by other script
   if [ $SHLVL -gt 1 ]; then  
@@ -14,7 +14,7 @@ else
        echo "\$1 is $1"
      else 
        SCRIPTPATH=$DOTFILES_SCRIPT_PARENT
-       echo "\$DOTFILES_SCRIPT_PARENT is $DOTDFILES_SCRIPT_PARENT"
+       echo "\$DOTFILES_SCRIPT_PARENT is $DOTFILES_SCRIPT_PARENT"
    fi
   fi
 fi
