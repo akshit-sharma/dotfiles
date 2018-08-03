@@ -205,7 +205,7 @@ let g:lightline = {
   \     'right': [['lineinfo'], ['percent'], ['fileformat', 'fileencoding', 'filetype']]
   \   },
   \   'component_function' : {
-  \     'gitbranch': 'fugitive#statusline'
+  \     'gitbranch': 'fugitive#head'
   \   }
   \ }
 
