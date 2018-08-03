@@ -9,10 +9,13 @@ if [ $DOTFILES_SCRIPT_PARENT ]; then
   echo "\$DOTFILES_SCRIPT_PARENT already set to $DOTFILES_SCRIPT_PARENT"
 fi
 
+#echo "arguments to this script are $@"
+
 SKIP_UPDATE=false
 
 # if called by other script
 if [ $SHLVL -gt 1 ]; then  
+  echo "Called by other script"
  if [ -z "$2" ]; then
    if [ -z "$DOTFILES_SCRIPT_PARENT" ]; then
      SCRIPTPATH=$1
@@ -23,18 +26,20 @@ if [ $SHLVL -gt 1 ]; then
      SCRIPTPATH=$DOTFILES_SCRIPT_PARENT
       echo "\$DOTFILES_SCRIPT_PARENT is $DOTFILES_SCRIPT_PARENT"
    fi
- fi
- if [ -z "$3" ]; then
-   if [ "$3" == "true" ]; then
-     SKIP_UPDATE=true
-   fi
+ fi 
+fi
+
+if [ ! -z "$2" ]; then
+ if [ "$2" == "true" ]; then
+   SKIP_UPDATE=true
+   echo "skipping auto-update"
  fi
 fi
 
 REPO_DIR=$SCRIPTPATH
-echo "REPO_DIR set to $REPO_DIR"
 
 if [ "$SKIP_UPDATE" != "true" ]; then
+  echo "REPO_DIR set to $REPO_DIR"
   git -C $REPO_DIR remote update
 
   UPSTREAM='@{u}'
