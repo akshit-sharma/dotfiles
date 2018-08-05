@@ -370,5 +370,6 @@ if [[ NEED_VIM_PLUGIN_INSTALL -ne 0 ]]; then
      echo "running vim +PluginInstall...."
   fi
   vim +PluginInstall +qall
+  $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer --java-completer
 fi
 

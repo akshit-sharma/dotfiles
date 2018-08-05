@@ -27,7 +27,7 @@ Plugin 'itchyny/lightline.vim'
 Plugin 'tomtom/tcomment_vim'
 
 " cpp autocomplete
-Plugin 'OmniCppComplete'
+"Plugin 'OmniCppComplete'
 
 " jump to words
 Plugin 'easymotion/vim-easymotion'
@@ -55,8 +55,14 @@ Plugin 'tpope/vim-fugitive'
 " for vim version < 7.2
 Plugin 'tpope/vim-git'
 
-" syntastic for syntax checking
-Plugin 'vim-syntastic/syntastic'
+" " syntastic for syntax checking
+" Plugin 'vim-syntastic/syntastic'
+
+" cpp autocomplete
+Plugin 'Valloric/YouCompleteMe'
+
+" YCM-Generator
+Plugin 'rdnetto/YCM-Generator'
 
 " All of your Plugins must be added before the following line
 call vundle#end() 		" required
@@ -78,6 +84,8 @@ autocmd FileType cpp,c source ~/.vim/syntax/vulkan1.0.vim
 
 " highlighting with opengl.vim
 "autocmd FileType cpp,c source ~/.vim/syntax/opengl.vim
+
+"autocmd FileType *.py set shiftwidth=2|set softtabstop=2|set tabstop=2|set expandtab
 
 " for vim wiki plugin
 syntax on
@@ -101,6 +109,7 @@ set smartindent
 set tabstop=2         " tab width is 2 spaces
 set shiftwidth=2      " indent also with 2 spaces
 set expandtab         " expand tabs to spaces
+set softtabstop=2
 
 " warp lines at 160 chars, 80 is somewhat antiquated with nowadays displays
 set textwidth=160
@@ -142,18 +151,18 @@ set tags+=.git/tags;./tags;
 map <C-F11> :!ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q --exclude=.git .<CR> 
 map <S-F11> :!cd .git && ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q --exclude=.git .. && cd ..<CR>  
 
-" OmniCppComplete
-let OmniCpp_NamespaceSearch = 1
-let OmniCpp_GlobalScopeSearch = 1
-let OmniCpp_ShowAccess = 1
-let OmniCpp_ShowPrototypeInAbbr = 1 " show function parameters
-let OmniCpp_MayCompleteDot = 1      " autocomplete after .
-let OmniCpp_MayCompleteArrow = 1    " autocomplete after ->
-let OmniCpp_MaycompleteScope = 1    " autocomplete after ::
-let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"] " check if I need this
-" automatically open and close the popup menu / preview window
-au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
-set completeopt=menuone,menu,longest,preview
+" " OmniCppComplete
+" let OmniCpp_NamespaceSearch = 1
+" let OmniCpp_GlobalScopeSearch = 1
+" let OmniCpp_ShowAccess = 1
+" let OmniCpp_ShowPrototypeInAbbr = 1 " show function parameters
+" let OmniCpp_MayCompleteDot = 1      " autocomplete after .
+" let OmniCpp_MayCompleteArrow = 1    " autocomplete after ->
+" let OmniCpp_MaycompleteScope = 1    " autocomplete after ::
+" let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"] " check if I need this
+" " automatically open and close the popup menu / preview window
+" au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
+" set completeopt=menuone,menu,longest,preview
 
 " switch between header/source with F4
 map <F4> :e %:p:s,.h$,.X123X,:s,:.cpp$,.h,:s,.X123X$,.cpp,<CR>
@@ -212,15 +221,17 @@ let g:lightline = {
   \   }
   \ }
 
-" for syntastic for syntax checking
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+" " for syntastic for syntax checking
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
+
+
 " nice abbreviations
 ab #d #define
 ab #i #include
