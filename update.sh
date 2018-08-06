@@ -377,7 +377,9 @@ if [[ NEED_VIM_PLUGIN_INSTALL -ne 0 ]]; then
     VIM_PLUGIN_OLD_HASH=$(cat $SCRIPTPATH/faaltu/.vim_plugin.hash)
   fi
   if [ "$VIM_PLUGIN_HASH" != "$VIM_PLUGIN_OLD_HASH" ]; then
-    vim +PluginUpdate
+    vim +PluginClean! +qall
+    vim +PluginInstall +qall
+    vim +PluginUpdate +qall
     echo $VIM_PLUGIN_HASH > $SCRIPTPATH/faaltu/.vim_plugin.hash
   fi
   YCM_HASH=$(git -C $HOME/.vim/bundle/YouCompleteMe/ rev-parse @)
