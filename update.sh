@@ -369,7 +369,65 @@ if [[ NEED_VIM_PLUGIN_INSTALL -ne 0 ]]; then
   if [[ DEBUG_SCRIPT -ne 0 ]]; then
      echo "running vim +PluginInstall...."
   fi
-  vim +PluginInstall +qall
-  $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer --java-completer
+  VIM_PLUGIN_HASH=$(cat $HOME/.vimrc | sed -n 's/\(^Plugin\)/\1/p' | md5sum | cut -d' ' -f1)
+  if [ ! -f $SCRIPTPATH/faaltu/.vim_plugin.hash ]; then
+    VIM_PLUGIN_OLD_HASH="Nothing"
+    vim +PluginInstall +qall
+  else
+    VIM_PLUGIN_OLD_HASH=$(cat $SCRIPTPATH/faaltu/.vim_plugin.hash)
+  fi
+  if [ "$VIM_PLUGIN_HASH" != "$VIM_PLUGIN_OLD_HASH" ]; then
+    vim +PluginUpdate
+    echo $VIM_PLUGIN_HASH > $SCRIPTPATH/faaltu/.vim_plugin.hash
+  fi
+  YCM_HASH=$(git -C $HOME/.vim/bundle/YouCompleteMe/ rev-parse @)
+  if [ ! -f $SCRIPTPATH/faaltu/.clang+llvm.hash ]; then
+    YCM_OLD_HASH="Nothing"
+  else
+    YCM_OLD_HASH=$(cat $SCRIPTPATH/faaltu/.clang+llvm.hash)
+  fi
+  if [ "$YCM_HASH" != "$YCM_OLD_HASH" ]; then
+    $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer --java-completer
+    echo $YCM_HASH > $SCRIPTPATH/faaltu/.clang+llvm.hash
+  else 
+    echo "YouCompleteMe is latest"
+  fi
+  wget --version > /dev/null
+  if [ "$?" == 0 ]; then 
+    echo "wget found"
+    LLVM_CORRECT_MD5='661fa37f6557d9544ed950d40c05a6fa'
+    LLVM_PREBINARY_DIR='clang+llvm-6.0.1-x86_64-linux-gnu-ubuntu-16.04'
+    LLVM_PREBINARY_TAR='clang+llvm-6.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz'
+    LLVM_PREBINARY_URL='http://releases.llvm.org/6.0.1/clang+llvm-6.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz' 
+    if [ ! -d "$SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR" ]; then
+      if [ ! -f "$SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR" ]; then
+        echo "downloading $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR"
+        wget $LLVM_PREBINARY_URL -O $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR
+      else 
+        LLVM_PREBINARY_MD5=`eval md5sum $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR | cut -d' ' -f1`
+        if [ "$LLVM_CORRECT_MD5" != "$LLVM_PREBINARY_MD5" ]; then
+          echo "redownloading LLVM prebinary"
+          rm $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR
+          wget $LLVM_PREBINARY_URL -O $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR 
+        fi
+      fi
+      rm -rf $SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR
+      tar -xf $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR
+    else
+      echo "$SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR already exists"
+    fi
+    if [ ! -L $SCRIPTPATH/faaltu/clang+llvm ]; then
+      ln -sT $SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR $SCRIPTPATH/faaltu/clang+llvm
+    else 
+      LLVM_CURRENT_LINK=`eval readlink -f $SCRIPTPATH/faaltu/clang+llvm`
+      if [ "$LLVM_CURRENT_LINK" != "$SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR" ]; then
+        rm $SCRIPTPATH/faaltu/clang+llvm
+        ln -sT $SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR $SCRIPTPATH/faaltu/clang+llvm
+      fi
+    fi
+  else 
+    echo "wget not found, cannot download LLVM Pre Binary"
+  fi
+
 fi
 

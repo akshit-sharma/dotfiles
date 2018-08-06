@@ -26,6 +26,8 @@ alias venv3="venv"
 alias iccpp="export CUDA_VISIBLE_DEVICES=\"\""       # not working on nvidia gpu for now
 alias vccpp="export PATH=$COMPUTECPP_DIR:$PATH"
 
+alias ycmgen='$HOME/.vim/bundle/YCM-Generator/config_gen.py --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .'
+
 export PS1
 export PATH
 export COMPUTECPP_HOME

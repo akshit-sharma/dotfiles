@@ -163,6 +163,10 @@ map <S-F11> :!cd .git && ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extr
 " " automatically open and close the popup menu / preview window
 " au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
 " set completeopt=menuone,menu,longest,preview
+ 
+" YCM (YouCompleteMe)
+let g:ycm_global_ycm_extra_conf = '$DOTFILES_SCRIPT_PARENT/.ycm_extra_conf.py'
+let g:ycm_confirm_extra_conf = 1
 
 " switch between header/source with F4
 map <F4> :e %:p:s,.h$,.X123X,:s,:.cpp$,.h,:s,.X123X$,.cpp,<CR>
@@ -275,8 +279,14 @@ inoremap <C-tab>    <Esc>:tabnext<CR>i
 "autocmd VimEnter * tab all
 "autocmd BufAdd * exe 'tablast | tabe "' . expand ( "<afile") . '"'
 
-nnoremap <Leader>Y :SyntasticToggleMode<CR>
-inoremap <Leader>Y :SyntasticToggleMode<CR>
+
+nnoremap <Leader>y :YcmGenerateConfig --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
+inoremap <Leader>y <Esc>:YcmGenerateConfig --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
+nnoremap <Leader>Y :CCGenerateConfig --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
+inoremap <Leader>Y <Esc>:CCGenerateConfig --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
+
+" nnoremap <Leader>Y :SyntasticToggleMode<CR>
+" inoremap <Leader>Y :SyntasticToggleMode<CR>
 
 " mouse does not select line numbers # default is c
 set mouse=a
