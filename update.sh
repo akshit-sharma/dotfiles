@@ -416,7 +416,7 @@ if [[ NEED_VIM_PLUGIN_INSTALL -ne 0 ]]; then
         fi
       fi
       rm -rf $SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR
-      tar -xf $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR
+      tar -xf $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR -C $SCRIPTPATH/faaltu/
     else
       echo "$SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR already exists"
     fi
