@@ -106,25 +106,36 @@ function home_dir_symlink {
     if [[ DEBUG_SCRIPT -ne 0 ]]; then
       echo "copying $HOME/$dir/$filename to $SCRIPTPATH/$filename"
     fi
-    cp $HOME/$dir/$filename $SCRIPTPATH/$filename   # usefull to add new files in the script
-  fi                                                   # instead of manually moving/copying
-  if [ -f "$HOME/$dir/$filename" ] && [ ! -L "$HOME/$dir/$filename" ]; then
+    if [ -f $HOME/$dir/$filename ]; then
+      cp $HOME/$dir/$filename $SCRIPTPATH/$filename   # usefull to add new files in the script
+                                                      # instead of manually moving/copying
+    elif [ -d $HOME/$dir/$filename ]; then
+      cp -r $HOME/$dir/$filename $SCRIPTPATH/$filename
+    else 
+      echo "don't know how to backup $HOME/$dir/$filename"
+      echo "return ............."
+      return
+    fi
+  fi                                                   
+  if [ ! -L "$HOME/$dir/$filename" ]; then
+    if [ -d "$HOME/$dir/$filename" ] || [ -f "$HOME/$dir/$filename" ]; then
 #  script_file_md5=`eval md5sum < $SCRIPTPATH/$filename | cut -d\  -f1`
 #  destination_file_md5=`eval md5sum < $SCRIPTPATH/$filename | cut -d\  -f1`
-    if [ ! -f "$HOME/$dir/$filename.bk" ] && [ ! -d "$HOME/$dir/$filename.bk" ] && [ ! -L "$HOME/$dir/$filename.bk" ]; then
-      if [[ DEBUG_SCRIPT -ne 0 ]]; then
-        echo "backing up $HOME/$dir/$filename to $HOME/$dir/$filename.bk"
+      if [ ! -f "$HOME/$dir/$filename.bk" ] && [ ! -d "$HOME/$dir/$filename.bk" ] && [ ! -L "$HOME/$dir/$filename.bk" ]; then
+        if [[ DEBUG_SCRIPT -ne 0 ]]; then
+          echo "backing up $HOME/$dir/$filename to $HOME/$dir/$filename.bk"
+        fi
+        mv "$HOME/$dir/$filename" "$HOME/$dir/$filename.bk"
+      else
+        echo "$HOME/$dir/$filename.bk already present skipping backup"
       fi
-      mv "$HOME/$dir/$filename" "$HOME/$dir/$filename.bk"
-    else
-      echo "$HOME/$dir/$filename.bk already present skipping backup"
     fi
-  fi
-  if [ ! -L "$HOME/$dir/$filename" ]; then
-    if [[ DEBUG_SCRIPT -ne 0 ]]; then
-      echo "linking $SCRIPTPATH/$filename to $HOME/$dir/$filename"
+    if [ ! -L "$HOME/$dir/$filename" ]; then
+      if [[ DEBUG_SCRIPT -ne 0 ]]; then
+        echo "linking $SCRIPTPATH/$filename to $HOME/$dir/$filename"
+      fi
+      ln -sT $SCRIPTPATH/$filename $HOME/$dir/$filename
     fi
-    ln -sT $SCRIPTPATH/$filename $HOME/$dir/$filename
   fi
 }
 
@@ -191,6 +202,9 @@ function vim_syntax_symlink {
     ln -sT $SCRIPTPATH/$filename $HOME/.vim/syntax/$filename
   fi
 }
+
+# script for adding llvm to environment
+home_dir_symlink llvm_scripts .
 
 # manual linking of files for ~/.vim/syntax dir
 home_dir_symlink vulkan1.0.vim .vim/syntax
