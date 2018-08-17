@@ -68,8 +68,10 @@ function sshagent_init {
       echo "press s to skip adding all keys"
       read to_skip
       # add all keys containing the hostname
-      if [ "$to_skip" != "s" ] && [ "$to_skip" != "S" ] && [ "$to_skip" != "skip" ] && [ "$to_skip" != "Skip" ]; then
-        find $HOME/.ssh | grep -v '.pub' | grep id_$HOSTNAME | xargs ssh-add
+      if [ "$to_skip" != "s" ] && [ "$to_skip" != "S" ]; then
+        find $home/.ssh | grep -v '.pub' | grep id_$hostname | grep github | xargs ssh-add
+      elif [ "$to_skip" != "skip" ] && [ "$to_skip" != "Skip" ]; then
+        find $home/.ssh | grep -v '.pub' | grep id_$hostname | xargs ssh-add
       else
         SKIP_UPDATE=true
       fi
@@ -81,6 +83,12 @@ function sshagent_init {
 
     # Finally, show what keys are currently in the agent
     ssh-add -l | cut -d' ' -f3
+  
+    IS_GITHUB_PRESENT=`ssh-add -l | cut -d' ' -f3 | grep Github | wc -l`
+    if [ "$IS_GITHUB_PRESENT" != "0" ]; then
+      SKIP_UPDATE=false
+    fi
+
 }
 
 sshagent_init
