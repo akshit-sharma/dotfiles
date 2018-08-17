@@ -216,7 +216,7 @@ home_dir_symlink vulkan1.0.vim .vim/syntax
 home_dir_symlink vimwiki .
 
 # if kde plasma get my shortcuts
-if [ "$DESKTOP_SESSION" = "plasma" ]; then
+if [[ $DESKTOP_SESSION = *"plasma" ]]; then
   if [[ DEBUG_SCRIPT -ne 0 ]]; then
      echo "plasma (kde) detected"
   fi
@@ -233,6 +233,10 @@ if [ "$DESKTOP_SESSION" = "plasma" ]; then
     echo "PLASMASHELL_MAJOR $PLASMASHELL_VERSION"
     OUTPUT_PLASMASHELL=`eval plasmashell --version`
     echo "plasmashell --version is $OUTPUT_PLASMASHELL"
+  fi
+else
+  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+    echo "desktop session not plasma ($DESKTOP_SESSION)"
   fi
 fi
 
