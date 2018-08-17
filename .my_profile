@@ -13,20 +13,24 @@ fi
 
 SKIP_UPDATE=false
 
-# if called by other script
-if [ $SHLVL -gt 1 ]; then  
-  echo "Called by other script"
- if [ -z "$2" ]; then
-   if [ -z "$DOTFILES_SCRIPT_PARENT" ]; then
-     SCRIPTPATH=$1
-     echo "\$1 is $1"
-   fi
- else 
-   if [ -z "$DOTFILES_SCRIPT_PARENT" ]; then
-     SCRIPTPATH=$DOTFILES_SCRIPT_PARENT
-      echo "\$DOTFILES_SCRIPT_PARENT is $DOTFILES_SCRIPT_PARENT"
-   fi
- fi 
+if [ -d "$SCRIPTPATH" ]; then
+  echo "SCRIPTPATH already set to $SCRIPTPATH"
+else
+  # if called by other script
+  if [ $SHLVL -gt 1 ]; then  
+    echo "Called by other script"
+   if [ -z "$2" ]; then
+     if [ -z "$DOTFILES_SCRIPT_PARENT" ]; then
+       SCRIPTPATH=$1
+       echo "\$1 is $1"
+     fi
+   else 
+     if [ -z "$DOTFILES_SCRIPT_PARENT" ]; then
+       SCRIPTPATH=$DOTFILES_SCRIPT_PARENT
+        echo "\$DOTFILES_SCRIPT_PARENT is $DOTFILES_SCRIPT_PARENT"
+     fi
+   fi 
+  fi
 fi
 
 if [ ! -z "$2" ]; then

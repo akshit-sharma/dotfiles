@@ -69,9 +69,9 @@ function sshagent_init {
       read to_skip
       # add all keys containing the hostname
       if [ "$to_skip" != "s" ] && [ "$to_skip" != "S" ]; then
-        find $home/.ssh | grep -v '.pub' | grep id_$hostname | grep github | xargs ssh-add
+        find $HOME/.ssh | grep -v '.pub' | grep id_${HOSTNAME} | grep github | xargs ssh-add
       elif [ "$to_skip" != "skip" ] && [ "$to_skip" != "Skip" ]; then
-        find $home/.ssh | grep -v '.pub' | grep id_$hostname | xargs ssh-add
+        find $HOME/.ssh | grep -v '.pub' | grep id_${HOSTNAME} | xargs ssh-add
       else
         SKIP_UPDATE=true
       fi
@@ -93,4 +93,9 @@ function sshagent_init {
 
 sshagent_init
 
-source ~/.my_profile $DOTFILES_SCRIPT_PARENT $SKIP_UPDATE
+if [ ! -z "$DOTFILES_SCRIPT_PARENT" ]; then
+  source ~/.my_profile " " $SKIP_UPDATE
+else
+  source ~/.my_profile $DOTFILES_SCRIPT_PARENT $SKIP_UPDATE
+fi
+
