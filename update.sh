@@ -99,7 +99,7 @@ function home_dir_symlink {
   filename="$1"
   dir="${2:-}"
   if [[ DEBUG_SCRIPT -ne 0 ]]; then
-    echo "value is $SCRIPTPATH/$filename"
+    echo "symlink $HOME/$dir/$filename ---> $SCRIPTPATH/$filename"
   fi
   if [ ! -f $SCRIPTPATH/$filename ] && [ ! -d $SCRIPTPATH/$filename ]; then 
                                                             # pretty much use less after getting files
