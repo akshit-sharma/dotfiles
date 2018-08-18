@@ -403,18 +403,24 @@ if [[ NEED_VIM_PLUGIN_INSTALL -ne 0 ]]; then
     vim +PluginUpdate +qall
     echo $VIM_PLUGIN_HASH > $SCRIPTPATH/faaltu/.vim_plugin.hash
   fi
-  if [ -f $HOME/.vim/bundle/YouCompleteMe/install.py ]; then
-    YCM_HASH=$(git -C $HOME/.vim/bundle/YouCompleteMe/ rev-parse @)
-    if [ ! -f $SCRIPTPATH/faaltu/.clang+llvm.hash ]; then
-      YCM_OLD_HASH="Nothing"
-    else
-      YCM_OLD_HASH=$(cat $SCRIPTPATH/faaltu/.clang+llvm.hash)
-    fi
-    if [ "$YCM_HASH" != "$YCM_OLD_HASH" ]; then
-      $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer --java-completer
-      echo $YCM_HASH > $SCRIPTPATH/faaltu/.clang+llvm.hash
-    else 
-      echo "YouCompleteMe is latest"
+  make --version
+  MAKE_RET=$?
+  cmake --version
+  CMAKE_RET=$?
+  if [ $MAKE_RET -eq 0 ] && [ $CMAKE_RET -eq 0 ]; then
+    if [ -f $HOME/.vim/bundle/YouCompleteMe/install.py ]; then
+      YCM_HASH=$(git -C $HOME/.vim/bundle/YouCompleteMe/ rev-parse @)
+      if [ ! -f $SCRIPTPATH/faaltu/.clang+llvm.hash ]; then
+        YCM_OLD_HASH="Nothing"
+      else
+        YCM_OLD_HASH=$(cat $SCRIPTPATH/faaltu/.clang+llvm.hash)
+      fi
+      if [ "$YCM_HASH" != "$YCM_OLD_HASH" ]; then
+        $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer --java-completer
+        echo $YCM_HASH > $SCRIPTPATH/faaltu/.clang+llvm.hash
+      else 
+        echo "YouCompleteMe is latest"
+      fi
     fi
   fi
   wget --version > /dev/null
