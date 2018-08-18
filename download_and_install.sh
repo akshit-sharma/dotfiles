@@ -48,12 +48,17 @@ if [ "$i" != "0" ]; then
     touch $HOME/.ssh/config
   fi
 
-  echo "" >> $HOME/.ssh/config
-  echo "host github.com" >> $HOME/.ssh/config
-  echo "  User ${username}" >> $HOME/.ssh/config
-  echo "  HostName github.com" >> $HOME/.ssh/config
-  echo "  IdentityFile ~/.ssh/id_${HOSTNAME}_github" >> $HOME/.ssh/config
-  echo "" >> $HOME/.ssh/config
+  if cat ~/.bashrc | grep -xqFe "host github.com"
+  then
+    echo "~/.ssh/config for github already exists"
+  else
+    echo "" >> $HOME/.ssh/config
+    echo "host github.com" >> $HOME/.ssh/config
+    echo "  User ${username}" >> $HOME/.ssh/config
+    echo "  HostName github.com" >> $HOME/.ssh/config
+    echo "  IdentityFile ~/.ssh/id_${HOSTNAME}_github" >> $HOME/.ssh/config
+    echo "" >> $HOME/.ssh/config
+  fi
 
 fi
 
