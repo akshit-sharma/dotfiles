@@ -5,12 +5,18 @@ Feel free to modify the repository and make it your own.
 
 # quick install
 
+```bash
 curl -fsSl https://https://raw.githubusercontent.com/akshit-sharma/dotfiles/master/download_and_install.sh | bash
+```
 
 # normal install 
+```bash
 git clone https://github.com/akshit-sharma/dotfiles.git
+```
 or 
+```bash
 git clone git@github.com:akshit-sharma/dotfiles.git
+```
 
 Note: you will not be able to push automatically, if you have configured with https
 
