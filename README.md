@@ -1,3 +1,20 @@
+# disclamer
+This repository is highly unstable. It contains my personal configuration for the system and will be changed rapidly without concern for compatibility.
+
+Feel free to modify the repository and make it your own.
+
+# quick install
+
+curl -fsSl https://https://raw.githubusercontent.com/akshit-sharma/dotfiles/master/download_and_install.sh | bash
+
+# normal install 
+git clone https://github.com/akshit-sharma/dotfiles.git
+or 
+git clone git@github.com:akshit-sharma/dotfiles.git
+
+Note: you will not be able to push automatically, if you have configured with https
+
+
 # cheatsheet for vim
 
 > Simple cheatsheet for my personal ~/.vimrc file
