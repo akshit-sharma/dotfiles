@@ -442,10 +442,18 @@ if [[ NEED_VIM_PLUGIN_INSTALL -ne 0 ]]; then
           wget $LLVM_PREBINARY_URL -O $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR 
         fi
       fi
-      rm -rf $SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR
       tar -xf $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR -C $SCRIPTPATH/faaltu/
     else
-      echo "$SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR already exists"
+      LLVM_PREBINARY_MD5=`eval md5sum $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR | cut -d' ' -f1`
+      if [ "$LLVM_CORRECT_MD5" != "$LLVM_PREBINARY_MD5" ]; then
+        echo "new version of LLVM prebinary found"
+        rm $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR
+        wget $LLVM_PREBINARY_URL -O $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR 
+        rm -rf $SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR
+        tar -xf $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR -C $SCRIPTPATH/faaltu/
+      else
+        echo "$SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR up-to-date"
+      fi
     fi
     if [ ! -L $SCRIPTPATH/faaltu/clang+llvm ]; then
       ln -sT $SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR $SCRIPTPATH/faaltu/clang+llvm
