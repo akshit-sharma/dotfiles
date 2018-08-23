@@ -30,20 +30,23 @@ if [ ! -f $GCC_SCRIPT_PATH/../faaltu/gcc.done ]; then
   if [ ! -d $GCC_SRC_HOME ]; then
     mkdir -p $GCC_SRC_HOME
   fi
-  if [ ! -d  "$GCC_SRC_HOME/$GCC_TAR_DIR" ]; then
-    if [ ! -f "$GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ" ]; then
+  if [ ! -d  "$GCC_BIN_HOME" ]; then
+    if [ ! -f "$GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ" ]; then # download if file not found
       echo "downloading $GCC_SCRIPT_PATH/../$GCC_TAR_GZ"
       wget $GCC_TAR_URL -O $GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ
     else
       GCC_DOWNLOAD_MD5=`eval md5sum $GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ | cut -d' ' -f1`
-      if [ "$GCC_CORRECT_MD5" != "$GCC_DOWNLOAD_MD5" ]; then
+      if [ "$GCC_CORRECT_MD5" != "$GCC_DOWNLOAD_MD5" ]; then  # download if previous was corrupt
         echo "redownloading gcc $GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ"
         rm $GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ
         wget $GCC_TAR_URL -O $GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ
       fi
     fi
+    if [ -d "$GCC_SRC_HOME/$GCC_TAR_DIR" ]; then
+      rm -rf $GCC_SRC_HOME/$GCC_TAR_DIR
+    fi
     tar -xf $GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ -C $GCC_SRC_HOME
-  else
+  else                                                       # check for update in script
     GCC_DOWNLOAD_MD5=`eval md5sum $GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ | cut -d' ' -f1`
     if [ "$GCC_CORRECT_MD5" != "$GCC_DOWNLOAD_MD5" ]; then
       echo "downloading new version of gcc"
@@ -54,6 +57,9 @@ if [ ! -f $GCC_SCRIPT_PATH/../faaltu/gcc.done ]; then
       fi
       if [ -f "$GCC_SCRIPT_PATH/../faaltu/.gcc-prerequisites.md5" ]; then
         rm $GCC_SCRIPT_PATH/../faaltu/.gcc-prerequisites.md5
+      fi
+      if [ -d "$GCC_SRC_HOME/$GCC_TAR_DIR" ]; then
+        rm -rf $GCC_SRC_HOME/$GCC_TAR_DIR
       fi
       tar -xf $GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ -C $GCC_SRC_HOME
     else
@@ -96,6 +102,7 @@ if [ ! -f $GCC_SCRIPT_PATH/../faaltu/gcc.done ]; then
     make install
     cd ..
     rm -rf build # remove build intermediate results
+    rm -tf $GCC_SRC_HOME/$GCC_TAR_DIR # remove extracted dir
     touch $GCC_SCRIPT_PATH/../faaltu/.gcc-build
     cd $GCC_SCRIPT_PATH
   fi
