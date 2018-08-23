@@ -193,6 +193,7 @@ map <Leader><Space>d :DiffSaved<CR>
 " for ctags jumps
 map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 map <Leader><C-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
+map <Leader><S-C-]> :sp <CR>:exec("tag ".expand("<cword>"))<CR>
 
 " Configuration for easymotion
 let g:EasyMotion_leader_key='f'
