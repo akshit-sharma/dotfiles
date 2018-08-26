@@ -1,12 +1,12 @@
 # disclamer
-This repository is highly unstable. It contains my personal configuration for the system and will be changed rapidly without concern for compatibility.
+This repository is highly unstable. It contains my personal configuration for the system and will be changed rapidly without concern for cross-platform compatibility. The script will have a few cases to handle backword script version compatibility and these will be modified as they appear.
 
 Feel free to modify the repository and make it your own.
 
 # quick install
 
 ```bash
-curl -fsSl https://https://raw.githubusercontent.com/akshit-sharma/dotfiles/master/download_and_install.sh | bash
+DOTFILES_SCRIPT_DIR=${HOME}/dotfiles curl -fsSl https://https://raw.githubusercontent.com/akshit-sharma/dotfiles/master/download_and_install.sh | bash
 ```
 
 # normal install 
@@ -18,7 +18,7 @@ or
 git clone git@github.com:akshit-sharma/dotfiles.git
 ```
 
-Note: you will not be able to push automatically, if you have configured with https
+Note: script will not be able to push automatically, if you have configured with https. It will ask for password everytime
 
 
 # cheatsheet for vim
@@ -46,7 +46,7 @@ S-F11          # make ctags inside .git of current folder
 ## alias shortcuts
 ```bash
 <Leader> for vim is \ (backslash)
-<Leader>S      # toggle scrollbind
+<Leader>S        # toggle scrollbind
 
 <Leader>d        # goto definition (F12) ctags should be present
 
