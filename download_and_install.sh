@@ -5,13 +5,13 @@
 DEFAULTPATH=${HOME}/dotfiles
 file_name=${HOME}/.ssh/id_${HOSTNAME}_github
 
-if [ -z ${DOTFILE_SCRIPT_DIR} ]; then
-  SCRIPTPATH=$DEFAULTPATH
+if [ -z ${DOTFILES_SCRIPT_DIR} ]; then
+  SCRIPT_PATH=$DEFAULTPATH
 else 
-  SCRIPTPATH=${DOTFILE_SCRIPT_DIR}
+  SCRIPT_PATH=${DOTFILES_SCRIPT_DIR}
 fi
 
-echo "Script installation path set to $SCRIPTPATH"
+echo "Script installation path set to $SCRIPT_PATH"
 
 i="1"
 if [ ! -f $file_name ]; then
@@ -159,8 +159,8 @@ function download_and_extract {
     download_and_extract /tmp/faaltu/$GIT_LFS_DIR /tmp/faaltu/$GIT_LFS_DIR $GIT_LFS_TAR $GIT_LFS_URL $GIT_LFS_MD5
     if [ -f /tmp/faaltu/$GIT_LFS_DIR/install.sh ]; then
       PREFIX=$HOME /tmp/faaltu/$GIT_LFS_DIR/install.sh
-      # if [ -d $SCRIPTPATH ]; then
-      #   git -C $SCRIPTPATH lfs install 
+      # if [ -d $SCRIPT_PATH ]; then
+      #   git -C $SCRIPT_PATH lfs install 
       # fi
       GIT_LFS_INSTALL_SUCC="0"
     else
@@ -169,21 +169,21 @@ function download_and_extract {
     fi
   fi
 
-if [ ! -d $SCRIPTPATH ]; then
+if [ ! -d $SCRIPT_PATH ]; then
   git --version
   if [ "$?" != "0"]; then
     echo "git not installed"
   else
     if [ "$GIT_LFS_INSTALL_SUCC" == 0 ]; then
-      git lfs clone git@github.com:akshit-sharma/dotfiles.git $SCRIPTPATH
+      git lfs clone git@github.com:akshit-sharma/dotfiles.git $SCRIPT_PATH
     else
-      git clone git@github.com:akshit-sharma/dotfiles.git $SCRIPTPATH
+      git clone git@github.com:akshit-sharma/dotfiles.git $SCRIPT_PATH
     fi
   fi
 else
-  echo "$SCRIPTPATH not an empty directory"
+  echo "$SCRIPT_PATH not an empty directory"
   echo "cannot clone"
 fi
 
-source $SCRIPTPATH/install.sh
+source $SCRIPT_PATH/install.sh
 
