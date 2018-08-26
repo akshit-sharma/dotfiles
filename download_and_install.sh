@@ -8,7 +8,7 @@ file_name=${HOME}/.ssh/id_${HOSTNAME}_github
 if [ $# -eq 0 ]; then
   SCRIPTPATH=$DEFAULTPATH
 else
-  SCRIPTPATH=$1
+  SCRIPTPATH=${DOTFILE_SCRIPT_DIR}
 fi
 
 
