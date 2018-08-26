@@ -256,27 +256,8 @@ if [ ! -f "$HOME/.my_vars" ]; then
   touch $HOME/.my_vars
 fi
 
-# if [ -f $HOME/.vimrc ] && [ ! -L "$HOME/.vimrc" ]; then
-#   mv $HOME/.vimrc $HOME/.vimrc.bk       # backup existing .vimrc
-# fi
-# if [ ! -L "$HOME/.vimrc" ]; then
-#   ln -sT $SCRIPTPATH/.vimrc $HOME/.vimrc
-# fi
-#
-# if [ ! -L "$HOME/.my_profile" ]; then
-#   ln -sT $SCRIPTPATH/.my_profile $HOME/.my_profile
-# fi
-#
-# if [ ! -L "$HOME/.my_bashrc" ]; then
-#   ln -sT $SCRIPTPATH/.my_bashrc $HOME/.my_bashrc
-# fi
-
-#if [ ! -L "$HOME/.tmux.conf" ]; then
-#  ln -sT $SCRIPTPATH/.tmux.conf $HOME/.tmux.conf
-#fi
 
 mkdir -p ~/.vim/tags
-
 
 # setup virtualenv for python2 and python3
 function python_virtualenv_setup {
@@ -403,6 +384,13 @@ if [[ NEED_VIM_PLUGIN_INSTALL -ne 0 ]]; then
     vim +PluginUpdate +qall
     echo $VIM_PLUGIN_HASH > $SCRIPTPATH/faaltu/.vim_plugin.hash
   fi
+
+fi
+
+# install YouCompleteMe only if not installed or if YCM is updated
+  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing YouCompleteMe"
+  fi
   make --version
   MAKE_RET=$?
   cmake --version
@@ -423,37 +411,90 @@ if [[ NEED_VIM_PLUGIN_INSTALL -ne 0 ]]; then
       fi
     fi
   fi
-  wget --version > /dev/null
-  if [ "$?" == 0 ]; then 
+
+wget --version > /dev/null
+WGET_RET="$?"
+
+# function for download and extracting a file to desired directory
+# DOWNLOAD_HOME (1st parameter) : parent directory required for extracting file (e.g. $HOME/faaltu)
+# DOWNLOAD_DIR  (2nd parameter) : full directory with extraction (e.g. $HOME/faaltu/clang+llvm-6.0.1....)
+# DOWNLOAD_TAR  (3rd parameter) : path with tar file for downloading
+# DOWNLOAD_URL  (4th parameter) : URL to download the tar file from
+# DOWNLOAD_MD5  (5th paramter)  : MD5 hash of DOWNLOAD_TAR, check if existing file was corrupted or incomplete
+function download_and_extract {
+  DOWNLOAD_HOME="$1"
+  DOWNLOAD_DIR="$2"
+  DOWNLOAD_TAR="$3"
+  DOWNLOAD_URL="$4"
+  DOWNLOAD_MD5="$5"
+
+  if [ $WGET_RET != 0 ]; then
+    echo "Value of return from wget $WGET_RET"
+    echo "Please make sure wget is installed"
+    return
+  fi
+
+  if [[ "$DOWNLOAD_DIR" == "$DOWNLOAD_HOME*" ]]; then
+    if [ -f "$DOWNLOAD_TAR" ]; then
+      EXISTING_MD5=`eval md5sum $DOWNLOAD_TAR | cut -d' ' -f1`
+      if [ "$DOWNLOAD_MD5" != "$EXISTING_MD5" ]; then
+        echo "will have to redownload $DOWNLOAD_TAR"
+        rm $DOWNLOAD_TAR
+      fi   
+    fi
+    wget $DOWNLOAD_URL -O $DOWNLOAD_TAR
+    if [ -d "$DOWNLOAD_DIR" ]; then
+      rm -rf $DOWNLOAD_DIR
+    fi
+    if [ ! -d "$DOWNLOAD_HOME" ]; then
+      mkdir -p $DOWNLOAD_HOME
+    fi
+    if [[ $DOWNLOAD_TAR == "*.xz" ]]; then
+      tar -xf $DOWNLOAD_TAR -C $DOWNLOAD_HOME
+    elif [[ $DOWNLOAD_TAR == "*.gz" ]]; then
+      tar -zxf $DOWNLOAD_TAR -C $DOWNLOAD_HOME
+    else 
+      echo "Don't know how to extract $DOWNLOAD_TAR"
+    fi
+  else
+    echo "DOWNLOAD_HOME is $DOWNLOAD_HOME"
+    echo "DOWNLOAD_DIR is $DOWNLOAD_DIR"
+    echo "DOWNLOAD_DIR should start with same string as DOWNLOAD_HOME"
+  fi
+}
+
+# install clang+llvm only if not installed or MD5 changed
+  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing clang+llvm"
+  fi
+  if [ $WGET_RET == 0 ]; then 
     echo "wget found"
-    LLVM_CORRECT_MD5='661fa37f6557d9544ed950d40c05a6fa'
-    LLVM_PREBINARY_DIR='clang+llvm-6.0.1-x86_64-linux-gnu-ubuntu-16.04'
-    LLVM_PREBINARY_TAR='clang+llvm-6.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz'
-    LLVM_PREBINARY_URL='http://releases.llvm.org/6.0.1/clang+llvm-6.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz' 
-    if [ ! -d "$SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR" ]; then
-      if [ ! -f "$SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR" ]; then
-        echo "downloading $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR"
-        wget $LLVM_PREBINARY_URL -O $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR
-      else 
-        LLVM_PREBINARY_MD5=`eval md5sum $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR | cut -d' ' -f1`
-        if [ "$LLVM_CORRECT_MD5" != "$LLVM_PREBINARY_MD5" ]; then
-          echo "redownloading LLVM prebinary"
-          rm $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR
-          wget $LLVM_PREBINARY_URL -O $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR 
-        fi
-      fi
-      tar -xf $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR -C $SCRIPTPATH/faaltu/
+    LLVM_CORRECT_MD5="661fa37f6557d9544ed950d40c05a6fa"
+    LLVM_PREBINARY_VER="6.0.1"
+    LLVM_PREBINARY_DIR="clang+llvm-${LLVM_PREBINARY_VER}-x86_64-linux-gnu-ubuntu-16.04"
+    LLVM_PREBINARY_TAR="${LLVM_PREBINARY_DIR}.tar.xz"
+    LLVM_PREBINARY_URL="http://releases.llvm.org/${LLVM_PREBINARY_VER}/${LLVM_PREBINARY_TAR}"
+    LLVM_INSTALL="1"
+    
+    if [ ! -L "$SCRIPTPATH/faaltu/clang+llvm" ]; then
+      # symlink not found, worst case download and install
+      LLVM_INSTALL="0"
     else
-      LLVM_PREBINARY_MD5=`eval md5sum $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR | cut -d' ' -f1`
-      if [ "$LLVM_CORRECT_MD5" != "$LLVM_PREBINARY_MD5" ]; then
-        echo "new version of LLVM prebinary found"
-        rm $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR
-        wget $LLVM_PREBINARY_URL -O $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR 
-        rm -rf $SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR
-        tar -xf $SCRIPTPATH/faaltu/$LLVM_PREBINARY_TAR -C $SCRIPTPATH/faaltu/
+      # symlink found, checking version next
+      LLVM_INSTALL_VER=`eval $SCRIPTPATH/faaltu/clang+llvm/bin/clang --version | head -n1 | cut -d' ' -f3`
+      if [ "$LLVM_INSTALL_VER" != "$LLVM_PREBINARY_VER" ]; then
+        # version different need removal, download and install
+        LLVM_INSTALL="0"
       else
-        echo "$SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR up-to-date"
+        # up-to date
+        echo "LLVM up-to date"
       fi
+    fi
+    if [ $LLVM_INSTALL == 0 ]; then
+      if [ -L $SCRIPTPATH/faaltu/clang+llvm ]; then
+        rm $SCRIPTPATH/faaltu/clang+llvm
+      fi
+      download_and_extract $SCRIPTPATH/faaltu $SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR $LLVM_PREBINARY_TAR $LLVM_PREBINARY_URL $LLVM_CORRECT_MD5
     fi
     if [ ! -L $SCRIPTPATH/faaltu/clang+llvm ]; then
       ln -sT $SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR $SCRIPTPATH/faaltu/clang+llvm
@@ -468,5 +509,43 @@ if [[ NEED_VIM_PLUGIN_INSTALL -ne 0 ]]; then
     echo "wget not found, cannot download LLVM Pre Binary"
   fi
 
-fi
+# install git large file system (git lfs) if not installed or version updated
+  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing git lfs"
+  fi
+  GIT_LFS_MD5="a8363aba7fa60e1769571c4f49affbcb"
+  GIT_LFS_VER="2.5.1"
+  GIT_LFS_DIR="git-lfs"
+  GIT_LFS_TAR="git-linux-amd64-v${GIT_LFS_VER}.tar.gz"
+  GIT_LFS_URL="https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VER}/${GIT_LFS_TAR}"
+  GIT_LFS_INSTALL="1"
+
+  git lfs --version 
+  if [ $WGET_RET == 0 ]; then
+    if [ "$?" != 0 ]; then
+      echo "git lfs not found"
+      # download and install lfs
+      GIT_LFS_INSTALL="0"
+    else 
+      echo "git lfs already found"
+      INSTALLED_VER=`eval git lfs --version | cut -d' ' -f1 | cut -d'/' -f2`
+      if [ "$GIT_LFS_VER" != "$INSTALLED_VER" ]; then
+        # version different need removal, download and install
+        GIT_LFS_INSTALL="0"
+      fi
+    fi
+  else
+    echo "wget not found, cannot download git lfs"
+  fi
+ 
+  if [ $GIT_LFS_INSTALL == 0 ]; then
+    echo "install of git lfs set to true"
+    download_and_extract $SCRIPTPATH/faaltu/$GIT_LFS_DIR $SCRIPTPATH/faaltu/$GIT_LFS_DIR $GIT_LFS_TAR $GIT_LFS_URL $GIT_LFS_MD5
+    if [ -f $SCRIPTPATH/faaltu/$GIT_LFS_DIR/install.sh ]; then
+      PREFIX=$HOME $SCRIPTPATH/faaltu/$GIT_LFS_DIR/install.sh
+    else
+      echo "$SCRIPTPATH/faaltu/$GIT_LFS_DIR/install.sh not found"
+      echo "git lfs install unsuccessful"
+    fi
+  fi
 
