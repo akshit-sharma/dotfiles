@@ -143,69 +143,6 @@ function home_dir_symlink {
 }
 
 
-# function for creating symlink to files in $HOME/.config
-function home_config_symlink {
-  filename="$1"
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
-    echo "value is $SCRIPTPATH/$filename"
-  fi
-  if [ ! -f $SCRIPTPATH/$filename ]; then              # pretty much use less after getting files
-    if [[ DEBUG_SCRIPT -ne 0 ]]; then
-      echo "copying $HOME/.config/$filename to $SCRIPTPATH/$filename"
-    fi
-    cp $HOME/.config/$filename $SCRIPTPATH/$filename   # usefull to add new files in the script
-  fi                                                   # instead of manually moving/copying
-  if [ -f "$HOME/.config/$filename" ]; then
-    if [[ DEBUG_SCRIPT -ne 0 ]]; then
-      echo "moving $HOME/.config/$filename to $HOME/.config/$filename.bk"
-    fi
-    if [ ! -f "$HOME/.config/$filename.bk" ]; then
-      mv "$HOME/.config/$filename" "$HOME/.config/$filename.bk"
-    else
-      echo "$HOME/.config/$filename.bk already present assuming $filename in $HOME/.config is latest"
-    fi
-  fi
-  if [ ! -L "$HOME/.config/$filename" ]; then
-    if [[ DEBUG_SCRIPT -ne 0 ]]; then
-      echo "linking $SCRIPTPATH/$filename to $HOME/.config/$filename"
-    fi
-    ln -sT $SCRIPTPATH/$filename $HOME/.config/$filename
-  fi
-}
-
-# function for creating symlink to files in $HOME/.vim/syntax
-function vim_syntax_symlink {
-  filename="$1"
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
-    echo "value is $SCRIPTPATH/$filename"
-  fi
-  if [ ! -d $HOME/.vim/syntax ]; then
-    mkdir -p $HOME/.vim/syntax
-  fi
-  if [ ! -f $SCRIPTPATH/$filename ]; then              # pretty much use less after getting files
-    if [[ DEBUG_SCRIPT -ne 0 ]]; then
-      echo "copying $HOME/.vim/syntax/$filename to $SCRIPTPATH/$filename"
-    fi
-    cp $HOME/.vim/syntax/$filename $SCRIPTPATH/$filename   # usefull to add new files in the script
-  fi                                                       # instead of manually moving/copying
-  if [ -f "$HOME/.vim/syntax/$filename" ]; then
-    if [[ DEBUG_SCRIPT -ne 0 ]]; then
-      echo "moving $HOME/.vim/syntax/$filename to $HOME/.vim/syntax/$filename.bk"
-    fi
-    if [ ! -f "$HOME/.vim/syntax/$filename.bk" ]; then
-      mv "$HOME/.vim/syntax/$filename" "$HOME/.vim/syntax/$filename.bk"
-    else
-      echo "$HOME/.vim/syntax/$filename.bk already present assuming $filename in $HOME/.vim/syntax is latest"
-    fi
-  fi
-  if [ ! -L "$HOME/.vim/syntax/$filename" ]; then
-    if [[ DEBUG_SCRIPT -ne 0 ]]; then
-      echo "linking $SCRIPTPATH/$filename to $HOME/.vim/syntax/$filename"
-    fi
-    ln -sT $SCRIPTPATH/$filename $HOME/.vim/syntax/$filename
-  fi
-}
-
 # script for adding llvm to environment
 home_dir_symlink llvm_scripts .
 
@@ -543,6 +480,7 @@ function download_and_extract {
     download_and_extract $SCRIPTPATH/faaltu/$GIT_LFS_DIR $SCRIPTPATH/faaltu/$GIT_LFS_DIR $GIT_LFS_TAR $GIT_LFS_URL $GIT_LFS_MD5
     if [ -f $SCRIPTPATH/faaltu/$GIT_LFS_DIR/install.sh ]; then
       PREFIX=$HOME $SCRIPTPATH/faaltu/$GIT_LFS_DIR/install.sh
+      git -C $SCRIPTPATH lfs install 
     else
       echo "$SCRIPTPATH/faaltu/$GIT_LFS_DIR/install.sh not found"
       echo "git lfs install unsuccessful"
