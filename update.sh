@@ -457,8 +457,8 @@ function download_and_extract {
   GIT_LFS_URL="https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VER}/${GIT_LFS_TAR}"
   GIT_LFS_INSTALL="1"
 
-  git lfs --version 
   if [ $WGET_RET == 0 ]; then
+    git lfs --version 
     if [ "$?" != 0 ]; then
       echo "git lfs not found"
       # download and install lfs
