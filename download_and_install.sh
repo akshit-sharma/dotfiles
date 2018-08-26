@@ -5,7 +5,7 @@
 DEFAULTPATH=${HOME}/dotfiles
 file_name=${HOME}/.ssh/id_${HOSTNAME}_github
 
-if [ ! -z ${DOTFILE_SCRIPT_DIR} ]; then
+if [ -z ${DOTFILE_SCRIPT_DIR} ]; then
   SCRIPTPATH=$DEFAULTPATH
 else 
   SCRIPTPATH=${DOTFILE_SCRIPT_DIR}

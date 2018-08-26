@@ -6,7 +6,7 @@ Feel free to modify the repository and make it your own.
 # quick install
 
 ```bash
-DOTFILES_SCRIPT_DIR=${HOME}/dotfiles | curl -fsSl https://raw.githubusercontent.com/akshit-sharma/dotfiles/master/download_and_install.sh | bash
+DOTFILES_SCRIPT_DIR=${HOME}/dotfiles; curl -fsSl https://raw.githubusercontent.com/akshit-sharma/dotfiles/master/download_and_install.sh | bash
 ```
 or 
 set DOTFILES_SCRIPT_DIR enviroment variable
