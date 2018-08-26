@@ -5,12 +5,13 @@
 DEFAULTPATH=${HOME}/dotfiles
 file_name=${HOME}/.ssh/id_${HOSTNAME}_github
 
-if [ -z ${DOTFILE_SCRIPT_DIR} ]; then
+if [ ! -z ${DOTFILE_SCRIPT_DIR} ]; then
   SCRIPTPATH=$DEFAULTPATH
 else 
   SCRIPTPATH=${DOTFILE_SCRIPT_DIR}
 fi
 
+echo "Script installation path set to $SCRIPTPATH"
 
 i="1"
 if [ ! -f $file_name ]; then
