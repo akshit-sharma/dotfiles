@@ -11,6 +11,7 @@ else
   SCRIPTPATH=${DOTFILE_SCRIPT_DIR}
 fi
 
+echo "Script installation path set to $SCRIPTPATH"
 
 i="1"
 if [ ! -f $file_name ]; then
