@@ -2,8 +2,15 @@
 # Make github key and install dotfiles in $HOME with having git ssh configurated
 
 
-SCRIPTPATH=${HOME}/dotfiles
+DEFAULTPATH=${HOME}/dotfiles
 file_name=${HOME}/.ssh/id_${HOSTNAME}_github
+
+if [ $# -eq 0 ]; then
+  SCRIPTPATH=$DEFAULTPATH
+else
+  SCRIPTPATH=$1
+fi
+
 
 i="1"
 if [ ! -f $file_name ]; then
@@ -161,7 +168,7 @@ function download_and_extract {
     fi
   fi
 
-if [ ! -d $HOME/dotfiles ]; then
+if [ ! -d $SCRIPTPATH ]; then
   git --version
   if [ "$?" != "0"]; then
     echo "git not installed"
@@ -172,6 +179,9 @@ if [ ! -d $HOME/dotfiles ]; then
       git clone git@github.com:akshit-sharma/dotfiles.git $SCRIPTPATH
     fi
   fi
+else
+  echo "$SCRIPTPATH not an empty directory"
+  echo "cannot clone"
 fi
 
 source $SCRIPTPATH/install.sh
