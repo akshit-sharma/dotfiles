@@ -145,6 +145,8 @@ function home_dir_symlink {
 
 # script for adding llvm to environment
 home_dir_symlink llvm_scripts .
+# script for adding gcc to environment
+home_dir_symlink gcc_scripts .
 
 # manual linking of files for ~/.vim/syntax dir
 home_dir_symlink vulkan1.0.vim .vim/syntax
@@ -188,6 +190,7 @@ home_dir_symlink .my_ssh_agent .
 home_dir_symlink .my_profile .
 home_dir_symlink .my_bashrc .
 home_dir_symlink .my_entry .
+home_dir_symlink .tmux.conf .
   
 if [ ! -f "$HOME/.my_vars" ]; then
   touch $HOME/.my_vars
