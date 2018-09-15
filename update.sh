@@ -358,7 +358,7 @@ WGET_RET="$?"
 # function for download and extracting a file to desired directory
 # DOWNLOAD_HOME (1st parameter) : parent directory required for extracting file (e.g. $HOME/faaltu)
 # DOWNLOAD_DIR  (2nd parameter) : full directory with extraction (e.g. $HOME/faaltu/clang+llvm-6.0.1....)
-# DOWNLOAD_TAR  (3rd parameter) : path with tar file for downloading
+# DOWNLOAD_TAR  (3rd parameter) : tar file for downloading
 # DOWNLOAD_URL  (4th parameter) : URL to download the tar file from
 # DOWNLOAD_MD5  (5th paramter)  : MD5 hash of DOWNLOAD_TAR, check if existing file was corrupted or incomplete
 function download_and_extract {
@@ -374,25 +374,25 @@ function download_and_extract {
     return
   fi
 
-  if [[ "$DOWNLOAD_DIR" == "$DOWNLOAD_HOME*" ]]; then
-    if [ -f "$DOWNLOAD_TAR" ]; then
+  if [[ $DOWNLOAD_DIR == $DOWNLOAD_HOME* ]]; then
+    if [ -f "$DOWNLOAD_HOME/$DOWNLOAD_TAR" ]; then
       EXISTING_MD5=`eval md5sum $DOWNLOAD_TAR | cut -d' ' -f1`
       if [ "$DOWNLOAD_MD5" != "$EXISTING_MD5" ]; then
         echo "will have to redownload $DOWNLOAD_TAR"
         rm $DOWNLOAD_TAR
       fi   
     fi
-    wget $DOWNLOAD_URL -O $DOWNLOAD_TAR
+    wget $DOWNLOAD_URL -O $DOWNLOAD_HOME/$DOWNLOAD_TAR
     if [ -d "$DOWNLOAD_DIR" ]; then
       rm -rf $DOWNLOAD_DIR
     fi
     if [ ! -d "$DOWNLOAD_HOME" ]; then
       mkdir -p $DOWNLOAD_HOME
     fi
-    if [[ $DOWNLOAD_TAR == "*.xz" ]]; then
-      tar -xf $DOWNLOAD_TAR -C $DOWNLOAD_HOME
-    elif [[ $DOWNLOAD_TAR == "*.gz" ]]; then
-      tar -zxf $DOWNLOAD_TAR -C $DOWNLOAD_HOME
+    if [[ $DOWNLOAD_HOME/$DOWNLOAD_TAR == *.xz ]]; then
+      tar -xf $DOWNLOAD_HOME/$DOWNLOAD_TAR -C $DOWNLOAD_HOME
+    elif [[ $DOWNLOAD_HOME/$DOWNLOAD_TAR == *.gz ]]; then
+      tar -zxf $DOWNLOAD_HOME/$DOWNLOAD_TAR -C $DOWNLOAD_HOME
     else 
       echo "Don't know how to extract $DOWNLOAD_TAR"
     fi
@@ -402,6 +402,44 @@ function download_and_extract {
     echo "DOWNLOAD_DIR should start with same string as DOWNLOAD_HOME"
   fi
 }
+
+# install ctags only if not installed or MD5 changed
+  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing ctags"
+  fi
+  if [ $WGET_RET == 0 ]; then
+    CTAGS_CORRECT_MD5="c00f82ecdcc357434731913e5b48630d"
+    CTAGS_VER="5.8"
+    CTAGS_DIR="ctags-${CTAGS_VER}"
+    CTAGS_TAR="ctags-${CTAGS_VER}.tar.gz"
+    CTAGS_URL="https://superb-dca2.dl.sourceforge.net/project/ctags/ctags/${CTAGS_VER}/${CTAGS_TAR}"
+    CTAGS_INSTALL="0"
+  
+    ctags --version > /dev/null
+    CTAGS_RET="$?"
+
+    if [[ $CTAGS_RET != 0 ]]; then
+
+      if [ ! -f "$SCRIPTPATH/faaltu/$CTAGS_TAR" ]; then
+        download_and_extract $SCRIPTPATH/faaltu/ $SCRIPTPATH/faaltu/$CTAGS_DIR $CTAGS_TAR $CTAGS_URL $CTAGS_MD5
+        CTAGS_INSTALL=1
+      fi
+      if [[ $CTAGS_INSTALL == 1 ]]; then
+        if [ -f "$SCRIPTPATH/faaltu/$CTAGS_DIR/configure" ]; then
+          (cd $SCRIPTPATH/faaltu/$CTAGS_DIR/ && ./configure --prefix=$HOME)
+          make -C $SCRIPTPATH/faaltu/$CTAGS_DIR 
+          make -C $SCRIPTPATH/faaltu/$CTAGS_DIR install
+        else
+          echo "$SCRIPTPATH/faaltu/$CTAGS_DIR/configure not found"
+        fi
+      fi
+
+  
+    else 
+      echo "CTAGS found, not installing again"
+    fi
+
+  fi
 
 # install clang+llvm only if not installed or MD5 changed
   if [[ DEBUG_SCRIPT -ne 0 ]]; then
