@@ -66,6 +66,13 @@ Plugin 'Valloric/YouCompleteMe'
 " YCM-Generator
 Plugin 'rdnetto/YCM-Generator'
 
+" latex plugin for vim
+Plugin 'lervag/vimtex'
+
+" Gutentags 
+Plugin 'ludovicchabant/vim-gutentags'
+Plugin 'skywind3000/gutentags_plus'
+
 " All of your Plugins must be added before the following line
 call vundle#end() 		" required
 filetype plugin indent on 	" required
@@ -304,7 +311,13 @@ set mouse=a
 " open NERDTree by default
 "autocmd VimEnter * NERDTree
 "autocmd BufEnter * NERDTreeMirror
-"autocmd VimEnter * wincmd w
+"autocmd VimEnter * wincmd 
+
+" enable gtags module
+let g:gutentags_modules = ['ctags', 'gtags_cscope']
+let g:gutentags_project_root = ['.git']
+let g:gutentags_cache_dir = expand('~/.cache/tags')
+let g:gutentags_auto_add_gtags_cscope = 0
 
 
 " alias for some fn commands
