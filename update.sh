@@ -403,6 +403,37 @@ function download_and_extract {
   fi
 }
 
+# install vim only if update is available
+  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing/updating vim"
+  fi
+  VIM_DIR="vim"
+  VIM_REPO=$SCRIPTPATH/faaltu/$VIM_DIR
+  VIM_INSTALL=0
+  if [ ! -d $VIM_REPO ]; then
+    git clone https://github.com/vim/vim.git $VIM_REPO
+    VIM_INSTALL=1
+  fi
+  git -C $VIM_REPO remote update
+
+  VIM_UPSTREAM='@{u}'
+  VIM_LOCAL=$(git -C $VIM_REPO rev-parse @)
+  VIM_REMOTE=$(git -C $VIM_REPO rev-parse "$UPSTREAM")
+  VIM_BASE=$(git -C $VIM_REPO merge-base @ "$UPSTREAM")
+
+  if [ $LOCAL = $BASE ] && [[ ! ($LOCAL = $REMOTE) ]]; then
+    echo "vim update available"
+    git -C $VIM_REPO pull origin master
+    make -C $VIM_REPO distclean
+    VIM_INSTALL=1
+  fi
+  if [ $VIM_INSTALL == 1 ]; then
+    (cd $VIM_REPO && ./configure --prefix=$HOME/.local)
+    make -C $VIM_REPO -j 8
+    make -C $VIM_REPO install
+  fi
+
+
 # install ctags only if not installed or MD5 changed
   if [[ DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing ctags"

@@ -9,6 +9,7 @@ SW_HOME=$HOME/Softwares
 LIB_HOME=$HOME/Libraries
 
 PATH=$HOME/bin:$PATH
+PATH=$HOME/.local/bin:$PATH
 
 VIRTUAL_ENV="$HOME/venv"
 VIRTUAL_ENV_2="$HOME/venv2"
