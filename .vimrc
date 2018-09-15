@@ -318,20 +318,30 @@ let g:gutentags_modules = ['ctags', 'gtags_cscope']
 let g:gutentags_project_root = ['.git']
 let g:gutentags_cache_dir = expand('~/.cache/tags')
 let g:gutentags_auto_add_gtags_cscope = 0
+let g:gutentags_plus_nomap = 1
+noremap <leader>gs :GscopeFind s <C-R><C-W><cr>
+noremap <leader>gg :GscopeFind g <C-R><C-W><cr>
+noremap <leader>gc :GscopeFind c <C-R><C-W><cr>
+noremap <leader>gt :GscopeFind t <C-R><C-W><cr>
+noremap <leader>ge :GscopeFind e <C-R><C-W><cr>
+noremap <leader>gf :GscopeFind f <C-R>=expand("<cfile>")<cr><cr>
+noremap <leader>gi :GscopeFind i <C-R>=expand("<cfile>")<cr><cr>
+noremap <leader>gd :GscopeFind d <C-R><C-W><cr>
+noremap <leader>ga :GscopeFind a <C-R><C-W><cr>
 
 
 " alias for some fn commands
 " make 
-map <Leader>m <F7>
+map <Leader><Leader>m <F7>
 " make clean
-map <Leader>M <S-F7>
+map <Leader><Leader>M <S-F7>
 " ctags
-map <Leader>c <C-F11>
+map <Leader><Leader>c <C-F11>
 " ctags in ./.git/tags
-map <Leader>C <S-F11>
+map <Leader><Leader>C <S-F11>
 " switch between header/source file
-map <Leader>s <F4>
+map <Leader><Leader>s <F4>
 " goto definition
-map <Leader>d <F12>
+map <Leader><Leader>d <F12>
 
 

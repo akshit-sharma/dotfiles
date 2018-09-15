@@ -114,3 +114,20 @@ EasyMotion <Plug> table                       *easymotion-plug-table*
     <Plug>(easymotion-s) | <Leader>s
 
 ```
+
+## gutentags
+# Keymaps
+
+| keymap | desc |
+|--------|------|
+| `<leader>gs` | Find symbol (reference) under cursor |
+| `<leader>gg` | Find symbol definition under cursor |
+| `<leader>gd` | Functions called by this function |
+| `<leader>gc` | Functions calling this function |
+| `<leader>gt` | Find text string under cursor |
+| `<leader>ge` | Find egrep pattern under cursor |
+| `<leader>gf` | Find file name under cursor |
+| `<leader>gi` | Find files #including the file name under cursor |
+| `<leader>ga` | Find places where current symbol is assigned |
+
+
