@@ -428,7 +428,7 @@ function download_and_extract {
     VIM_INSTALL=1
   fi
   if [ $VIM_INSTALL == 1 ]; then
-    (cd $VIM_REPO && ./configure --prefix=$HOME/.local)
+    (cd $VIM_REPO && ./configure --enable-pythoninterp --prefix=$HOME/.local)
     make -C $VIM_REPO -j 8
     make -C $VIM_REPO install
   fi
