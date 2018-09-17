@@ -314,7 +314,8 @@ set mouse=a
 "autocmd VimEnter * wincmd 
 
 " enable gtags module
-let g:gutentags_modules = ['ctags', 'gtags_cscope']
+"let g:gutentags_modules = ['ctags', 'gtags_cscope']
+let g:gutentags_modules = ['ctags']
 let g:gutentags_project_root = ['.git']
 let g:gutentags_cache_dir = expand('~/.cache/tags')
 let g:gutentags_auto_add_gtags_cscope = 0
