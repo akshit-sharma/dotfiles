@@ -329,7 +329,8 @@ noremap <leader>gf :GscopeFind f <C-R>=expand("<cfile>")<cr><cr>
 noremap <leader>gi :GscopeFind i <C-R>=expand("<cfile>")<cr><cr>
 noremap <leader>gd :GscopeFind d <C-R><C-W><cr>
 noremap <leader>ga :GscopeFind a <C-R><C-W><cr>
-
+      
+set backspace=indent,eol,start
 
 " alias for some fn commands
 " make 
