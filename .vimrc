@@ -73,21 +73,21 @@ Plugin 'lervag/vimtex'
 Plugin 'ludovicchabant/vim-gutentags'
 Plugin 'skywind3000/gutentags_plus'
 
-" vim-coverage
-" Add maktaba and coverage to the runtimepath.
-" (The latter must be installed before it can be used.)
-Plugin 'google/vim-maktaba'
-Plugin 'google/vim-coverage'
-" Also add Glaive, which is used to configure coverage's maktaba flags. See
-" `:help :Glaive` for usage.
-Plugin 'google/vim-glaive'
+" " vim-coverage
+" " Add maktaba and coverage to the runtimepath.
+" " (The latter must be installed before it can be used.)
+" Plugin 'google/vim-maktaba'
+" Plugin 'google/vim-coverage'
+" " Also add Glaive, which is used to configure coverage's maktaba flags. See
+" " `:help :Glaive` for usage.
+" Plugin 'google/vim-glaive'
 
 " All of your Plugins must be added before the following line
 call vundle#end() 		" required
 
-call glaive#Install()
-" Optional: Enable coverage's default mappings on the <Leader>C prefix.
-Glaive coverage plugin[mappings]
+" call glaive#Install()
+" " Optional: Enable coverage's default mappings on the <Leader>C prefix.
+" Glaive coverage plugin[mappings]
 
 filetype plugin indent on 	" required
 " To ignore plugin indent changes, instead use:
