@@ -478,8 +478,8 @@ function download_and_extract {
   fi
   if [ $WGET_RET == 0 ]; then 
     echo "wget found"
-    LLVM_CORRECT_MD5="661fa37f6557d9544ed950d40c05a6fa"
-    LLVM_PREBINARY_VER="6.0.1"
+    LLVM_CORRECT_MD5="a35a41f734e673d0104f5bd16a3b9380"
+    LLVM_PREBINARY_VER="7.0.0"
     LLVM_PREBINARY_DIR="clang+llvm-${LLVM_PREBINARY_VER}-x86_64-linux-gnu-ubuntu-16.04"
     LLVM_PREBINARY_TAR="${LLVM_PREBINARY_DIR}.tar.xz"
     LLVM_PREBINARY_URL="http://releases.llvm.org/${LLVM_PREBINARY_VER}/${LLVM_PREBINARY_TAR}"
