@@ -408,46 +408,52 @@ function download_and_extract {
   if [[ DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing/updating vim"
   fi
-  VIM_DIR="vim"
-  VIM_REPO=$SCRIPTPATH/faaltu/$VIM_DIR
-  VIM_FINGERPRINT="Random123"
-  VIM_INSTALL=0
-  if [ ! -d $VIM_REPO ]; then
-    git clone https://github.com/vim/vim.git $VIM_REPO
-    VIM_INSTALL=1
-  else 
-    if [ ! -f $SCRIPTPATH/faaltu/vim.done ]; then
-      echo "No $SCRIPTPATH/faaltu/vim.done file found"
-      make -C $VIM_REPO distclean
+  if [[ false ]]; then
+    if [ -f $HOME/.local/bin/vim ]; then
+      rm -rf $HOME/.local
+    fi
+  else
+    VIM_DIR="vim"
+    VIM_REPO=$SCRIPTPATH/faaltu/$VIM_DIR
+    VIM_FINGERPRINT="Random123"
+    VIM_INSTALL=0
+    if [ ! -d $VIM_REPO ]; then
+      git clone https://github.com/vim/vim.git $VIM_REPO
       VIM_INSTALL=1
-    else
-      VIM_FINGERPRINT_FOUND=`cat $SCRIPTPATH/faaltu/vim.done`
-      if [ $VIM_FINGERPRINT != $VIM_FINGERPRINT_FOUND ]; then
-        echo "$VIM_FINGERPRINT != $VIM_FINGERPRINT_FOUND"
-        echo "reinstalling vim"
+    else 
+      if [ ! -f $SCRIPTPATH/faaltu/vim.done ]; then
+        echo "No $SCRIPTPATH/faaltu/vim.done file found"
         make -C $VIM_REPO distclean
         VIM_INSTALL=1
+      else
+        VIM_FINGERPRINT_FOUND=`cat $SCRIPTPATH/faaltu/vim.done`
+        if [ $VIM_FINGERPRINT != $VIM_FINGERPRINT_FOUND ]; then
+          echo "$VIM_FINGERPRINT != $VIM_FINGERPRINT_FOUND"
+          echo "reinstalling vim"
+          make -C $VIM_REPO distclean
+          VIM_INSTALL=1
+        fi
       fi
     fi
-  fi
-  git -C $VIM_REPO remote update
+    git -C $VIM_REPO remote update
 
-  VIM_UPSTREAM='@{u}'
-  VIM_LOCAL=$(git -C $VIM_REPO rev-parse @)
-  VIM_REMOTE=$(git -C $VIM_REPO rev-parse "$UPSTREAM")
-  VIM_BASE=$(git -C $VIM_REPO merge-base @ "$UPSTREAM")
+    VIM_UPSTREAM='@{u}'
+    VIM_LOCAL=$(git -C $VIM_REPO rev-parse @)
+    VIM_REMOTE=$(git -C $VIM_REPO rev-parse "$UPSTREAM")
+    VIM_BASE=$(git -C $VIM_REPO merge-base @ "$UPSTREAM")
 
-  if [ $LOCAL = $BASE ] && [[ ! ($LOCAL = $REMOTE) ]]; then
-    echo "vim update available"
-    git -C $VIM_REPO pull origin master
-    make -C $VIM_REPO distclean
-    VIM_INSTALL=1
-  fi
-  if [ $VIM_INSTALL == 1 ]; then
-    (cd $VIM_REPO && ./configure --enable-pythoninterp --prefix=$HOME/.local --with-features=huge --enable-gui=auto)
-    make -C $VIM_REPO -j 8
-    make -C $VIM_REPO install
-    echo $VIM_FINGERPRINT > $SCRIPTPATH/faaltu/vim.done
+    if [ $LOCAL = $BASE ] && [[ ! ($LOCAL = $REMOTE) ]]; then
+      echo "vim update available"
+      git -C $VIM_REPO pull origin master
+      make -C $VIM_REPO distclean
+      VIM_INSTALL=1
+    fi
+    if [ $VIM_INSTALL == 1 ]; then
+      (cd $VIM_REPO && ./configure --enable-pythoninterp --with-features=huge --enable-gui=auto --prefix=$HOME/.local )
+      make -C $VIM_REPO -j 8
+      make -C $VIM_REPO install
+      echo $VIM_FINGERPRINT > $SCRIPTPATH/faaltu/vim.done
+    fi
   fi
 
 
