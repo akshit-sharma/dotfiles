@@ -416,7 +416,7 @@ function download_and_extract {
     git clone https://github.com/vim/vim.git $VIM_REPO
     VIM_INSTALL=1
   else 
-    if [ ! -d $SCRIPTPATH/faaltu/vim.done ]; then
+    if [ ! -f $SCRIPTPATH/faaltu/vim.done ]; then
       echo "No $SCRIPTPATH/faaltu/vim.done file found"
       make -C $VIM_REPO distclean
       VIM_INSTALL=1
@@ -444,7 +444,7 @@ function download_and_extract {
     VIM_INSTALL=1
   fi
   if [ $VIM_INSTALL == 1 ]; then
-    (cd $VIM_REPO && ./configure --enable-pythoninterp --prefix=$HOME/.local --with-features=huge--enable-gui=auto)
+    (cd $VIM_REPO && ./configure --enable-pythoninterp --prefix=$HOME/.local --with-features=huge --enable-gui=auto)
     make -C $VIM_REPO -j 8
     make -C $VIM_REPO install
     echo $VIM_FINGERPRINT > $SCRIPTPATH/faaltu/vim.done
