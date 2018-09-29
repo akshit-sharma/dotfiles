@@ -310,8 +310,6 @@ inoremap <C-tab>    <Esc>:tabnext<CR>i
 "autocmd VimEnter * tab all
 "autocmd BufAdd * exe 'tablast | tabe "' . expand ( "<afile") . '"'
 
-let g:vimtex_view_method = 'zathura'
-
 nnoremap <Leader>y :YcmGenerateConfig --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
 inoremap <Leader>y <Esc>:YcmGenerateConfig --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
 nnoremap <Leader>Y :CCGenerateConfig --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
@@ -327,6 +325,10 @@ set mouse=a
 "autocmd VimEnter * NERDTree
 "autocmd BufEnter * NERDTreeMirror
 "autocmd VimEnter * wincmd 
+
+let g:vimtex_view_general_method = 'okular'
+let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
+let g:vimtex_view_general_options_latexmk = '--unique'
 
 " enable gtags module
 "let g:gutentags_modules = ['ctags', 'gtags_cscope']
