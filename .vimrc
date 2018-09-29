@@ -40,8 +40,8 @@ Plugin 'airblade/vim-gitgutter'
 " Rainbow brackets
 Plugin 'luochen1990/rainbow'
 
-" Async run commands in shell
-Plugin 'skywind3000/asyncrun.vim'
+" " Async run commands in shell
+" Plugin 'skywind3000/asyncrun.vim'
 
 " vim-cmake-syntax
 Plugin 'pboettch/vim-cmake-syntax'
@@ -207,10 +207,10 @@ map <F7> :make<CR>
 " build using makeprg with <S-F7>
 map <S-F7> :make clean<CR>
 
-" toggle quickfix window with <F9>
-noremap <F9> :call asyncrun#quickfix_toggle(8)<CR>
+" " toggle quickfix window with <F9>
+" noremap <F9> :call asyncrun#quickfix_toggle(8)<CR>
+" map <Leader>a :call asyncrun#quickfix_toggle(8)<CR>
 
-map <Leader>a :call asyncrun#quickfix_toggle(8)<CR>
 map <Leader><Space>d :DiffSaved<CR>
 
 " for ctags jumps
@@ -310,6 +310,7 @@ inoremap <C-tab>    <Esc>:tabnext<CR>i
 "autocmd VimEnter * tab all
 "autocmd BufAdd * exe 'tablast | tabe "' . expand ( "<afile") . '"'
 
+let g:vimtex_view_method = 'zathura'
 
 nnoremap <Leader>y :YcmGenerateConfig --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
 inoremap <Leader>y <Esc>:YcmGenerateConfig --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>

@@ -3,7 +3,7 @@ DataCount=4
 
 [Data_1]
 Comment=KMenuEdit Global Shortcuts
-DataCount=1
+DataCount=2
 Enabled=true
 Name=KMenuEdit
 SystemGroup=1
@@ -38,6 +38,32 @@ TriggersCount=1
 Key=
 Type=SHORTCUT
 Uuid={d03619b6-9b3c-48cc-9d9c-a2aadb485550}
+
+[Data_1_2]
+Comment=Global keyboard shortcut to launch Konsole
+Enabled=true
+Name=Launch Konsole
+Type=MENUENTRY_SHORTCUT_ACTION_DATA
+
+[Data_1_2Actions]
+ActionsCount=1
+
+[Data_1_2Actions0]
+CommandURL=org.kde.konsole.desktop
+Type=MENUENTRY
+
+[Data_1_2Conditions]
+Comment=
+ConditionsCount=0
+
+[Data_1_2Triggers]
+Comment=Simple_action
+TriggersCount=1
+
+[Data_1_2Triggers0]
+Key=Ctrl+Alt+T
+Type=SHORTCUT
+Uuid={a5ec325e-323b-4131-b6b2-ddea5bbfae75}
 
 [Data_2]
 Comment=Shortcuts for taking screenshots
@@ -1542,7 +1568,7 @@ LookAndFeelPackage[$d]
 SingleClick[$d]
 
 [Main]
-AlreadyImported=defaults,spectacle,konqueror_gestures_kde321,kde32b1
+AlreadyImported=defaults,spectacle,konqueror_gestures_kde321,kde32b1,konsole
 Disabled=false
 Version=2
 
