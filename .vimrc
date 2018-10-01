@@ -312,8 +312,12 @@ inoremap <C-tab>    <Esc>:tabnext<CR>i
 
 nnoremap <Leader>y :YcmGenerateConfig --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
 inoremap <Leader>y <Esc>:YcmGenerateConfig --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
+nnoremap <C-y> :YcmGenerateConfig --verbose --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
+inoremap <C-y> <Esc>:YcmGenerateConfig --verbose --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
 nnoremap <Leader>Y :CCGenerateConfig --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
 inoremap <Leader>Y <Esc>:CCGenerateConfig --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
+nnoremap <C-Y> :CCGenerateConfig --verbose --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
+inoremap <C-Y> <Esc>:CCGenerateConfig --verbose --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
 
 " nnoremap <Leader>Y :SyntasticToggleMode<CR>
 " inoremap <Leader>Y :SyntasticToggleMode<CR>
