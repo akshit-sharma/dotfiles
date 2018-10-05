@@ -192,11 +192,12 @@ let g:ycm_enable_diagnostic_signs = 1
 let g:ycm_enable_diagnostic_highlighting = 0
 let g:ycm_always_populate_location_list = 1 "default 0
 let g:ycm_open_loclist_on_ycm_diags = 1 "default 1
-
 let g:ycm_global_ycm_extra_conf = '$DOTFILES_SCRIPT_PARENT/.ycm_extra_conf.py'
 let g:ycm_confirm_extra_conf = 0 " 1 (for now, asks everytime instead of just once )
-
 let g:ycm_key_invoke_completion = '<C-space>'
+" let g:ycm_semantic_triggers = {
+"       \ 'tex' : ['{']
+"       \}
 
 " switch between header/source with F4
 map <F4> :e %:p:s,.h$,.X123X,:s,:.cpp$,.h,:s,.X123X$,.cpp,<CR>
@@ -331,9 +332,18 @@ set mouse=a
 "autocmd VimEnter * wincmd 
 
 let g:vimtex_view_method = 'zathura'
+let g:vimtex_complete_enabled = 1
+let g:vimtex_complete_close_braces = 1
+let g:vimtex_complete_img_use_tail = 1
+let g:vimtex_complete_recursive_bib = 1
 " let g:vimtex_view_general_method = 'okular'
 " let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
 " let g:vimtex_view_general_options_latexmk = '--unique'
+if !exists('g:ycm_semantic_triggers')
+  let g:ycm_semantic_triggers = {}
+endif
+let g:ycm_semantic_triggers.tex = g:vimtex#re#youcompleteme
+noremap \b cw\begin{<C-R>"}<CR>\end{<C-R>"}<Esc>
 
 " enable gtags module
 "let g:gutentags_modules = ['ctags', 'gtags_cscope']

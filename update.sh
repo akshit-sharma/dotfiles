@@ -582,3 +582,18 @@ function download_and_extract {
     fi
   fi
 
+# # install vim-ycm-latex-semantic-completer
+#  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+#    echo "install latex ycm for vim"
+#  fi
+#  YCM_COMPLETERS_DIR="$HOME/.vim/bundle/YouCompleteMe/third_party/ycmd/ycmd/completers"
+#  if [ -d $YCM_COMPLETERS_DIR ]; then
+#    if [ ! -d $YCM_COMPLETERS_DIR/tex/.git ]; then
+#      git clone git@github.com:Cocophotos/vim-ycm-latex-semantic-completer.git $YCM_COMPLETERS_DIR/tex
+#    fi
+#    git -C $YCM_COMPLETERS_DIR/tex pull
+#  else
+#    echo "$YCM_COMPLETERS_DIR not found, cannot install vim-ycm-latex_semantic-completer"
+#  fi
+
+
