@@ -99,6 +99,7 @@ if [ ! -f $LLVM_SCRIPT_PATH/../faaltu/llvm.done ]; then
       exit 2
     fi
   done
+  make install
 
   if [ ! -d $LLVM_SRC_HOME/build-debug ]; then
     mkdir $LLVM_SRC_HOME/build-debug
@@ -118,6 +119,7 @@ if [ ! -f $LLVM_SCRIPT_PATH/../faaltu/llvm.done ]; then
       exit 2
     fi
   done
+  make install
 
   touch $LLVM_SCRIPT_PATH/../faaltu/llvm.done
 
