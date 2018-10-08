@@ -71,7 +71,11 @@ Plugin 'lervag/vimtex'
 
 " Gutentags 
 Plugin 'ludovicchabant/vim-gutentags'
-Plugin 'skywind3000/gutentags_plus'
+
+" vim-cmake 
+Plugin 'sigidagi/vim-cmake-project'
+" vimux
+Plugin 'benmills/vimux'
 
 " " vim-coverage
 " " Add maktaba and coverage to the runtimepath.
