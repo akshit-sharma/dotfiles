@@ -195,9 +195,11 @@ let g:ycm_open_loclist_on_ycm_diags = 1 "default 1
 let g:ycm_global_ycm_extra_conf = '$DOTFILES_SCRIPT_PARENT/.ycm_extra_conf.py'
 let g:ycm_confirm_extra_conf = 0 " 1 (for now, asks everytime instead of just once )
 let g:ycm_key_invoke_completion = '<C-space>'
-" let g:ycm_semantic_triggers = {
-"       \ 'tex' : ['{']
-"       \}
+let g:ycm_autoclose_preview_after_completion = 0
+let g:ycm_autoclose_preview_after_insertion = 1
+" Map cuda files to c++ so that Ycm can parse 
+autocmd BufNewFile, BufRead *.cu set filetype=cpp
+" autocmd FileType cuda set ft=cpp
 
 " switch between header/source with F4
 map <F4> :e %:p:s,.h$,.X123X,:s,:.cpp$,.h,:s,.X123X$,.cpp,<CR>
@@ -331,19 +333,19 @@ set mouse=a
 "autocmd BufEnter * NERDTreeMirror
 "autocmd VimEnter * wincmd 
 
-let g:vimtex_view_method = 'zathura'
 let g:vimtex_complete_enabled = 1
 let g:vimtex_complete_close_braces = 1
 let g:vimtex_complete_img_use_tail = 1
 let g:vimtex_complete_recursive_bib = 1
-" let g:vimtex_view_general_method = 'okular'
-" let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
-" let g:vimtex_view_general_options_latexmk = '--unique'
+let g:vimtex_quickfix_mode = 2
+let g:vimtex_view_general_method = 'zathura'
+let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
+let g:vimtex_view_general_options_latexmk = '--unique'
+let g:vimtex_compiler_latexmk = { 'build_dir' : 'build' }
 if !exists('g:ycm_semantic_triggers')
   let g:ycm_semantic_triggers = {}
 endif
 let g:ycm_semantic_triggers.tex = g:vimtex#re#youcompleteme
-noremap \b cw\begin{<C-R>"}<CR>\end{<C-R>"}<Esc>
 
 " enable gtags module
 "let g:gutentags_modules = ['ctags', 'gtags_cscope']
