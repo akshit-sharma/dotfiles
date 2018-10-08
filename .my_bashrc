@@ -17,7 +17,13 @@ VIRTUAL_ENV_2="$HOME/venv2"
 COMPUTECPP_HOME=$LIB_HOME/computecpp-sdk
 COMPUTECPP_DIR=$LIB_HOME/ComputeCpp
 
-INTEL_OPENCL_LIBRARY=/usr/lib/x86_64-linux-gnu/libOpenCL.so.1
+if [ -f /usr/lib/x86_64-linux-gnu/libOpenCL.so.1 ]; then
+  INTEL_OPENCL_LIBRARY=/usr/lib/x86_64-linux-gnu/libOpenCL.so.1
+fi
+
+if [ -f $LIB_HOME/vulkan-from-src/1.1.82.1/setup-env.sh ]; then
+  source $LIB_HOME/vulkan-from-src/1.1.82.1/setup-env.sh
+fi
 
 alias vi='vim'
 alias vr='vim -R'
