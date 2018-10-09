@@ -201,6 +201,7 @@ let g:ycm_confirm_extra_conf = 0 " 1 (for now, asks everytime instead of just on
 let g:ycm_key_invoke_completion = '<C-space>'
 let g:ycm_autoclose_preview_after_completion = 0
 let g:ycm_autoclose_preview_after_insertion = 1
+let g:ycm_max_diagnostics_to_display = 60
 " Map cuda files to c++ so that Ycm can parse 
 autocmd BufNewFile, BufRead *.cu set filetype=cpp
 " autocmd FileType cuda set ft=cpp
