@@ -159,8 +159,9 @@ if [ -d ~/.vim/syntax ]; then
   rm -rf ~/.vim/syntax
 fi
 
-# manual linking of files for ~/.vim/syntax dir
+# manual linking of dir inside ~/.vim 
 home_dir_symlink syntax .vim
+home_dir_symlink ftplugin .vim
 
 # symlink directory for vimwiki
 home_dir_symlink vimwiki .
