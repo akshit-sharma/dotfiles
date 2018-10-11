@@ -134,10 +134,22 @@ function home_dir_symlink {
       fi
     fi
     if [ ! -L "$HOME/$dir/$filename" ]; then
-      if [[ DEBUG_SCRIPT -ne 0 ]]; then
-        echo "linking $SCRIPTPATH/$filename to $HOME/$dir/$filename"
+      if [ -f "$SCRIPTPATH/$filename" ]; then
+        if [[ DEBUG_SCRIPT -ne 0 ]]; then
+          echo "linking $SCRIPTPATH/$filename to $HOME/$dir/$filename"
+        fi
+        ln -sT $SCRIPTPATH/$filename $HOME/$dir/$filename
+      elif [ -d "$SCRIPTPATH/$filename" ]; then
+        if [[ DEBUG_SCRIPT -ne 0 ]]; then
+          echo "linking $SCRIPTPATH/$filename to $HOME/$dir"
+        fi
+        ln -sT $SCRIPTPATH/$filename $HOME/$dir
+      else
+        echo "Don't know how to link"
+        echo "dir is $dir"
+        echo "filename is $filename"
+        exit 5
       fi
-      ln -sT $SCRIPTPATH/$filename $HOME/$dir/$filename
     fi
   fi
 }
@@ -148,8 +160,12 @@ home_dir_symlink llvm_scripts .
 # script for adding gcc to environment
 home_dir_symlink gcc_scripts .
 
+if [ ! -L ~/.vim/syntax ]; then
+  rm -rf ~/.vim/syntax
+fi
+
 # manual linking of files for ~/.vim/syntax dir
-home_dir_symlink vulkan1.0.vim .vim/syntax
+home_dir_symlink syntax .vim/syntax
 
 # symlink directory for vimwiki
 home_dir_symlink vimwiki .
