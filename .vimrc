@@ -285,16 +285,16 @@ ab #e **************************************************************************
 ab #l /******************************************************************************/
 
 "highlight TooMuchChars ctermbg=155 guibg=#afff5f
-highlight TooMuchChars cterm=underline
+" highlight TooMuchChars cterm=underline
 
-" Define autocmd for some highlighting *before* the colorscheme is loaded
-augroup VimrcColors
-au!
-  autocmd ColorScheme * highlight ExtraWhitespace ctermbg=darkgreen   guibg=#444444
-  autocmd ColorScheme * highlight Tab             ctermbg=darkblue    guibg=darkblue
-augroup END
+" " Define autocmd for some highlighting *before* the colorscheme is loaded
+" augroup VimrcColors
+" au!
+"   autocmd ColorScheme * highlight ExtraWhitespace ctermbg=darkgreen   guibg=#444444
+"   autocmd ColorScheme * highlight Tab             ctermbg=darkblue    guibg=darkblue
+" augroup END
 
-au BufWinEnter * let w:m1=matchadd('TooMuchChars', '\%>80v.\+', -1)
+" au BufWinEnter * let w:m1=matchadd('TooMuchChars', '\%>80v.\+', -1)
 
 " for tab navigation
 nnoremap <Leader>th :tabfirst<CR>
