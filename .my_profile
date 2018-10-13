@@ -40,6 +40,13 @@ if [ ! -z "$2" ]; then
  fi
 fi
 
+ping google.com -c 1 -t 5 > /dev/null
+NET_AVAILABLE="$?"
+if [ $NET_AVAILABLE != 0 ]; then
+  SKIP_UPDATE=true
+  echo "Internet not available, skipping update"
+fi
+
 REPO_DIR=$SCRIPTPATH
 
 if [ "$SKIP_UPDATE" != "true" ]; then
@@ -83,7 +90,6 @@ if [ "$SKIP_UPDATE" != "true" ]; then
     fi
    
     PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ '
-
 
   else
     
