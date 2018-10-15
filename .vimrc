@@ -343,8 +343,9 @@ let g:vimtex_complete_close_braces = 1
 let g:vimtex_complete_img_use_tail = 1
 let g:vimtex_complete_recursive_bib = 1
 let g:vimtex_quickfix_mode = 2
-let g:vimtex_view_general_viewer = 'zathura'
-let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
+let g:vimtex_view_method = 'zathura'
+" let g:vimtex_view_general_viewer = 'zathura'
+" let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
 " let g:vimtex_view_general_options_latexmk = '--unique'
 let g:vimtex_compiler_latexmk = { 'build_dir' : 'build' }
 if !exists('g:ycm_semantic_triggers')
