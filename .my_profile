@@ -40,7 +40,7 @@ if [ ! -z "$2" ]; then
  fi
 fi
 
-ping google.com -c 1 -t 20 > /dev/null
+ping google.com -c 1 -t 100 > /dev/null
 NET_AVAILABLE="$?"
 if [ $NET_AVAILABLE != 0 ]; then
   SKIP_UPDATE=true

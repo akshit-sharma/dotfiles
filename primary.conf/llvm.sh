@@ -44,7 +44,7 @@ if [ ! -f $LLVM_SCRIPT_PATH/../faaltu/llvm.done ]; then
   PYTHON_RET=$?
 
   if [[ $SVN_RET -ne 0 ]] || [[ $MAKE_RET -ne 0 ]] || [[ $GCC_RET -ne 0 ]] || [[ $PYTHON_RET -ne 0 ]]; then
-    CMD="sudo apt-get install -y subversion make gcc python"
+    CMD="sudo apt-get install -y subversion make gcc python doxygen"
     echo $CMD
     $CMD
     CMD_RET=$?
@@ -83,11 +83,19 @@ if [ ! -f $LLVM_SCRIPT_PATH/../faaltu/llvm.done ]; then
     mkdir $LLVM_SRC_HOME/build-release
     cd $LLVM_SRC_HOME/build-release
     cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE=Release \
-              -DCMAKE_INSTALL_PREFIX=$LLVM_BIN_HOME/llvm ../llvm
+              -DCMAKE_INSTALL_PREFIX=$LLVM_BIN_HOME/llvm ../llvm \
+              -DLLVM_ENABLE_DOXYGEN=true
+              # -DLLVM_ENABLE_SPHINX=true \
+              # -DSPHINX_OUTPUT_HTML=true
               # -DCMAKE_C_COMPILER=$LLVM_SCRIPT_PATH/../faaltu/clang+llvm/bin/clang \
               # -DCMAKE_CXX_COMPILER=$LLVM_SCRIPT_PATH/../faaltu/clang+llvm/bin/clang++ \
               # -DLLVM_BUILD_LLVM_DYLIB=ON                                              \
               # -DLLVM_LINK_LLVM_DYLIB=ON    
+    CMAKE_RET="$?"
+    if [ $CMAKE_RET -ne 0 ]; then
+      echo "Error running cmake command"
+      echo "cmake return code : $CMAKE_RET"
+    fi
   fi
   for ((i=8; i >= 1; i = i/2))
   do
@@ -105,9 +113,17 @@ if [ ! -f $LLVM_SCRIPT_PATH/../faaltu/llvm.done ]; then
     mkdir $LLVM_SRC_HOME/build-debug
     cd $LLVM_SRC_HOME/build-debug
     cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug \
-                -DCMAKE_INSTALL_PREFIX=$LLVM_BIN_HOME/llvm-dbg  ../llvm
+              -DCMAKE_INSTALL_PREFIX=$LLVM_BIN_HOME/llvm-dbg  ../llvm \
+              -DLLVM_ENABLE_DOXYGEN=true
+              # -DLLVM_ENABLE_SPHINX=true \
+              # -DSPHINX_OUTPUT_HTML=true
               # -DCMAKE_C_COMPILER=$LLVM_SCRIPT_PATH/../faaltu/clang+llvm/bin/clang \
               # -DCMAKE_CXX_COMPILER=$LLVM_SCRIPT_PATH/../faaltu/clang+llvm/bin/clang++ 
+    CMAKE_RET="$?"
+    if [ $CMAKE_RET -ne 0 ]; then
+      echo "Error running cmake command"
+      echo "cmake return code : $CMAKE_RET"
+    fi
   fi
   for ((i=8; i >= 1; i = i/2))
   do
