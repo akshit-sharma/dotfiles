@@ -51,6 +51,7 @@ if [ ! -f $LLVM_SCRIPT_PATH/../faaltu/llvm.done ]; then
 
   if [[ $SVN_RET -ne 0 ]] || [[ $MAKE_RET -ne 0 ]] || [[ $GCC_RET -ne 0 ]] || [[ $PYTHON_RET -ne 0 ]] || [[ $DOXYGEN_RET -ne 0 ]] || [[ $SPHINX_RET -ne 0 ]]; then
     CMD="sudo apt-get install -y "
+    ORG_CMD="sudo apt-get install -y "
     # CMD="sudo apt-get install -y subversion make gcc python doxygen"
     if [[ $SVN_RET -ne 0 ]]; then
       CMD="$CMD subversion"
@@ -71,13 +72,15 @@ if [ ! -f $LLVM_SCRIPT_PATH/../faaltu/llvm.done ]; then
       pip install -U sphinx
       pip3 install -U sphinx
     fi
-    echo $CMD
-    $CMD
-    CMD_RET=$?
-    if [[ $CMD_RET -ne 0 ]]; then
-      echo "Error in installing requirements"
-      echo "Returning"
-      exit 1
+    if [ $CMD != $ORG_CMD ]; then
+      echo $CMD
+      $CMD
+      CMD_RET=$?
+      if [[ $CMD_RET -ne 0 ]]; then
+        echo "Error in installing requirements"
+        echo "Returning"
+        exit 1
+      fi
     fi
   fi
 
