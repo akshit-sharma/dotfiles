@@ -68,9 +68,9 @@ function sshagent_init {
       echo "press s to skip adding all keys"
       read to_skip
       # add all keys containing the hostname
-      if [ "$to_skip" != "s" ] && [ "$to_skip" != "S" ]; then
+      if [ "$to_skip" != "skip" ] && [ "$to_skip" != "Skip" ]; then
         find $HOME/.ssh | grep -v '.pub' | grep id_${HOSTNAME} | grep github | xargs ssh-add
-      elif [ "$to_skip" != "skip" ] && [ "$to_skip" != "Skip" ]; then
+      elif [ "$to_skip" != "s" ] && [ "$to_skip" != "S" ] && [ "$to_skip" != "skip" ] && [ "$to_skip" != "Skip" ]; then
         find $HOME/.ssh | grep -v '.pub' | grep id_${HOSTNAME} | xargs ssh-add
       else
         SKIP_UPDATE=true
