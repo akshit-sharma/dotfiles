@@ -132,6 +132,11 @@ if [ ! -f $LLVM_SCRIPT_PATH/../faaltu/llvm.done ]; then
     fi
   done
   make install
+  MAKE_INSTALL_RET="$?"
+  if [ $MAKE_INSTALL_RET -ne 0 ]; then
+    echo "Error running make install "
+    exit 2
+  fi
 
   if [ ! -d $LLVM_SRC_HOME/build-debug ]; then
     mkdir $LLVM_SRC_HOME/build-debug
@@ -163,6 +168,11 @@ if [ ! -f $LLVM_SCRIPT_PATH/../faaltu/llvm.done ]; then
     fi
   done
   make install
+  MAKE_INSTALL_RET="$?"
+  if [ $MAKE_INSTALL_RET -ne 0 ]; then
+    echo "Error running make install "
+    exit 2
+  fi
 
   touch $LLVM_SCRIPT_PATH/../faaltu/llvm.done
 
