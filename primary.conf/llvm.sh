@@ -111,8 +111,6 @@ if [ ! -f $LLVM_SCRIPT_PATH/../faaltu/llvm.done ]; then
               # -DLLVM_BUILD_LLVM_DYLIB=ON                                              \
               # -DLLVM_LINK_LLVM_DYLIB=ON    
     CMAKE_RET="$?"
-      echo "Error running cmake command"
-      echo "cmake return code : $CMAKE_RET"
     if [ $CMAKE_RET -ne 0 ]; then
       echo "Error running cmake command"
       echo "cmake return code : $CMAKE_RET"
@@ -125,6 +123,10 @@ if [ ! -f $LLVM_SCRIPT_PATH/../faaltu/llvm.done ]; then
   do
     echo "Running with $i jobs"
     make -j $i
+    if [ $? -eq 0 ]; then
+      echo "make successful with $i jobs"
+      break 
+    fi
     if [ $? -ne 0 ] && [ $i -eq 1 ]; then
       echo "Error in running with 1 job"
       echo "Returning"
@@ -161,6 +163,10 @@ if [ ! -f $LLVM_SCRIPT_PATH/../faaltu/llvm.done ]; then
   do
     echo "Running with $i jobs"
     make -j $i
+    if [ $? -eq 0 ]; then
+      echo "make successful with $i jobs"
+      break 
+    fi
     if [ $? -ne 0 ] && [ $i -eq 1 ]; then
       echo "Error in running with 1 job"
       echo "Returning"
