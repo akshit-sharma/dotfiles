@@ -584,7 +584,10 @@ function download_and_extract {
  
   if [ $GIT_LFS_INSTALL == 0 ]; then
     echo "install of git lfs set to true"
-    download_and_extract $SCRIPTPATH/faaltu $SCRIPTPATH/faaltu/$GIT_LFS_DIR $GIT_LFS_TAR $GIT_LFS_URL $GIT_LFS_MD5
+    if [ ! -d $SCRIPTPATH/faaltu/$GIT_LFS_DIR ]; then
+      mkdir -p $SCRIPTPATH/faaltu/$GIT_LFS_TAR
+    fi
+    download_and_extract $SCRIPTPATH/faaltu/$GIT_LFS_DIR $SCRIPTPATH/faaltu/$GIT_LFS_DIR $GIT_LFS_TAR $GIT_LFS_URL $GIT_LFS_MD5
     if [ -f $SCRIPTPATH/faaltu/$GIT_LFS_DIR/install.sh ]; then
       PREFIX=$HOME $SCRIPTPATH/faaltu/$GIT_LFS_DIR/install.sh
       git -C $SCRIPTPATH lfs install 
