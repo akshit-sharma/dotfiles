@@ -584,6 +584,9 @@ function download_and_extract {
  
   if [ $GIT_LFS_INSTALL == 0 ]; then
     echo "install of git lfs set to true"
+    if [ -f $SCRIPTPATH/faaltu/$GIT_LFS_TAR ]; then
+      rm $SCRIPTPATH/faaltu/$GIT_LFS_TAR
+    fi
     if [ ! -d $SCRIPTPATH/faaltu/$GIT_LFS_DIR ]; then
       mkdir -p $SCRIPTPATH/faaltu/$GIT_LFS_TAR
     fi
