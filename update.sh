@@ -173,7 +173,8 @@ home_dir_symlink ftplugin .vim
 home_dir_symlink vimwiki .
 
 # symlink i3 config
-home_dir_symlink i3 .config/
+home_dir_symlink i3 .config
+home_dir_symlink i3status .config
 
 # symlink toggletouchpad.sh
 home_dir_symlink .toggletouchpad.sh .
