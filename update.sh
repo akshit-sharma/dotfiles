@@ -178,6 +178,8 @@ home_dir_symlink i3status .config
 
 # symlink toggletouchpad.sh
 home_dir_symlink .toggletouchpad.sh .
+# disable ctrlq for firefox
+home_dir_symlink .noctrlq.sh .
 
 # if kde plasma get my shortcuts
 if [[ $DESKTOP_SESSION = *"plasma" ]]; then

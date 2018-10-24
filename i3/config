@@ -10,7 +10,6 @@
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
 set_from_resource $home echo $HOME
-
 set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -151,21 +150,41 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-# # Pulse Audio controls
-# bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
-# bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
-# bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
-#
+# Press $mod+o followed by f, Escape or Return to launch firefox,
+# or return to the default mode
+set $mode_launcher Launch: [f]irefox
+bindsym $mod+o mode "$mode_launcher"
+
+mode "$mode_launcher" {
+  bindsym f exec firefox
+
+  bindsym Escape mode "default"
+  bindsym Return mode "default"
+}
+
+focus_follows_mouse no 
+mouse_warping none # does not move mouse if focused across screens
+workspace_auto_back_and_forth yes
+
+# Pulse Audio controls
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+
 # # Screen brightness controls
 # bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
 # bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
-#
-# # Touchpad controls
-# bindsym XF86TouchpadToggle exec $HOME/.toggletouchpad.sh
+
+# Touchpad controls
+bindsym XF86TouchpadToggle exec $HOME/.toggletouchpad.sh
 
 #move focused workspace between monitors
 bindsym $mod+shift+bracketleft move workspace to output right
 bindsym $mod+shift+bracketright move workspace to output left
+
+# disable ctrlq for firefox
+bindsym ctrl+q exec $HOME/.noctrlq.sh
+# close 
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
