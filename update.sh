@@ -120,6 +120,12 @@ function home_dir_symlink {
       return
     fi
   fi                                                   
+  if [ ! -f $SCRIPTPATH/$filename ] && [ ! -d $SCRIPTPATH/$filename ]; then
+    echo "don't have source file or directory"
+    echo "$SCRIPTPATH/$filename does not exit"
+    echo "return ................"
+    return
+  fi
   if [ ! -L "$HOME/$dir/$filename" ]; then
     if [ -d "$HOME/$dir/$filename" ] || [ -f "$HOME/$dir/$filename" ]; then
 #  script_file_md5=`eval md5sum < $SCRIPTPATH/$filename | cut -d\  -f1`
