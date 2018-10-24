@@ -166,6 +166,12 @@ home_dir_symlink ftplugin .vim
 # symlink directory for vimwiki
 home_dir_symlink vimwiki .
 
+# symlink i3 config
+home_dir_symlink i3 .config/
+
+# symlink toggletouchpad.sh
+home_dir_symlink .toggletouchpad.sh .
+
 # if kde plasma get my shortcuts
 if [[ $DESKTOP_SESSION = *"plasma" ]]; then
   if [[ DEBUG_SCRIPT -ne 0 ]]; then
