@@ -9,7 +9,6 @@
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
-set_from_resource $home echo $HOME
 set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -154,10 +153,23 @@ bindsym $mod+r mode "resize"
 # or return to the default mode
 set $mode_launcher Launch: [f]irefox
 bindsym $mod+o mode "$mode_launcher"
-
 mode "$mode_launcher" {
-  bindsym f exec firefox
+  bindsym f exec firefox, mode "default"
 
+  bindsym Escape mode "default"
+  bindsym Return mode "default"
+}
+
+# Press $mod+y
+set $mode_system System [l]ock log[o]ut [s]uspend [shift]+[s]hutdown
+bindsym $mod+y mode "$mode_system"
+mode "$mode_system" {
+  bindsym l exec --no-startup-id i3exit lock, mode "default"
+  bindsym o exec --no-startup-id i3exit logout, mode "default"
+  bindsym s exec --no-startup-id i3exit suspend, mode "default"
+  bindsym Shift+s exec --no-startup-id i3exit shutdown, "default"
+
+  # back to normal: Enter or Escape
   bindsym Escape mode "default"
   bindsym Return mode "default"
 }
@@ -176,14 +188,14 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute s
 # bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
 
 # Touchpad controls
-bindsym XF86TouchpadToggle exec $HOME/.toggletouchpad.sh
+bindsym XF86TouchpadToggle exec toggletouchpad.sh
 
 #move focused workspace between monitors
 bindsym $mod+shift+bracketleft move workspace to output right
 bindsym $mod+shift+bracketright move workspace to output left
 
 # disable ctrlq for firefox
-bindsym ctrl+q exec $HOME/.noctrlq.sh
+bindsym ctrl+q exec noctrlq.sh
 # close 
 
 # Start i3bar to display a workspace bar (plus the system information i3status

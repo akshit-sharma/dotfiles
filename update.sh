@@ -176,10 +176,18 @@ home_dir_symlink vimwiki .
 home_dir_symlink i3 .config
 home_dir_symlink i3status .config
 
-# symlink toggletouchpad.sh
-home_dir_symlink .toggletouchpad.sh .
-# disable ctrlq for firefox
-home_dir_symlink .noctrlq.sh .
+if [ -f ~/.toggletouchpad.sh ]; then
+  rm -rf ~/.toggletouchpad.sh
+fi
+
+if [ -f ~/.noctrlq.sh ]; then
+  rm -rf ~/.noctrlq.sh
+fi
+
+# # symlink toggletouchpad.sh
+# home_dir_symlink .toggletouchpad.sh .
+# # disable ctrlq for firefox
+# home_dir_symlink .noctrlq.sh .
 
 # if kde plasma get my shortcuts
 if [[ $DESKTOP_SESSION = *"plasma" ]]; then
