@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/sh
 # toggle touchpad
 
 synclient -V
@@ -9,4 +9,6 @@ if synclient -l | grep "TouchpadOff .*=.*0"; then
 else
   synclient TouchpadOff=0;
 fi
+
+exit 0
 

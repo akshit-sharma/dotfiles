@@ -176,12 +176,12 @@ home_dir_symlink vimwiki .
 home_dir_symlink i3 .config
 home_dir_symlink i3status .config
 
-if [ -f ~/.toggletouchpad.sh ]; then
-  rm -rf ~/.toggletouchpad.sh
+if [ -L ~/.toggletouchpad.sh ]; then
+  rm  ~/.toggletouchpad.sh
 fi
 
-if [ -f ~/.noctrlq.sh ]; then
-  rm -rf ~/.noctrlq.sh
+if [ -L ~/.noctrlq.sh ]; then
+  rm  ~/.noctrlq.sh
 fi
 
 # # symlink toggletouchpad.sh
