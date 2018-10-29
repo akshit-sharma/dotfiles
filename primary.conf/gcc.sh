@@ -14,12 +14,19 @@ function parent_dir {
   GCC_SCRIPT_PATH=$DIR
 }
 
-if [ ! -f $GCC_SCRIPT_PATH/../faaltu/gcc.done ]; then
+if [ ! -f $GCC_TEMP_DIR/gcc.done ]; then
 
   parent_dir
 
   GCC_SRC_HOME=$HOME/Libraries/gcc-from-src
   GCC_BIN_HOME=$HOME/Softwares/gcc
+
+  if [ -d $GCC_TEMP_DIR ]; then
+    GCC_TEMP_DIR=$GCC_TEMP_DIR
+  else
+    mkdir -p /tmp/gcc_script
+    GCC_TEMP_DIR=/tmp/gcc_script
+  fi
 
   GCC_CORRECT_MD5="747d5010b7c6938b480bc6e4d7c4be9a"
   GCC_VERSION="7.3"
@@ -31,42 +38,42 @@ if [ ! -f $GCC_SCRIPT_PATH/../faaltu/gcc.done ]; then
     mkdir -p $GCC_SRC_HOME
   fi
   if [ ! -d  "$GCC_BIN_HOME" ]; then
-    if [ ! -f "$GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ" ]; then # download if file not found
-      echo "downloading $GCC_SCRIPT_PATH/../$GCC_TAR_GZ"
-      wget $GCC_TAR_URL -O $GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ
+    if [ ! -f "$GCC_TEMP_DIR/$GCC_TAR_GZ" ]; then # download if file not found
+      echo "downloading $uuGCC_SCRIPT_PATH/../$GCC_TAR_GZ"
+      wget $GCC_TAR_URL -O $GCC_TEMP_DIR/$GCC_TAR_GZ
     else
-      GCC_DOWNLOAD_MD5=`eval md5sum $GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ | cut -d' ' -f1`
+      GCC_DOWNLOAD_MD5=`eval md5sum $GCC_TEMP_DIR/$GCC_TAR_GZ | cut -d' ' -f1`
       if [ "$GCC_CORRECT_MD5" != "$GCC_DOWNLOAD_MD5" ]; then  # download if previous was corrupt
-        echo "redownloading gcc $GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ"
-        rm $GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ
-        wget $GCC_TAR_URL -O $GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ
+        echo "redownloading gcc $GCC_TEMP_DIR/$GCC_TAR_GZ"
+        rm $GCC_TEMP_DIR/$GCC_TAR_GZ
+        wget $GCC_TAR_URL -O $GCC_TEMP_DIR/$GCC_TAR_GZ
       fi
     fi
     if [ -d "$GCC_SRC_HOME/$GCC_TAR_DIR" ]; then
       rm -rf $GCC_SRC_HOME/$GCC_TAR_DIR
     fi
-    tar -xf $GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ -C $GCC_SRC_HOME
+    tar -xf $GCC_TEMP_DIR/$GCC_TAR_GZ -C $GCC_SRC_HOME
   else                                                       # check for update in script
-    GCC_DOWNLOAD_MD5=`eval md5sum $GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ | cut -d' ' -f1`
+    GCC_DOWNLOAD_MD5=`eval md5sum $GCC_TEMP_DIR/$GCC_TAR_GZ | cut -d' ' -f1`
     if [ "$GCC_CORRECT_MD5" != "$GCC_DOWNLOAD_MD5" ]; then
       echo "downloading new version of gcc"
-      rm $GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ
-      wget $GCC_TAR_URL -O $GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ
+      rm $GCC_TEMP_DIR/$GCC_TAR_GZ
+      wget $GCC_TAR_URL -O $GCC_TEMP_DIR/$GCC_TAR_GZ
       if [ -d $GCC_SRC_HOME/$GCC_TAR_DIR ]; then
         rm -rf $GCC_SRC_HOME/$GCC_TAR_DIR
       fi
-      if [ -f "$GCC_SCRIPT_PATH/../faaltu/.gcc-prerequisites.md5" ]; then
-        rm $GCC_SCRIPT_PATH/../faaltu/.gcc-prerequisites.md5
+      if [ -f "$GCC_TEMP_DIR/.gcc-prerequisites.md5" ]; then
+        rm $GCC_TEMP_DIR/.gcc-prerequisites.md5
       fi
       if [ -d "$GCC_SRC_HOME/$GCC_TAR_DIR" ]; then
         rm -rf $GCC_SRC_HOME/$GCC_TAR_DIR
       fi
-      tar -xf $GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ -C $GCC_SRC_HOME
+      tar -xf $GCC_TEMP_DIR/$GCC_TAR_GZ -C $GCC_SRC_HOME
     else
-      echo "$GCC_SCRIPT_PATH/../faaltu/$GCC_TAR_GZ up-to-date"
+      echo "$GCC_TEMP_DIR/$GCC_TAR_GZ up-to-date"
     fi
   fi
-  if [ ! -f "$GCC_SCRIPT_PATH/../faaltu/.gcc-prerequisites.md5" ]; then
+  if [ ! -f "$GCC_TEMP_DIR/.gcc-prerequisites.md5" ]; then
     cd $GCC_SRC_HOME/$GCC_TAR_DIR
     ./contrib/download_prerequisites
     if [ "$?" != 0 ]; then
@@ -74,13 +81,13 @@ if [ ! -f $GCC_SCRIPT_PATH/../faaltu/gcc.done ]; then
       exit 1 
     fi
     GCC_DOWNLOAD_PREREQUISITES_MD5=`eval md5sum contrib/download_prerequisites | cut -d' ' -f1`
-    echo $GCC_DOWNLOAD_PREREQUISITES_MD5 > $GCC_SCRIPT_PATH/../faaltu/.gcc-prerequisites.md5 
-    if [ -f "$GCC_SCRIPT_PATH/../faaltu/.gcc-build" ]; then
-      rm $GCC_SCRIPT_PATH/../faaltu/.gcc-build
+    echo $GCC_DOWNLOAD_PREREQUISITES_MD5 > $GCC_TEMP_DIR/.gcc-prerequisites.md5 
+    if [ -f "$GCC_TEMP_DIR/.gcc-build" ]; then
+      rm $GCC_TEMP_DIR/.gcc-build
     fi
     cd $GCC_SCRIPT_PATH
   fi
-  if [ ! -f "$GCC_SCRIPT_PATH/../faaltu/.gcc-build" ]; then
+  if [ ! -f "$GCC_TEMP_DIR/.gcc-build" ]; then
     cd $GCC_SRC_HOME/
     if [ ! -d build ]; then
       mkdir build
@@ -103,10 +110,10 @@ if [ ! -f $GCC_SCRIPT_PATH/../faaltu/gcc.done ]; then
     cd ..
     rm -rf build # remove build intermediate results
     rm -tf $GCC_SRC_HOME/$GCC_TAR_DIR # remove extracted dir
-    touch $GCC_SCRIPT_PATH/../faaltu/.gcc-build
+    touch $GCC_TEMP_DIR/.gcc-build
     cd $GCC_SCRIPT_PATH
   fi
 
-  touch $GCC_SCRIPT_PATH/../faaltu/gcc.done 
+  touch $GCC_TEMP_DIR/gcc.done 
 
 fi
