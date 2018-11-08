@@ -98,6 +98,13 @@ fi
 function home_dir_symlink {
   filename="$1"
   dir="${2:-}"
+  if [ ! -f $HOME/$dir/$filename ] && [ ! -d $HOME/$dir/$filename ] && [ ! -L $HOME/$dir/$filename ] \
+    && [ ! -f $SCRIPTPATH/$filename ] && [ ! -d $SCRIPTPATH/$filename ] && [ ! -L $SCRIPTPATH/$filename ]; then
+    echo "Could not determine if $HOME/$dir/$filename or $SCRIPTPATH/$filename are file, directory or symlink"
+    echo "return ............."
+    return
+  fi
+
   if [[ DEBUG_SCRIPT -ne 0 ]]; then
     echo "symlink $HOME/$dir/$filename ---> $SCRIPTPATH/$filename"
   fi
@@ -115,7 +122,7 @@ function home_dir_symlink {
     elif [ -d $HOME/$dir/$filename ]; then
       cp -r $HOME/$dir/$filename $SCRIPTPATH/$filename
     else 
-      echo "don't know how to backup $HOME/$dir/$filename"
+      echo "don't know how to copy $HOME/$dir/$filename to $SCRIPTPATH/$filename"
       echo "return ............."
       return
     fi
@@ -168,6 +175,7 @@ fi
 # manual linking of dir inside ~/.vim 
 home_dir_symlink syntax .vim
 home_dir_symlink ftplugin .vim
+home_dir_symlink templates .vim
 
 # symlink directory for vimwiki
 home_dir_symlink vimwiki .

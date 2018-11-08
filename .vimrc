@@ -126,6 +126,13 @@ function! s:DiffWithSaved()
 endfunction
 com! DiffSaved call s:DiffWithSaved()
 
+if has("autocmd")
+  augroup templates
+    autocmd BufNewFile *.sh 0r ~/.vim/templates/skeleton.sh
+    autocmd BufNewFile *.tex 0r ~/.vim/templates/skeleton.tex
+  augroup END
+endif
+
 " use indentation of previous line
 set autoindent
 
