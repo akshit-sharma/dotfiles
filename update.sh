@@ -631,6 +631,79 @@ function download_and_extract {
     fi
   fi
 
+# build i3wmIPC only if 
+function build_i3wmIPC {
+  i3 --version > /dev/null
+  I3_RET="$?"
+  if [[ I3_RET -eq 127 ]]; then # i3 not installed
+    echo "i3 not installed, returning..."
+    return
+  fi
+  if [[ I3_RET -ne 0 ]]; then
+    echo "i3 --version returned ${I3_RET}"
+    return
+  fi
+  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+    echo "building i3wmIPC"
+  fi
+
+  I3WMIPC_DIR=$HOME/.config/i3/i3wmIPC
+
+  make --version
+  MAKE_RET=$?
+  cmake --version
+  CMAKE_RET=$?
+  if [ $MAKE_RET -eq 0 ] && [ $CMAKE_RET -eq 0 ]; then
+    if [ ! -d $I3WMIPC_DIR ]; then
+      git clone https://github.com/akshit-sharma/i3wmIPC.git $I3WMIPC_DIR
+    fi
+    if [ -d $I3WMIPC_DIR ]; then
+      I3WMIPC_HASH=$(git -C $I3WMIPC_DIR rev-parse @)
+      if [ ! -f $SCRIPTPATH/faaltu/.i3wm_ipc.hash ]; then
+        I3WMIPC_OLD_HASH="Nothing"
+      else
+        I3WMIPC_OLD_HASH=$(cat $SCRIPTPATH/faaltu/.i3wm_ipc.hash)
+      fi
+      if [ "$I3WMIPC_HASH" != "$I3WMIPC_OLD_HASH" ]; then
+        if [ ! -d ${I3WMIPC_DIR}/build ]; then
+          mkdir ${I3WMIPC_DIR}/build
+        fi
+        (${I3WMIPC_DIR}/download_prerequisites.sh)
+        (cd ${I3WMIPC_DIR} && cmake -G"Unix Makefiles" -B${I3WMIPC_DIR}/build  -H${I3WMIPC_DIR})
+        PREBUILD_RET="$?"
+        if [ $PREBUILD_RET -ne 0 ]; then
+          echo "error in running cmake"
+          echo "cmake -G\"Unix Makefiles\" -B${I3WMIPC_DIR}/build  -H${I3WMIPC_DIR}"
+          echo "returning........................"
+          return
+        fi
+
+        make -C${I3WMIPC_DIR}/build
+        BUILD_RET="$?"
+        if [ $BUILD_RET -ne 0 ]; then
+          echo "error in running make"
+          echo "make -C${I3WMIPC_DIR}/build"
+          echo "returning......................."
+          return
+        fi
+
+        echo $I3WMIPC_HASH > $SCRIPTPATH/faaltu/.i3wm_ipc.hash
+
+      else 
+        echo "i3wmIPC is latest"
+      fi
+    else
+      echo "This should not happen !!!"
+      echo "Cloning https://github.com/akshit-sharma/i3wmIPC.git did not create $I3WMIPC_DIR"
+      echo "Returning...."
+      return
+    fi
+  fi
+
+}
+
+build_i3wmIPC
+
 # # install vim-ycm-latex-semantic-completer
 #  if [[ DEBUG_SCRIPT -ne 0 ]]; then
 #    echo "install latex ycm for vim"
