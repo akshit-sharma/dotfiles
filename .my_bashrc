@@ -17,6 +17,10 @@ VIRTUAL_ENV_2="$HOME/venv2"
 COMPUTECPP_HOME=$LIB_HOME/computecpp-sdk
 COMPUTECPP_DIR=$LIB_HOME/ComputeCpp
 
+if [ -d $SW_HOME/gcc/bin/ ]; then
+  PATH=$PATH:$SW_HOME/gcc/bin
+fi
+
 if [ -f /usr/lib/x86_64-linux-gnu/libOpenCL.so.1 ]; then
   INTEL_OPENCL_LIBRARY=/usr/lib/x86_64-linux-gnu/libOpenCL.so.1
 fi
