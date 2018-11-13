@@ -402,15 +402,17 @@ WGET_RET="$?"
 # function for download and extracting a file to desired directory
 # DOWNLOAD_HOME (1st parameter) : parent directory required for extracting file (e.g. $HOME/faaltu)
 # DOWNLOAD_DIR  (2nd parameter) : full directory with extraction (e.g. $HOME/faaltu/clang+llvm-6.0.1....)
-# DOWNLOAD_TAR  (3rd parameter) : tar file for downloading
+# DOWNLOAD_FILE (3rd parameter) : file for downloading
 # DOWNLOAD_URL  (4th parameter) : URL to download the tar file from
-# DOWNLOAD_MD5  (5th paramter)  : MD5 hash of DOWNLOAD_TAR, check if existing file was corrupted or incomplete
+# DOWNLOAD_MD5  (5th parameter) : MD5 hash of DOWNLOAD_TAR, check if existing file was corrupted or incomplete
 function download_and_extract {
   DOWNLOAD_HOME="$1"
   DOWNLOAD_DIR="$2"
-  DOWNLOAD_TAR="$3"
+  DOWNLOAD_FILE="$3"
   DOWNLOAD_URL="$4"
   DOWNLOAD_MD5="$5"
+       
+  SCRIPT_SUCC=0
 
   if [ $WGET_RET != 0 ]; then
     echo "Value of return from wget $WGET_RET"
@@ -419,26 +421,46 @@ function download_and_extract {
   fi
 
   if [[ $DOWNLOAD_DIR == $DOWNLOAD_HOME* ]]; then
-    if [ -f "$DOWNLOAD_HOME/$DOWNLOAD_TAR" ]; then
-      EXISTING_MD5=`eval md5sum $DOWNLOAD_TAR | cut -d' ' -f1`
+    if [ -f "$DOWNLOAD_HOME/$DOWNLOAD_FILE" ]; then
+      EXISTING_MD5=`eval md5sum $DOWNLOAD_HOME/$DOWNLOAD_FILE | cut -d' ' -f1`
       if [ "$DOWNLOAD_MD5" != "$EXISTING_MD5" ]; then
-        echo "will have to redownload $DOWNLOAD_TAR"
-        rm $DOWNLOAD_TAR
+        echo "will have to redownload $DOWNLOAD_FILE"
+        echo "expected and existing md5 are $DOWNLOAD_MD5 and $EXISTING_MD5"
+        echo "existing md5 - $DOWNLOAD_HOME/$DOWNLOAD_FILE"
+        rm $DOWNLOAD_HOME/$DOWNLOAD_FILE
+      else
+        return
       fi   
     fi
-    wget $DOWNLOAD_URL -O $DOWNLOAD_HOME/$DOWNLOAD_TAR
     if [ -d "$DOWNLOAD_DIR" ]; then
       rm -rf $DOWNLOAD_DIR
     fi
     if [ ! -d "$DOWNLOAD_HOME" ]; then
       mkdir -p $DOWNLOAD_HOME
     fi
-    if [[ $DOWNLOAD_HOME/$DOWNLOAD_TAR == *.xz ]]; then
-      tar -xf $DOWNLOAD_HOME/$DOWNLOAD_TAR -C $DOWNLOAD_HOME
-    elif [[ $DOWNLOAD_HOME/$DOWNLOAD_TAR == *.gz ]]; then
-      tar -zxf $DOWNLOAD_HOME/$DOWNLOAD_TAR -C $DOWNLOAD_HOME
+
+    wget $DOWNLOAD_URL -O $DOWNLOAD_HOME/$DOWNLOAD_FILE
+
+    if [ ! -f ${DOWNLOAD_HOME}/${DOWNLOAD_FILE} ]; then
+      echo "downloaded file from $DOWNLOAD_URL"
+      echo "not found as ${DOWNLOAD_HOME}/${DOWNLOAD_FILE}"
+      echo "returning........."
+      return
+    fi
+    if [[ $DOWNLOAD_HOME/$DOWNLOAD_FILE == *.xz ]]; then
+      tar -xf $DOWNLOAD_HOME/$DOWNLOAD_FILE -C $DOWNLOAD_HOME
+    elif [[ $DOWNLOAD_HOME/$DOWNLOAD_FILE == *.gz ]]; then
+      tar -zxf $DOWNLOAD_HOME/$DOWNLOAD_FILE -C $DOWNLOAD_HOME
+    elif [[ $DOWNLOAD_FILE == *.sh ]]; then
+      if [[ -x "$DOWNLOAD_HOME/$DOWNLOAD_FILE" ]]; then
+        echo "file already executable"
+      else
+        chmod a+x $DOWNLOAD_HOME/$DOWNLOAD_FILE
+        SCRIPT_SUCC=1
+      fi
+      return
     else 
-      echo "Don't know how to extract $DOWNLOAD_TAR"
+      echo "Don't know what to do with $DOWNLOAD_FILE"
     fi
   else
     echo "DOWNLOAD_HOME is $DOWNLOAD_HOME"
@@ -448,6 +470,7 @@ function download_and_extract {
 }
 
 # install vim only if update is available
+function install_vim {
   if [[ DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing/updating vim"
   fi
@@ -498,9 +521,11 @@ function download_and_extract {
       echo $VIM_FINGERPRINT > $SCRIPTPATH/faaltu/vim.done
     fi
   fi
+}
 
 
 # install ctags only if not installed or MD5 changed
+function install_ctags {
   if [[ DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing ctags"
   fi
@@ -529,16 +554,15 @@ function download_and_extract {
         else
           echo "$SCRIPTPATH/faaltu/$CTAGS_DIR/configure not found"
         fi
-      fi
-
-  
+      fi 
     else 
       echo "CTAGS found, not installing again"
     fi
-
   fi
+}
 
 # install clang+llvm only if not installed or MD5 changed
+function install_clang_llvm {
   if [[ DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing clang+llvm"
   fi
@@ -583,8 +607,10 @@ function download_and_extract {
   else 
     echo "wget not found, cannot download LLVM Pre Binary"
   fi
+}
 
 # install git large file system (git lfs) if not installed or version updated
+function install_gitlfs {
   if [[ DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing git lfs"
   fi
@@ -611,6 +637,7 @@ function download_and_extract {
     fi
   else
     echo "wget not found, cannot download git lfs"
+    return
   fi
  
   if [ $GIT_LFS_INSTALL == 0 ]; then
@@ -630,9 +657,10 @@ function download_and_extract {
       echo "git lfs install unsuccessful"
     fi
   fi
+}
 
-# build i3wmIPC only if 
-function build_i3wmIPC {
+# install i3wmIPC only if 
+function install_i3wmIPC {
   i3 --version > /dev/null
   I3_RET="$?"
   if [[ I3_RET -eq 127 ]]; then # i3 not installed
@@ -702,7 +730,40 @@ function build_i3wmIPC {
 
 }
 
-build_i3wmIPC
+# install cmake
+function install_cmake {
+  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing cmake"
+  fi
+  CMAKE_MD5="762dda556a9a1c84cd7ded37c3c5191f"
+  CMAKE_VER="3.12"
+  CMAKE_SUB_VER="4"
+  CMAKE_DIR="cmake"
+  CMAKE_SCRIPT="cmake-${CMAKE_VER}.${CMAKE_SUB_VER}-Linux-x86_64.sh"
+  CMAKE_URL="https://cmake.org/files/v${CMAKE_VER}/${CMAKE_SCRIPT}"
+ 
+  CMAKE_INSTALL_DIR="$HOME/Softwares/cmake/"
+  CMAKE_CMD="--skip-license --exclude-subdir --prefix=${CMAKE_INSTALL_DIR}"
+
+  if [ ! -d $CMAKE_INSTALL_DIR ]; then
+    mkdir -p $CMAKE_INSTALL_DIR
+  fi
+
+  download_and_extract $SCRIPTPATH/faaltu/$CMAKE_DIR $SCRIPTPATH/faaltu/$CMAKE_DIR \
+    $CMAKE_SCRIPT $CMAKE_URL $CMAKE_MD5 
+
+  if [ $SCRIPT_SUCC -eq 1 ]; then
+    $SCRIPTPATH/faaltu/$CMAKE_DIR/$CMAKE_SCRIPT $CMAKE_CMD
+  fi
+
+}
+
+install_vim
+install_clang_llvm
+install_ctags
+install_gitlfs
+install_i3wmIPC
+install_cmake
 
 # # install vim-ycm-latex-semantic-completer
 #  if [[ DEBUG_SCRIPT -ne 0 ]]; then
