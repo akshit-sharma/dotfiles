@@ -153,10 +153,15 @@ bindsym $mod+r mode "resize"
 
 # Press $mod+o followed by f, Escape or Return to launch firefox,
 # or return to the default mode
-set $mode_launcher Launch: [f]irefox
+set $mode_launcher Launch: [f]irefox [k]onsole [u]xterm [d]olphin [o]kular [z]athura
 bindsym $mod+o mode "$mode_launcher"
 mode "$mode_launcher" {
   bindsym f exec firefox, mode "default"
+  bindsym k exec konsole, mode "default"
+  bindsym u exec uxterm, mode "default"
+  bindsym d exec dolphin, mode "default"
+  bindsym o exec okular, mode "default"
+  bindsym z exec zathura, mode "default"
 
   bindsym Escape mode "default"
   bindsym Return mode "default"
@@ -211,15 +216,15 @@ set $homesecondary DP-0
 workspace 1 output $maindisplay
 workspace 2 output $maindisplay
 workspace 3 output $leftdisplay
-workspace 3 output $homesecondary
+# workspace 3 output $homesecondary
 workspace 4 output $leftdisplay
-workspace 4 output $homesecondary
+# workspace 4 output $homesecondary
 workspace 5 output $maindisplay
 workspace 6 output $maindisplay
 workspace 7 output $rightdisplay
-workspace 7 output $homesecondary
+# workspace 7 output $homesecondary
 workspace 8 output $rightdisplay
-workspace 8 output $homesecondary
+# workspace 8 output $homesecondary
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
