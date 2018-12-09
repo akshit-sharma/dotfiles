@@ -365,7 +365,7 @@ let g:ycm_semantic_triggers.tex = g:vimtex#re#youcompleteme
 let g:gutentags_modules = ['ctags']
 let g:gutentags_project_root = ['.git']
 let g:gutentags_cache_dir = expand('~/.cache/tags')
-let g:gutentags_auto_add_gtags_cscope = 0
+" let g:gutentags_auto_add_gtags_cscope = 0
 let g:gutentags_plus_nomap = 1
 noremap <leader>gs :GscopeFind s <C-R><C-W><cr>
 noremap <leader>gg :GscopeFind g <C-R><C-W><cr>

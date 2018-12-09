@@ -207,24 +207,15 @@ bindsym $mod+shift+bracketright move workspace to output right
 # disable ctrlq for firefox
 bindsym ctrl+q exec $config_dir/noctrlq
 
-set $leftdisplay HDMI-0
-set $rightdisplay DP-1
 set $maindisplay eDP-1-1
-set $homesecondary DP-0
 
 # assigning workspace to displays
 workspace 1 output $maindisplay
 workspace 2 output $maindisplay
-workspace 3 output $leftdisplay
-# workspace 3 output $homesecondary
-workspace 4 output $leftdisplay
-# workspace 4 output $homesecondary
 workspace 5 output $maindisplay
 workspace 6 output $maindisplay
-workspace 7 output $rightdisplay
-# workspace 7 output $homesecondary
-workspace 8 output $rightdisplay
-# workspace 8 output $homesecondary
+
+#feh --randomize --bg-fill $config_dir/bgImages/*
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
@@ -232,3 +223,4 @@ bar {
         status_command i3status
         tray_output primary
 }
+

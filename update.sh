@@ -184,6 +184,8 @@ home_dir_symlink vimwiki .
 home_dir_symlink i3 .config
 home_dir_symlink i3status .config
 
+home_dir_symlink .set_screen.sh .
+
 if [ -L ~/.toggletouchpad.sh ]; then
   rm  ~/.toggletouchpad.sh
 fi
