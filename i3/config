@@ -157,6 +157,7 @@ set $mode_launcher Launch: [f]irefox [k]onsole [u]xterm [d]olphin [o]kular [z]at
 bindsym $mod+o mode "$mode_launcher"
 mode "$mode_launcher" {
   bindsym f exec firefox, mode "default"
+  bindsym Shift+f exec firefox --private-window, mode "default"
   bindsym k exec konsole, mode "default"
   bindsym u exec uxterm, mode "default"
   bindsym d exec dolphin, mode "default"
