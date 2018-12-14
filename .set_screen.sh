@@ -8,7 +8,7 @@ display_args=""
 hdmi_msg=""
 dp_msg=""
 
-xrandr --listmonitors | grep HDMI-0 > /dev/null
+xrandr --listmonitors | grep ^HDMI-0$ > /dev/null
 HDMI0_RET=$?
 
 if [ $HDMI0_RET -eq 0 ]; then
@@ -16,9 +16,9 @@ if [ $HDMI0_RET -eq 0 ]; then
   hdmi_msg="workspace 4, move workspace to output HDMI-0, workspace 3, move workspace to output HDMI-0"
 fi
 
-xrandr --listmonitors | grep DP-0 > /dev/null
+xrandr --listmonitors | grep ^DP-0$ > /dev/null
 DP0_RET=$?
-xrandr --listmonitors | grep DP-1 > /dev/null
+xrandr --listmonitors | grep ^DP-1$ > /dev/null
 DP1_RET=$?
 
 if [ $DP0_RET -eq 0 ]; then
@@ -31,7 +31,7 @@ elif [ $DP1_RET -eq 0 ]; then
 fi
 
 if [ "$display_args" != "" ]; then
-  display_args="$display_args --output eDP-1-1"
+  display_args="$display_args --output eDP-1"
   echo "xrandr $display_args"
   xrandr $display_args
 fi
