@@ -95,7 +95,7 @@ function download_and_extract {
     return
   fi
 
-  if [[ "$DOWNLOAD_DIR" == "$DOWNLOAD_HOME" ]] || [[ "$DOWNLOAD_DIR" == "$DOWNLOAD_HOME*" ]]; then
+  if [[ $DOWNLOAD_DIR == $DOWNLOAD_HOME* ]]; then
     if [ -f "$DOWNLOAD_TAR" ]; then
       EXISTING_MD5=`eval md5sum $DOWNLOAD_TAR | cut -d' ' -f1`
       if [ "$DOWNLOAD_MD5" != "$EXISTING_MD5" ]; then
@@ -103,7 +103,6 @@ function download_and_extract {
         rm $DOWNLOAD_TAR
       fi   
     fi
-    echo "Downloading $DOWNLOAD_URL to $DOWNLOAD_TAR"
     wget $DOWNLOAD_URL -O $DOWNLOAD_TAR
     if [ -d "$DOWNLOAD_DIR" ]; then
       rm -rf $DOWNLOAD_DIR
@@ -111,9 +110,9 @@ function download_and_extract {
     if [ ! -d "$DOWNLOAD_HOME" ]; then
       mkdir -p $DOWNLOAD_HOME
     fi
-    if [[ $DOWNLOAD_TAR == "*.xz" ]]; then
+    if [[ $DOWNLOAD_TAR == *.xz ]]; then
       tar -xf $DOWNLOAD_TAR -C $DOWNLOAD_HOME
-    elif [[ $DOWNLOAD_TAR == "*.gz" ]]; then
+    elif [[ $DOWNLOAD_TAR == *.gz ]]; then
       tar -zxf $DOWNLOAD_TAR -C $DOWNLOAD_HOME
     else 
       echo "Don't know how to extract $DOWNLOAD_TAR"
