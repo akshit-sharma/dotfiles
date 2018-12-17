@@ -132,7 +132,7 @@ function download_and_extract {
   GIT_LFS_MD5="a8363aba7fa60e1769571c4f49affbcb"
   GIT_LFS_VER="2.5.1"
   GIT_LFS_DIR="git-lfs"
-  GIT_LFS_TAR="git-linux-amd64-v${GIT_LFS_VER}.tar.gz"
+  GIT_LFS_TAR="git-lfs-linux-amd64-v${GIT_LFS_VER}.tar.gz"
   GIT_LFS_URL="https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VER}/${GIT_LFS_TAR}"
   GIT_LFS_INSTALL="1"
 
