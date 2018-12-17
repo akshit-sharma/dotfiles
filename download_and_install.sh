@@ -95,7 +95,7 @@ function download_and_extract {
     return
   fi
 
-  if [[ "$DOWNLOAD_DIR" == "$DOWNLOAD_HOME*" ]]; then
+  if [[ "$DOWNLOAD_DIR" == "$DOWNLOAD_HOME" ] || [ "$DOWNLOAD_DIR" == "$DOWNLOAD_HOME*" ]]; then
     if [ -f "$DOWNLOAD_TAR" ]; then
       EXISTING_MD5=`eval md5sum $DOWNLOAD_TAR | cut -d' ' -f1`
       if [ "$DOWNLOAD_MD5" != "$EXISTING_MD5" ]; then
@@ -103,6 +103,7 @@ function download_and_extract {
         rm $DOWNLOAD_TAR
       fi   
     fi
+    echo "Downloading $DOWNLOAD_URL to $DOWNLOAD_TAR"
     wget $DOWNLOAD_URL -O $DOWNLOAD_TAR
     if [ -d "$DOWNLOAD_DIR" ]; then
       rm -rf $DOWNLOAD_DIR
@@ -171,6 +172,7 @@ function download_and_extract {
     fi
   fi
 
+DOTFILES_DOWNLOAD="0"
 if [ ! -d $SCRIPT_PATH ]; then
   git --version
   if [ "$?" != "0" ]; then
@@ -178,11 +180,14 @@ if [ ! -d $SCRIPT_PATH ]; then
   else
     if [ "$GIT_LFS_INSTALL_SUCC" == 0 ]; then
       git lfs clone git@github.com:akshit-sharma/dotfiles.git $SCRIPT_PATH
+      DOTFILES_DOWNLOAD="1"
     else
       if [ "$SSH_OFF" == "0" ]; then
         git clone git@github.com:akshit-sharma/dotfiles.git $SCRIPT_PATH
+        DOTFILES_DOWNLOAD="1"
       else
         git clone https://github.com/akshit-sharma/dotfiles.git $SCRIPT_PATH
+        DOTFILES_DOWNLOAD="1"
       fi
     fi
   fi
@@ -192,6 +197,8 @@ else
 fi
 
 if [ -d $SCRIPT_PATH ]; then
-  source $SCRIPT_PATH/install.sh
+  if [ "$DOTFILES_DOWNLOAD" == "1" ]; then
+    source $SCRIPT_PATH/install.sh
+  fi
 fi
 
