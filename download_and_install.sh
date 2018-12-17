@@ -95,7 +95,7 @@ function download_and_extract {
     return
   fi
 
-  if [[ "$DOWNLOAD_DIR" == "$DOWNLOAD_HOME" ] || [ "$DOWNLOAD_DIR" == "$DOWNLOAD_HOME*" ]]; then
+  if [[ "$DOWNLOAD_DIR" == "$DOWNLOAD_HOME" ]] || [[ "$DOWNLOAD_DIR" == "$DOWNLOAD_HOME*" ]]; then
     if [ -f "$DOWNLOAD_TAR" ]; then
       EXISTING_MD5=`eval md5sum $DOWNLOAD_TAR | cut -d' ' -f1`
       if [ "$DOWNLOAD_MD5" != "$EXISTING_MD5" ]; then
