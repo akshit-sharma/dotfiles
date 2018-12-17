@@ -155,7 +155,7 @@ function download_and_extract {
   else
     echo "wget not found, cannot download git lfs"
   fi
- 
+  GIT_LFS_INSTALL="1" # bypassing git lfs install
   if [ $GIT_LFS_INSTALL == 0 ]; then
     echo "install of git lfs set to true"
     download_and_extract /tmp/faaltu/$GIT_LFS_DIR /tmp/faaltu/$GIT_LFS_DIR $GIT_LFS_TAR $GIT_LFS_URL $GIT_LFS_MD5
