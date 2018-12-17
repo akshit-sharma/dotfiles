@@ -191,5 +191,7 @@ else
   echo "cannot clone"
 fi
 
-source $SCRIPT_PATH/install.sh
+if [ -d $SCRIPT_PATH ]; then
+  source $SCRIPT_PATH/install.sh
+fi
 
