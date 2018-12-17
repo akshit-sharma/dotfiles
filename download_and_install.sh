@@ -173,7 +173,7 @@ function download_and_extract {
 
 if [ ! -d $SCRIPT_PATH ]; then
   git --version
-  if [ "$?" != "0"]; then
+  if [ "$?" != "0" ]; then
     echo "git not installed"
   else
     if [ "$GIT_LFS_INSTALL_SUCC" == 0 ]; then
