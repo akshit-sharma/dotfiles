@@ -358,7 +358,9 @@ let g:vimtex_compiler_latexmk = { 'build_dir' : 'build' }
 if !exists('g:ycm_semantic_triggers')
   let g:ycm_semantic_triggers = {}
 endif
-let g:ycm_semantic_triggers.tex = g:vimtex#re#youcompleteme
+if exists('g:vimtex#re#youcompleteme')
+  let g:ycm_semantic_triggers.tex = g:vimtex#re#youcompleteme
+endif
 
 " enable gtags module
 "let g:gutentags_modules = ['ctags', 'gtags_cscope']
