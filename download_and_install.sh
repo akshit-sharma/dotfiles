@@ -1,13 +1,14 @@
 #!/bin/bash
 # Make github key and install dotfiles in $HOME with having git ssh configurated
 
-echo "SSH_OFF is set to ${SSH_OFF}"
-
 DEFAULTPATH=${HOME}/dotfiles
 file_name=${HOME}/.ssh/id_${HOSTNAME}_github
-SSH_OFF="${SSH_OFF}:-1"
 
-echo "SSH_OFF is set to ${SSH_OFF}"
+if [ -z ${SSH_VAR} ]; then
+  SSH_OFF="1"
+else
+  SSH_OFF=${SSH_VAR}
+fi
 
 if [ -z ${DOTFILES_SCRIPT_DIR} ]; then
   SCRIPT_PATH=$DEFAULTPATH
