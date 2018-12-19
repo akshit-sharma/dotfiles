@@ -197,7 +197,7 @@ fi
 
 if [ -d $SCRIPT_PATH ]; then
   if [ "$DOTFILES_DOWNLOAD" == "1" ]; then
-    source $SCRIPT_PATH/install.sh
+    source $SCRIPT_PATH/update.sh
   fi
 fi
 
