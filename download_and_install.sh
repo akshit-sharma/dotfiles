@@ -6,6 +6,8 @@ DEFAULTPATH=${HOME}/dotfiles
 file_name=${HOME}/.ssh/id_${HOSTNAME}_github
 SSH_OFF="${SSH_OFF:-1}"
 
+echo "SSH_OFF is set to ${SSH_OFF}"
+
 if [ -z ${DOTFILES_SCRIPT_DIR} ]; then
   SCRIPT_PATH=$DEFAULTPATH
 else 
