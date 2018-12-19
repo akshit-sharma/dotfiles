@@ -4,7 +4,7 @@
 
 DEFAULTPATH=${HOME}/dotfiles
 file_name=${HOME}/.ssh/id_${HOSTNAME}_github
-SSH_OFF="${SSH_OFF:-1}"
+SSH_OFF="${SSH_OFF}:-1"
 
 echo "SSH_OFF is set to ${SSH_OFF}"
 
