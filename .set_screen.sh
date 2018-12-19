@@ -16,15 +16,20 @@ if [ $HDMI0_RET -eq 0 ]; then
   hdmi_msg="workspace 4, move workspace to output HDMI-0, workspace 3, move workspace to output HDMI-0"
 fi
 
-xrandr --listmonitors | grep ^DP-0$ > /dev/null
+xrandr --listmonitors | grep +DP-0 > /dev/null
 DP0_RET=$?
-xrandr --listmonitors | grep ^DP-1$ > /dev/null
+xrandr --listmonitors | grep +DP-1-1 > /dev/null
+DP11_RET=$?
+xrandr --listmonitors | grep +DP-1 > /dev/null
 DP1_RET=$?
 
 if [ $DP0_RET -eq 0 ]; then
   display_args="$display_args --output DP-0 --auto --right-of eDP-1-1"
   dp_msg="workspace 8, move workspace to output DP-0, workspace 7, move workspace to output DP-0"
   dp_msg="$dp_msg, workspace 4, move workspace to output DP-0, workspace 3, move workspace to output DP-0"
+elif [ $DP11_RET -eq 0 ]; then
+  display_args="$display_args --output DP-1-1 --auto --right-of eDP-1-1"
+  dp_msg="workspace 8, move workspace to output DP-1-1, workspace 7, move workspace to output DP-1-1" 
 elif [ $DP1_RET -eq 0 ]; then
   display_args="$display_args --output DP-1 --rotate left --auto --right-of eDP-1-1"
   dp_msg="workspace 8, move workspace to output DP-1, workspace 7, move workspace to output DP-1"
