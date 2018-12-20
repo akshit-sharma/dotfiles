@@ -48,6 +48,7 @@ run_watch VPN {
 
 tztime local {
         format = "%Y-%m-%d %H:%M:%S %Z"
+        timezone = "Asia/Kolkata"
 }
 
 load {

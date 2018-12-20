@@ -36,7 +36,7 @@ elif [ $DP1_RET -eq 0 ]; then
 fi
 
 if [ "$display_args" != "" ]; then
-  display_args="$display_args --output eDP-1"
+  display_args="$display_args --output eDP-1-1"
   echo "xrandr $display_args"
   xrandr $display_args
 fi
