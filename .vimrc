@@ -58,7 +58,7 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-git'
 
 " " syntastic for syntax checking
-" Plugin 'vim-syntastic/syntastic'
+" Plugin 'vim-syntastic/syntastic'  gives unwanted space at { (possible issue with brackets)
 
 " cpp autocomplete
 Plugin 'Valloric/YouCompleteMe'
@@ -351,6 +351,7 @@ let g:vimtex_complete_img_use_tail = 1
 let g:vimtex_complete_recursive_bib = 1
 let g:vimtex_quickfix_mode = 2
 let g:vimtex_view_method = 'zathura'
+" let g:vimtex_compiler_engine = 'lualatex'
 " let g:vimtex_view_general_viewer = 'zathura'
 " let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
 " let g:vimtex_view_general_options_latexmk = '--unique'
@@ -361,6 +362,7 @@ endif
 if exists('g:vimtex#re#youcompleteme')
   let g:ycm_semantic_triggers.tex = g:vimtex#re#youcompleteme
 endif
+
 
 " enable gtags module
 "let g:gutentags_modules = ['ctags', 'gtags_cscope']

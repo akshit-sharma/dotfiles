@@ -214,7 +214,7 @@ if [[ $DESKTOP_SESSION = *"plasma" ]]; then
   else
     echo "Don't know how to handle this plasma version"
     echo "PLASMASHELL_VERSION $PLASMASHELL_VERSION"
-    echo "PLASMASHELL_MAJOR $PLASMASHELL_VERSION"
+    echo "PLASMASHELL_MAJOR $PLASMASHELL_MAJOR"
     OUTPUT_PLASMASHELL=`eval plasmashell --version`
     echo "plasmashell --version is $OUTPUT_PLASMASHELL"
   fi
@@ -476,7 +476,7 @@ function install_vim {
   if [[ DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing/updating vim"
   fi
-  if [[ false ]]; then
+  if false; then
     if [ -f $HOME/.local/bin/vim ]; then
       rm -rf $HOME/.local
     fi
@@ -486,6 +486,9 @@ function install_vim {
     VIM_FINGERPRINT="Random123"
     VIM_INSTALL=0
     if [ ! -d $VIM_REPO ]; then
+      if [[ DEBUG_SCRIPT -ne 0 ]]; then
+        echo "cloning vim git repo into $VIM_REPO"
+      fi
       git clone https://github.com/vim/vim.git $VIM_REPO
       VIM_INSTALL=1
     else 
@@ -517,9 +520,33 @@ function install_vim {
       VIM_INSTALL=1
     fi
     if [ $VIM_INSTALL == 1 ]; then
+      if [[ DEBUG_SCRIPT -ne 0 ]]; then
+        echo "running vim install script"
+      fi
       (cd $VIM_REPO && ./configure --enable-pythoninterp --with-features=huge --enable-gui=auto --prefix=$HOME/.local )
+      PREBUILD_RET=$?
+      if [ $PREBUILD_RET -ne 0 ]; then
+        echo "error in running configure"
+        echo "(cd $VIM_REPO && ./configure --enable-pythoninterp --with-features=huge --enable-gui=auto --prefix=$HOME/.local )"
+        echo "returning......................"
+        return
+      fi
       make -C $VIM_REPO -j 8
+      BUILD_RET=$?
+      if [ $BUILD_RET -ne 0 ]; then
+        echo "error in running make"
+        echo "make -C $VIM_REPO -j 8"
+        echo "returning......................"
+        return
+      fi
       make -C $VIM_REPO install
+      INSTALL_RET=$?
+      if [ $INSTALL_RET -ne 0 ]; then
+        echo "error in running make install"
+        echo "make -C $VIM_REPO install"
+        echo "returning......................"
+        return
+      fi
       echo $VIM_FINGERPRINT > $SCRIPTPATH/faaltu/vim.done
     fi
   fi
@@ -764,7 +791,7 @@ install_vim
 install_clang_llvm
 install_ctags
 install_gitlfs
-install_i3wmIPC
+# install_i3wmIPC
 install_cmake
 
 # # install vim-ycm-latex-semantic-completer
