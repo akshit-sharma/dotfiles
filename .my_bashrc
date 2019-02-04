@@ -45,6 +45,12 @@ alias vccpp="export PATH=$COMPUTECPP_DIR:$PATH"
 
 alias ycmgen='$HOME/.vim/bundle/YCM-Generator/config_gen.py --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .'
 
+VISUAL=vim
+EDITOR="$VISUAL"
+
+export VISUAL
+export EDITOR
+
 export PS1
 export PATH
 export COMPUTECPP_HOME
