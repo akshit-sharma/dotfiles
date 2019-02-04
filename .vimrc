@@ -217,6 +217,8 @@ let g:ycm_key_invoke_completion = '<C-space>'
 let g:ycm_autoclose_preview_after_completion = 0
 let g:ycm_autoclose_preview_after_insertion = 1
 let g:ycm_max_diagnostics_to_display = 100
+nnoremap <Leader><C-k> :lprevious<CR>
+nnoremap <Leader><C-j> :lnext<CR>
 " Map cuda files to c++ so that Ycm can parse 
 autocmd BufNewFile, BufRead *.cu set filetype=cpp
 " autocmd FileType cuda set ft=cpp
@@ -242,13 +244,31 @@ let g:clang_format#style_options = {
       \ "AccessModifierOffset" : -2,
       \ "AllowShortIfStatementsOnASingleLine" : "true",
       \ "AlwaysBreakTemplateDeclarations" : "true",
+      \ "AlignConsecutiveAssignments" : "true",
+      \ "AlignTrailingComments" : "true",
+      \ "AlignEscapedNewlines" : "Left",
+      \ "AllowShortFunctionsOnASingleLine" : "Inline",
+      \ "BinPackArguments" : "true",
+      \ "BinPackParameters" : "true",
+      \ "ColumnLimit" : 80,
+      \ "CompactNamespaces" : "true",
+      \ "Cpp11BracedListStyle" : "true",
+      \ "IncludeBlocks" : "Regroup",
+      \ "IndentPPDirectives" : "AfterHash",
+      \ "IndentWidth" : 2,
+      \ "IndentWrappedFunctionNames" : "true",
+      \ "Language" : "Cpp",
+      \ "NamespaceIndentation" : "All",
+      \ "PointerAlignment" : "Right",
+      \ "TabWidth" : 2,
+      \ "UseTab" : "ForContinuationAndIndentation",
       \ "Standard" : "C++11" }
 let g:clang_format#auto_format = 1
 augroup ClangFormatSettings
   autocmd!
   " map to <Leader>cf in C++ code
-  autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
-  autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
+  autocmd FileType c,cpp nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
+  autocmd FileType c,cpp vnoremap <buffer><Leader>cf :ClangFormat<CR>
 augroup END
 
 
