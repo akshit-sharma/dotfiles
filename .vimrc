@@ -77,6 +77,14 @@ Plugin 'sigidagi/vim-cmake-project'
 " vimux
 Plugin 'benmills/vimux'
 
+" Asynchronous linting/fixing for Vim and Language Server Protocol
+Plugin 'w0rp/ale'
+
+" vim-clang-format
+Plugin 'rhysd/vim-clang-format'
+Plugin 'kana/vim-operator-user'
+Plugin 'Shougo/vimproc.vim'
+
 " " vim-coverage
 " " Add maktaba and coverage to the runtimepath.
 " " (The latter must be installed before it can be used.)
@@ -212,6 +220,37 @@ let g:ycm_max_diagnostics_to_display = 100
 " Map cuda files to c++ so that Ycm can parse 
 autocmd BufNewFile, BufRead *.cu set filetype=cpp
 " autocmd FileType cuda set ft=cpp
+
+" ALE Lint only used for clang tidy
+let clang_home = '$DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm'
+let g:ale_linters = {
+      \ 'c' : ['clangtidy'],
+      \ 'cpp' : ['clangtidy'],
+      \ }
+" let g:ale_cpp_clangtidy_options = 'p ./build/'
+" let g:ale_cpp_clangtidy_options = 'something'
+" let g:ale_cpp_clang_executable = expand(clang_home).'/bin/clang++'
+" let g:ale_cpp_clangd_executable = expand(clang_home).'/bin/clangd'
+" let g:ale_cpp_clangcheck_executable = expand(clang_home).'/bin/clang-check'
+let g:ale_c_clangtidy_executable = expand(clang_home).'/bin/clang-tidy'
+let g:ale_cpp_clangtidy_executable = expand(clang_home).'/bin/clang-tidy'
+" let g:ale_linters_explicit = 1
+
+let g:clang_format#command = expand(clang_home).'/bin/clang-format'
+let g:clang_format#code_style = 'llvm'
+let g:clang_format#style_options = {
+      \ "AccessModifierOffset" : -2,
+      \ "AllowShortIfStatementsOnASingleLine" : "true",
+      \ "AlwaysBreakTemplateDeclarations" : "true",
+      \ "Standard" : "C++11" }
+let g:clang_format#auto_format = 1
+augroup ClangFormatSettings
+  autocmd!
+  " map to <Leader>cf in C++ code
+  autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
+  autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
+augroup END
+
 
 " switch between header/source with F4
 map <F4> :e %:p:s,.h$,.X123X,:s,:.cpp$,.h,:s,.X123X$,.cpp,<CR>
