@@ -97,6 +97,8 @@ Plugin 'Shougo/vimproc.vim'
 " All of your Plugins must be added before the following line
 call vundle#end() 		" required
 
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+
 " call glaive#Install()
 " " Optional: Enable coverage's default mappings on the <Leader>C prefix.
 " Glaive coverage plugin[mappings]
@@ -179,6 +181,18 @@ let g:cpp_concepts_highlight = 1
 let g:cpp_no_function_highlight = 1
 let g:cpp_experimental_template_highlight = 1
 let g:cpp_experimental_simple_template_highlight = 1
+
+" ctrlp
+let g:ctrlp_custom_ignore = {
+      \ 'dir': '\v[\/]\.(git|hg|svn)|build|Build|bin$',
+      \ 'file': '\v\.(exe|so|dll|out)$',
+      \ }
+let g:ctrl_user_command = {
+      \ 'types' : {
+              \ 1: [ '.git', 'cd %s && git ls-files . -co --exclude-standard' ],
+              \ },
+      \ 'fallback': 'find %s -type f'
+      \ }
 
 " vim have issue with flagging braces as errors (workaround)
 let c_no_curly_error=1
