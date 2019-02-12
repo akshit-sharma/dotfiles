@@ -85,6 +85,9 @@ Plugin 'rhysd/vim-clang-format'
 Plugin 'kana/vim-operator-user'
 Plugin 'Shougo/vimproc.vim'
 
+" vim table mode
+Plugin 'dhruvasagar/vim-table-mode'
+
 " " vim-coverage
 " " Add maktaba and coverage to the runtimepath.
 " " (The latter must be installed before it can be used.)
