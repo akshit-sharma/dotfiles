@@ -50,7 +50,11 @@ function update_bashrc {
   MSG_IF_PRESENT="${3:-3rd paramater to update_bashrc not given, no debug stmt}"
   CMD="${4:-$LINE}"
 
-  if cat ~/.bashrc | grep -xqFe "$LINE"
+  echo "running "
+  echo "cat ~/.bashrc | grep -xqFe \"$LINE\""
+  cat ~/.bashrc | grep -xqFe "$LINE"
+  RET_CAT=$?
+  if [ $RET_CAT -eq 0 ];
   then
     if [[ DEBUG_SCRIPT -ne 0 ]]; then
       echo "~/.bashrc $MSG_IF_PRESENT"
@@ -80,8 +84,10 @@ else
 fi
 
 if [ -z "$1" ]; then
+  echo "setting NEED_ENTRY_REFRESH to 1"
   NEED_ENTRY_REFRESH=1
 else
+  echo "setting NEED_ENTRY_REFRESH to 0"
   NEED_ENTRY_REFRESH=0
 fi
 
@@ -314,20 +320,54 @@ python_virtualenv_setup 3
 
 # all symlink done (configuration structure established)
 
-update_bashrc "^force_color_prompt=yes" $NEED_BASH_REFRESH "force_color_prompt already set" \
+update_bashrc "force_color_prompt=yes" $NEED_BASH_REFRESH "force_color_prompt already set" \
               "sed -i 's/#force_color_prompt/force_color_prompt/g' ~/.bashrc"
+if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ] && [ DEBUG_SCRIPT -ne 0 ]; then
+  echo "force_color_prompt is setting NEED_BASH_REFRESH"
+fi
 NEED_BASH_REFRESH=$REFRESH
 
 update_bashrc DOTFILES_SCRIPT_PARENT=$SCRIPTPATH $NEED_BASH_REFRESH "DOTFILES_SCRIPT_PARENT env var set"
+if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ] && [ DEBUG_SCRIPT -ne 0 ]; then
+  echo "DOTFILES_SCRIPT_PARENT is setting NEED_BASH_REFRESH"
+fi
 NEED_BASH_REFRESH=$REFRESH
 
 update_bashrc "export DOTFILES_SCRIPT_PARENT" $NEED_BASH_REFRESH "DOTFILES_SCRIPT_PARENT env already exported"
+if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ] && [ DEBUG_SCRIPT -ne 0 ]; then
+  echo "export DOTFILES_SCRIPT_PARENT is setting NEED_BASH_REFRESH"
+fi
 NEED_BASH_REFRESH=$REFRESH
 
-update_bashrc "source ~/.my_profile" $NEED_ENTRY_REFRESH "removing source ~/.my_bashrc" \
+
+update_bashrc "source ~/.my_bashrc" $NEED_ENTRY_REFRESH "removing source ~/.my_bashrc" \
+              "sed -i '/source ~\/.my_bashrc/d' ~/.bashrc"
+if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ]; then
+  REFRESH=0 
+else 
+  NEED_BASH_REFRESH=1 
+  if [ DEBUG_SCRIPT -ne 0 ]; then
+    echo "removing ~/.my_bashrc is setting NEED_BASH_REFRESH"
+  fi
+fi
+NEED_BASH_REFRESH=$REFRESH
+
+update_bashrc "source ~/.my_profile" $NEED_ENTRY_REFRESH "removing source ~/.my_profile" \
               "sed -i '/source ~\/.my_profile/d' ~/.bashrc"
+if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ]; then
+  REFRESH=0
+else
+  NEED_BASH_REFRESH=1 
+  if [ DEBUG_SCRIPT -ne 0 ]; then
+    echo "removing ~/.my_profile is setting NEED_BASH_REFRESH"
+  fi
+fi
+NEED_BASH_REFRESH=$REFRESH
 
 update_bashrc "source ~/.my_entry" $NEED_ENTRY_REFRESH "already calling ~/.my_entry" 
+if [ $NEED_ENTRY_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ]; then
+  echo "souce ~/.my_entry is setting NEED_ENTRY_REFRESH"
+fi
 NEED_ENTRY_REFRESH=$REFRESH
 
 
@@ -513,7 +553,13 @@ function install_vim {
     VIM_REMOTE=$(git -C $VIM_REPO rev-parse "$UPSTREAM")
     VIM_BASE=$(git -C $VIM_REPO merge-base @ "$UPSTREAM")
 
-    if [ $LOCAL = $BASE ] && [[ ! ($LOCAL = $REMOTE) ]]; then
+    # if [[ DEBUG_SCRIPT -ne 0 ]]; then
+    #   echo "Value of VIM_LOCAL is $VIM_LOCAL"
+    #   echo "Value of VIM_REMOTE is $VIM_REMOTE"
+    #   echo "Value of VIM_BASE is $VIM_BASE"
+    # fi
+
+    if [ $VIM_LOCAL = $VIM_BASE ] && [[ ! ($VIM_LOCAL = $VIM_REMOTE) ]]; then
       echo "vim update available"
       git -C $VIM_REPO pull origin master
       make -C $VIM_REPO distclean
