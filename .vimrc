@@ -224,11 +224,12 @@ map <S-F11> :!cd .git && ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extr
 " set completeopt=menuone,menu,longest,preview
  
 " YCM (YouCompleteMe)
-let g:ycm_enable_diagnostic_signs = 1
+let g:ycm_compilation_database_folder = 'build'
+let g:ycm_enable_diagnostic_signs = 0
 let g:ycm_enable_diagnostic_highlighting = 0
-let g:ycm_always_populate_location_list = 1 "default 0
-let g:ycm_open_loclist_on_ycm_diags = 1 "default 1
-let g:ycm_global_ycm_extra_conf = '$DOTFILES_SCRIPT_PARENT/.ycm_extra_conf.py'
+let g:ycm_always_populate_location_list = 0 "default 0
+let g:ycm_open_loclist_on_ycm_diags = 0 "default 1
+" let g:ycm_global_ycm_extra_conf = '$DOTFILES_SCRIPT_PARENT/.ycm_extra_conf.py'
 let g:ycm_confirm_extra_conf = 0 " 1 (for now, asks everytime instead of just once)
 let g:ycm_key_invoke_completion = '<C-space>'
 let g:ycm_autoclose_preview_after_completion = 0
@@ -240,22 +241,25 @@ nnoremap <Leader><C-j> :lnext<CR>
 autocmd BufNewFile, BufRead *.cu set filetype=cpp
 " autocmd FileType cuda set ft=cpp
 
-" ALE Lint only used for clang tidy
+" ALE Lint 
 let clang_home = '$DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm'
+let g:ale_completion_enabled = 1
 let g:ale_linters = {
-      \ 'c' : ['clangtidy'],
-      \ 'cpp' : ['clangtidy'],
+      \ 'c' : ['clang','clangd','clangformat','clangtidy'],
+      \ 'cpp' : ['clang','clangd','clangformat','clangtidy'],
       \ }
-" let g:ale_cpp_clangtidy_options = 'p ./build/'
-" let g:ale_cpp_clangtidy_options = 'something'
-" let g:ale_cpp_clang_executable = expand(clang_home).'/bin/clang++'
-" let g:ale_cpp_clangd_executable = expand(clang_home).'/bin/clangd'
-" let g:ale_cpp_clangcheck_executable = expand(clang_home).'/bin/clang-check'
+let g:ale_c_build_dir_name = ['build','Build','bin']
+let g:ale_c_parse_compile_commands = 1
+let g:ale_c_clang_executable = expand(clang_home).'/bin/clang'
+let g:ale_cpp_clang_executable = expand(clang_home).'/bin/clang++'
+let g:ale_c_clangd_executable = expand(clang_home).'/bin/clangd'
+let g:ale_cpp_clangd_executable = expand(clang_home).'/bin/clangd'
+let g:ale_c_clangformat_executable = expand(clang_home).'/bin/clang-format'
+let g:ale_cpp_clangformat_executable = expand(clang_home).'/bin/clang-format'
 let g:ale_c_clangtidy_executable = expand(clang_home).'/bin/clang-tidy'
 let g:ale_cpp_clangtidy_executable = expand(clang_home).'/bin/clang-tidy'
-" let g:ale_linters_explicit = 1
-
-let g:clang_format#command = expand(clang_home).'/bin/clang-format'
+let g:ale_c_clangtidy_checks = ['bugprone','cppcoreguidelines','clang_analyzer','llvm','misc','modernize','performance','portability','readability']
+let g:ale_cpp_clangtidy_checks = ['bugprone','cppcoreguidelines','clang_analyzer','llvm','misc','modernize','performance','portability','readability']
 let g:clang_format#code_style = 'llvm'
 let g:clang_format#style_options = {
       \ "AccessModifierOffset" : -2,
