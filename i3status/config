@@ -59,7 +59,6 @@ cpu_temperature 0 {
 				format = "%degrees C"
 }
 
-
 disk "/" {
         format = "%avail"
 }
