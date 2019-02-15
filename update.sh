@@ -836,7 +836,7 @@ function install_cmake {
 # install Homebrew
 function install_brew {
   if [[ DEBUG_SCRIPT -ne 0 ]]; then
-    # echo "installing HomeBrew"
+    echo "installing HomeBrew"
   fi
 }
 
