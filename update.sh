@@ -833,12 +833,21 @@ function install_cmake {
 
 }
 
+# install Homebrew
+function install_brew {
+  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+    # echo "installing HomeBrew"
+  fi
+}
+
 install_vim
 install_clang_llvm
 install_ctags
 install_gitlfs
 # install_i3wmIPC
 install_cmake
+
+#install_brew
 
 # # install vim-ycm-latex-semantic-completer
 #  if [[ DEBUG_SCRIPT -ne 0 ]]; then
