@@ -615,7 +615,10 @@ function install_ctags {
     ctags --version > /dev/null
     CTAGS_RET="$?"
 
-    if [[ $CTAGS_RET != 0 ]]; then
+    $HOME/bin/ctags --version > /dev/null
+    MY_CTAGS_RET="$?"
+
+    if [[ $CTAGS_RET != 0 ]] && [[ $MY_CTAGS_RET != 0 ]]; then
 
       if [ ! -f "$SCRIPTPATH/faaltu/$CTAGS_TAR" ]; then
         download_and_extract $SCRIPTPATH/faaltu/ $SCRIPTPATH/faaltu/$CTAGS_DIR $CTAGS_TAR $CTAGS_URL $CTAGS_MD5
