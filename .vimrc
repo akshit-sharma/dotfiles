@@ -88,6 +88,9 @@ Plugin 'Shougo/vimproc.vim'
 " vim table mode
 Plugin 'dhruvasagar/vim-table-mode'
 
+" syntaxx file and snippets for dockers dockerfile
+Plugin 'ekalinin/Dockerfile.vim'
+
 " " vim-coverage
 " " Add maktaba and coverage to the runtimepath.
 " " (The latter must be installed before it can be used.)
@@ -245,9 +248,16 @@ autocmd BufNewFile, BufRead *.cu set filetype=cpp
 let clang_home = '$DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm'
 let g:ale_completion_enabled = 1
 let g:ale_linters = {
-      \ 'c' : ['clang','clangd','clangformat','clangtidy'],
-      \ 'cpp' : ['clang','clangd','clangformat','clangtidy'],
+      \ 'c' : ['clang','clangd','clangtidy'],
+      \ 'cpp' : ['clang','clangd','clangtidy'],
       \ }
+let g:ale_fixers = {
+      \ 'c' : [ 'clang-format' ],
+      \ 'cpp' : [ 'clang-format' ],
+      \ 'cuda' : [ 'clang-format' ],
+      \ }
+let g:ale_lint_on_save = 1
+let g:ale_fix_on_save = 1
 let g:ale_c_build_dir_name = ['build','Build','bin']
 let g:ale_c_parse_compile_commands = 1
 let g:ale_c_clang_executable = expand(clang_home).'/bin/clang'
@@ -260,37 +270,40 @@ let g:ale_c_clangtidy_executable = expand(clang_home).'/bin/clang-tidy'
 let g:ale_cpp_clangtidy_executable = expand(clang_home).'/bin/clang-tidy'
 let g:ale_c_clangtidy_checks = ['bugprone','cppcoreguidelines','clang_analyzer','llvm','misc','modernize','performance','portability','readability']
 let g:ale_cpp_clangtidy_checks = ['bugprone','cppcoreguidelines','clang_analyzer','llvm','misc','modernize','performance','portability','readability']
-let g:clang_format#code_style = 'llvm'
-let g:clang_format#style_options = {
-      \ "AccessModifierOffset" : -2,
-      \ "AllowShortIfStatementsOnASingleLine" : "true",
-      \ "AlwaysBreakTemplateDeclarations" : "true",
-      \ "AlignConsecutiveAssignments" : "true",
-      \ "AlignTrailingComments" : "true",
-      \ "AlignEscapedNewlines" : "Left",
-      \ "AllowShortFunctionsOnASingleLine" : "Inline",
-      \ "BinPackArguments" : "true",
-      \ "BinPackParameters" : "true",
-      \ "ColumnLimit" : 80,
-      \ "CompactNamespaces" : "true",
-      \ "Cpp11BracedListStyle" : "true",
-      \ "IncludeBlocks" : "Regroup",
-      \ "IndentPPDirectives" : "AfterHash",
-      \ "IndentWidth" : 2,
-      \ "IndentWrappedFunctionNames" : "true",
-      \ "Language" : "Cpp",
-      \ "NamespaceIndentation" : "All",
-      \ "PointerAlignment" : "Right",
-      \ "TabWidth" : 2,
-      \ "UseTab" : "ForContinuationAndIndentation",
-      \ "Standard" : "C++11" }
-let g:clang_format#auto_format = 1
-augroup ClangFormatSettings
-  autocmd!
-  " map to <Leader>cf in C++ code
-  autocmd FileType c,cpp nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
-  autocmd FileType c,cpp vnoremap <buffer><Leader>cf :ClangFormat<CR>
-augroup END
+
+" let g:clang_format#code_style = 'llvm'
+" let g:clang_format#style_options = {
+"       \ "AccessModifierOffset" : -2,
+"       \ "AllowShortIfStatementsOnASingleLine" : "true",
+"       \ "AlwaysBreakTemplateDeclarations" : "true",
+"       \ "AlignConsecutiveAssignments" : "true",
+"       \ "AlignTrailingComments" : "true",
+"       \ "AlignEscapedNewlines" : "Left",
+"       \ "AllowShortFunctionsOnASingleLine" : "Inline",
+"       \ "BinPackArguments" : "true",
+"       \ "BinPackParameters" : "true",
+"       \ "ColumnLimit" : 80,
+"       \ "CompactNamespaces" : "true",
+"       \ "Cpp11BracedListStyle" : "true",
+"       \ "IncludeBlocks" : "Regroup",
+"       \ "IndentPPDirectives" : "AfterHash",
+"       \ "IndentWidth" : 2,
+"       \ "IndentWrappedFunctionNames" : "true",
+"       \ "Language" : "Cpp",
+"       \ "NamespaceIndentation" : "All",
+"       \ "PointerAlignment" : "Right",
+"       \ "TabWidth" : 2,
+"       \ "UseTab" : "ForContinuationAndIndentation",
+"       \ "Standard" : "C++11" }
+" let g:clang_format#auto_format = 1
+" let g:clang_format#auto_format_on_insert_leave = 1
+
+" augroup ClangFormatSettings
+"   autocmd!
+"   " map to <Leader>cf in C++ code
+"   autocmd FileType c,cpp,cuda nnoremap <buffer><Leader>cf :<C-u>ALEFix<CR>
+"   autocmd FileType c,cpp,cuda vnoremap <buffer><Leader>cf :ALEFix<CR>
+" augroup END
 
 
 " switch between header/source with F4
