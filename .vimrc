@@ -250,12 +250,13 @@ let g:ale_completion_enabled = 1
 let g:ale_linters = {
       \ 'c' : ['clang','clangd','clangtidy'],
       \ 'cpp' : ['clang','clangd','clangtidy'],
+      \ 'cuda' : ['clang','clangd','clangtidy','nvcc'],
       \ }
 let g:ale_fixers = {
-      \ 'c' : [ 'clang-format' ],
-      \ 'cpp' : [ 'clang-format' ],
-      \ 'cuda' : [ 'clang-format' ],
-      \ }
+  \ 'c' : ['clang-format'],
+  \ 'cpp' : ['clang-format'],
+  \ 'cuda' : ['clang-format'],
+  \ }
 let g:ale_lint_on_save = 1
 let g:ale_fix_on_save = 1
 let g:ale_c_build_dir_name = ['build','Build','bin']
