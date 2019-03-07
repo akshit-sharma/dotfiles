@@ -317,6 +317,14 @@ function python_virtualenv_setup {
 python_virtualenv_setup 2
 python_virtualenv_setup 3
 
+if [ -f /usr/bin/pip3 ] || [ -L /usr/bin/pip3 ]; then
+  if [ ! -f $HOME/.local/bin/cmakelint ]; then
+    /usr/bin/pip3 install --user cmakelint
+  fi
+  if [ ! -f $HOME/.local/bin/cmake-format ]; then
+    /usr/bin/pip3 install --user cmake-format
+  fi
+fi
 
 # all symlink done (configuration structure established)
 

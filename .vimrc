@@ -256,6 +256,7 @@ let g:ale_fixers = {
   \ 'c' : ['clang-format'],
   \ 'cpp' : ['clang-format'],
   \ 'cuda' : ['clang-format'],
+  \ 'cmake' : ['cmakeformat'],
   \ }
 let g:ale_lint_on_save = 1
 let g:ale_fix_on_save = 1
@@ -271,6 +272,8 @@ let g:ale_c_clangtidy_executable = expand(clang_home).'/bin/clang-tidy'
 let g:ale_cpp_clangtidy_executable = expand(clang_home).'/bin/clang-tidy'
 let g:ale_c_clangtidy_checks = ['bugprone','cppcoreguidelines','clang_analyzer','llvm','misc','modernize','performance','portability','readability']
 let g:ale_cpp_clangtidy_checks = ['bugprone','cppcoreguidelines','clang_analyzer','llvm','misc','modernize','performance','portability','readability']
+let g:ale_cmakelint_executable = /home/akshitsharma/.local/bin/cmakelint
+let g:ale_cmakeformat_executable = /home/akshitsharma/.local/bin/cmake-format
 
 " let g:clang_format#code_style = 'llvm'
 " let g:clang_format#style_options = {
