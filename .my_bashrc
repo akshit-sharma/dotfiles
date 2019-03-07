@@ -20,6 +20,8 @@ COMPUTECPP_DIR=$LIB_HOME/ComputeCpp
 CMAKE_HOME=$SW_HOME/cmake
 PATH=$CMAKE_HOME/bin:$PATH
 
+GTEST_DIR=$SW_HOME/googletest
+
 if [ -d $SW_HOME/gcc/bin/ ]; then
   PATH=$PATH:$SW_HOME/gcc/bin
 fi
@@ -56,6 +58,7 @@ export PATH
 export COMPUTECPP_HOME
 export COMPUTECPP_DIR
 export INTEL_OPENCL_LIBRARY
+export GTEST_DIR
 
 source $HOME/.my_vars
 
