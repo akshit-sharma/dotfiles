@@ -398,16 +398,20 @@ if [[ NEED_VIM_PLUGIN_INSTALL -ne 0 ]]; then
      echo "running vim +PluginInstall...."
   fi
   VIM_PLUGIN_HASH=$(cat $HOME/.vimrc | sed -n 's/\(^Plugin\)/\1/p' | md5sum | cut -d' ' -f1)
+  VIM_EXEC=vim
+  if [ -f $HOME/.local/bin/vim ]; then
+    VIM_EXEC=$HOME/.local/bin/vim
+  fi
   if [ ! -f $SCRIPTPATH/faaltu/.vim_plugin.hash ]; then
     VIM_PLUGIN_OLD_HASH="Nothing"
-    vim +PluginInstall +qall
+    $VIM_EXEC +PluginInstall +qall
   else
     VIM_PLUGIN_OLD_HASH=$(cat $SCRIPTPATH/faaltu/.vim_plugin.hash)
   fi
   if [ "$VIM_PLUGIN_HASH" != "$VIM_PLUGIN_OLD_HASH" ]; then
-    vim +PluginClean! +qall
-    vim +PluginInstall +qall
-    vim +PluginUpdate +qall
+    $VIM_EXEC +PluginClean! +qall
+    $VIM_EXEC +PluginInstall +qall
+    $VIM_EXEC +PluginUpdate +qall
     echo $VIM_PLUGIN_HASH > $SCRIPTPATH/faaltu/.vim_plugin.hash
   fi
 
@@ -481,7 +485,10 @@ function download_and_extract {
       mkdir -p $DOWNLOAD_HOME
     fi
 
-    wget $DOWNLOAD_URL -O $DOWNLOAD_HOME/$DOWNLOAD_FILE
+    if [ ! -f $DOWNLOAD_HOME/$DOWNLOAD_FILE ]; then
+      echo "downloading $DOWNLOAD_FILE to $DOWNLOAD_HOME"
+      wget $DOWNLOAD_URL -O $DOWNLOAD_HOME/$DOWNLOAD_FILE
+    fi
 
     if [ ! -f ${DOWNLOAD_HOME}/${DOWNLOAD_FILE} ]; then
       echo "downloaded file from $DOWNLOAD_URL"
@@ -491,8 +498,10 @@ function download_and_extract {
     fi
     if [[ $DOWNLOAD_HOME/$DOWNLOAD_FILE == *.xz ]]; then
       tar -xf $DOWNLOAD_HOME/$DOWNLOAD_FILE -C $DOWNLOAD_HOME
+      SCRIPT_SUCC=1
     elif [[ $DOWNLOAD_HOME/$DOWNLOAD_FILE == *.gz ]]; then
       tar -zxf $DOWNLOAD_HOME/$DOWNLOAD_FILE -C $DOWNLOAD_HOME
+      SCRIPT_SUCC=1
     elif [[ $DOWNLOAD_FILE == *.sh ]]; then
       if [[ -x "$DOWNLOAD_HOME/$DOWNLOAD_FILE" ]]; then
         echo "file already executable"
@@ -836,6 +845,62 @@ function install_cmake {
 
 }
 
+# install googletest
+function install_googletest {
+  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing googletest"
+  fi
+  GOOGLETEST_MD5="2e6fbeb6a91310a16efe181886c59596"
+  GOOGLETEST_VER="1.8"
+  GOOGLETEST_SUB_VER="1"
+  GOOGLETEST_DIR="googletest-release-${GOOGLETEST_VER}.${GOOGLETEST_SUB_VER}"
+  GOOGLETEST_FILE="release-${GOOGLETEST_VER}.${GOOGLETEST_SUB_VER}.tar.gz"
+  GOOGLETEST_URL="https://github.com/google/googletest/archive/${GOOGLETEST_FILE}"
+
+  GOOGLETEST_INSTALL_DIR="$HOME/Softwares/googletest/"
+  GOOGLETEST_CMD="$CMAKE_INSTALL_PREFIX=${GOOGLETEST_INSTALL_DIR}"
+
+  download_and_extract $SCRIPTPATH/faaltu/ $SCRIPTPATH/faaltu/$GOOGLETEST_DIR \
+    $GOOGLETEST_FILE $GOOGLETEST_URL $GOOGLETEST_MD5
+
+  GOOGLETEST_BUILD_DIR=${SCRIPTPATH}/faaltu/${GOOGLETEST_DIR}/build
+
+  if [ $SCRIPT_SUCC -eq 1 ]; then
+    if [ ! -d ${GOOGLETEST_BUILD_DIR} ]; then
+      mkdir -p ${GOOGLETEST_BUILD_DIR}
+    else 
+      rm -rf ${GOOGLETEST_BUILD_DIR}/*
+    fi
+    (cd ${GOOGLETEST_BUILD_DIR} && cmake -G"Unix Makefiles" --build ${GOOGLETEST_BUILD_DIR} -DCMAKE_INSTALL_PREFIX=${GOOGLETEST_INSTALL_DIR} ..) 
+    GT_CMAKE_BUILD_RET="$?"
+    if [ $GT_CMAKE_BUILD_RET -ne 0 ]; then
+      echo "error in running cmake"
+      echo "cmake -G"Unix Makefiles" --build ${GOOGLETEST_BUILD_DIR} -DCMAKE_INSTALL_PREFIX=${GOOGLETEST_INSTALL_DIR} ${GOOGLETEST_BUILD_DIR}/.."
+      echo "returning........................"
+      return
+    fi
+    make -C $GOOGLETEST_BUILD_DIR -j 8
+    BUILD_RET=$?
+    if [ $BUILD_RET -ne 0 ]; then
+      echo "error in running make"
+      echo "make -C $GOOGLETEST_BUILD_DIR -j 8"
+      echo "returning......................"
+      return
+    fi
+    make -C $GOOGLETEST_BUILD_DIR install
+    INSTALL_RET=$?
+    if [ $INSTALL_RET -ne 0 ]; then
+      echo "error in running make install"
+      echo "make -C $GOOGLETEST_BUILD_DIR install"
+      echo "returning......................"
+      return
+    fi
+  else
+    echo "skipping googletest install"
+  fi
+
+}
+
 # install Homebrew
 function install_brew {
   if [[ DEBUG_SCRIPT -ne 0 ]]; then
@@ -849,6 +914,7 @@ install_ctags
 install_gitlfs
 # install_i3wmIPC
 install_cmake
+install_googletest
 
 #install_brew
 
