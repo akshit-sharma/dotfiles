@@ -14,6 +14,8 @@ function parent_dir {
   GCC_SCRIPT_PATH=$DIR
 }
 
+GCC_TEMP_DIR=$GCC_SCRIPT/../gcc
+
 if [ ! -f $GCC_TEMP_DIR/gcc.done ]; then
 
   parent_dir
@@ -28,8 +30,8 @@ if [ ! -f $GCC_TEMP_DIR/gcc.done ]; then
     GCC_TEMP_DIR=/tmp/gcc_script
   fi
 
-  GCC_CORRECT_MD5="747d5010b7c6938b480bc6e4d7c4be9a"
-  GCC_VERSION="7.3"
+  GCC_CORRECT_MD5="6a1fabd167fe98c11857181c210fc743"
+  GCC_VERSION="8.1"
   GCC_TAR_DIR="gcc-$GCC_VERSION.0"
   GCC_TAR_GZ="$GCC_TAR_DIR.tar.gz"
   GCC_TAR_URL="https://ftpmirror.gnu.org/gcc/$GCC_TAR_DIR/$GCC_TAR_GZ"
@@ -39,7 +41,7 @@ if [ ! -f $GCC_TEMP_DIR/gcc.done ]; then
   fi
   if [ ! -d  "$GCC_BIN_HOME" ]; then
     if [ ! -f "$GCC_TEMP_DIR/$GCC_TAR_GZ" ]; then # download if file not found
-      echo "downloading $uuGCC_SCRIPT_PATH/../$GCC_TAR_GZ"
+      echo "downloading $GCC_SCRIPT_PATH/../$GCC_TAR_GZ"
       wget $GCC_TAR_URL -O $GCC_TEMP_DIR/$GCC_TAR_GZ
     else
       GCC_DOWNLOAD_MD5=`eval md5sum $GCC_TEMP_DIR/$GCC_TAR_GZ | cut -d' ' -f1`
@@ -109,7 +111,7 @@ if [ ! -f $GCC_TEMP_DIR/gcc.done ]; then
     make install
     cd ..
     rm -rf build # remove build intermediate results
-    rm -tf $GCC_SRC_HOME/$GCC_TAR_DIR # remove extracted dir
+    rm -rf $GCC_SRC_HOME/$GCC_TAR_DIR # remove extracted dir
     touch $GCC_TEMP_DIR/.gcc-build
     cd $GCC_SCRIPT_PATH
   fi

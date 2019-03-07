@@ -276,8 +276,9 @@ let g:ale_cpp_clangtidy_executable = expand(clang_home).'/bin/clang-tidy'
 let g:ale_c_clangtidy_checks = ['bugprone','cppcoreguidelines','clang_analyzer','llvm','misc','modernize','performance','portability','readability']
 let g:ale_cpp_clangtidy_checks = ['bugprone','cppcoreguidelines','clang_analyzer','llvm','misc','modernize','performance','portability','readability']
 let g:ale_cmake_cmakelint_executable = expand(user_home).'/.local/bin/cmakelint'
+let g:ale_cmake_cmakelint_options = '--config='.expand(config_home).'/.cmakelintrc'
 let g:ale_cmake_cmakeformat_executable = expand(user_home).'/.local/bin/cmake-format'
-let g:ale_cmake_cmakeformat_options = expand(config_home).'/.clang-format.yml'
+let g:ale_cmake_cmakeformat_options = '-c '.expand(config_home).'/.clang-format.yml'
 
 " let g:clang_format#code_style = 'llvm'
 " let g:clang_format#style_options = {
