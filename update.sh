@@ -871,11 +871,11 @@ function install_googletest {
     else 
       rm -rf ${GOOGLETEST_BUILD_DIR}/*
     fi
-    (cd ${GOOGLETEST_BUILD_DIR} && cmake -G"Unix Makefiles" --build ${GOOGLETEST_BUILD_DIR} -DCMAKE_INSTALL_PREFIX=${GOOGLETEST_INSTALL_DIR} ..) 
+    (cd ${GOOGLETEST_BUILD_DIR} && cmake -G"Unix Makefiles" --build ${GOOGLETEST_BUILD_DIR} -DCMAKE_INSTALL_PREFIX=${GOOGLETEST_INSTALL_DIR} -Dgtest_build_samples=ON ..) 
     GT_CMAKE_BUILD_RET="$?"
     if [ $GT_CMAKE_BUILD_RET -ne 0 ]; then
       echo "error in running cmake"
-      echo "cmake -G"Unix Makefiles" --build ${GOOGLETEST_BUILD_DIR} -DCMAKE_INSTALL_PREFIX=${GOOGLETEST_INSTALL_DIR} ${GOOGLETEST_BUILD_DIR}/.."
+      echo "cmake -G"Unix Makefiles" --build ${GOOGLETEST_BUILD_DIR} -DCMAKE_INSTALL_PREFIX=${GOOGLETEST_INSTALL_DIR} -Dgtest_build_samples=ON ${GOOGLETEST_BUILD_DIR}/.."
       echo "returning........................"
       return
     fi
