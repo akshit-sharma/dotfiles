@@ -640,6 +640,8 @@ function install_ctags {
       if [ ! -f "$SCRIPTPATH/faaltu/$CTAGS_TAR" ]; then
         download_and_extract $SCRIPTPATH/faaltu/ $SCRIPTPATH/faaltu/$CTAGS_DIR $CTAGS_TAR $CTAGS_URL $CTAGS_MD5
         CTAGS_INSTALL=1
+      elif [ ! -f $HOME/bin/ctags ]; then
+        CTAGS_INSTALL=1
       fi
       if [[ $CTAGS_INSTALL == 1 ]]; then
         if [ -f "$SCRIPTPATH/faaltu/$CTAGS_DIR/configure" ]; then
