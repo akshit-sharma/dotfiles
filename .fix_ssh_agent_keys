@@ -1,0 +1,5 @@
+#!/bin/bash
+# temporary fix for ssh getting different key names
+
+ssh-add -D
+find ~/.ssh/ | grep -v '.pub' | grep id_${HOSTNAME} | xargs ssh-add
