@@ -35,8 +35,11 @@ MAIN_HOME=`xrandr --listmonitors | grep 597 | grep 336 | cut -d' ' -f6`
 # DP1_RET=$?
 
 if [ -z $MAIN_DISPLAY ];  then
-  echo "Main Display unkown"
-  exit 2
+  MAIN_DISPLAY=`xrandr --listmonitors | grep 345 | grep 194 | cut -d' ' -f6`
+  if [ -z $MAIN_DISPLAY ]; then
+    echo "Main Display unkown"
+    exit 2
+  fi
 fi
 
 if [ ! -z "$PORTRAIT_DISPLAY" ]; then
