@@ -44,6 +44,7 @@ ping google.com -c 1 -t 100 > /dev/null
 NET_AVAILABLE="$?"
 if [ $NET_AVAILABLE != 0 ]; then
   SKIP_UPDATE=true
+  echo "Ping returned ${NET_AVAILABLE}"
   echo "Internet not available, skipping update"
 fi
 

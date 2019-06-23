@@ -249,7 +249,8 @@ if [ ! -f "$HOME/.my_vars" ]; then
 fi
 
 
-mkdir -p ~/.vim/tags
+mkdir -p $HOME/.vim/tags
+mkdir -p $HOME/.local/bin
 
 # setup virtualenv for python2 and python3
 function python_virtualenv_setup {
@@ -270,7 +271,7 @@ function python_virtualenv_setup {
     fi
   fi
 
-  $VIRTUALENV_EXEC --version
+  type $VIRTUALENV_EXEC 
   if [ "$?" != "0" ]; then
     #virtualenv not in path    
     if [ ! -f $HOME/.local/bin/virtualenv ]; then
@@ -280,13 +281,32 @@ function python_virtualenv_setup {
         echo "Cannot create virtualenv"
         return
       else
-        /usr/bin/python3 -m pip install --user virtualenv
-        VIRTUALENV_EXEC="$HOME/.local/bin/virtualenv"
-        if [ "$?" != "0" ]; then
-          echo "Error in installing virtualenv through pip"
-          echo "Command tried"
-          echo "/usr/bin/python3 -m pip install --user virtualenv"
-          return
+        WHICH_PIP3=`which pip3`
+        if [ "$?" != "0" ] || [ "$WHICH_PIP3" == "$HOME/.local/bin/pip3"]; then
+          if [ "$WHICH_PIP3" != "$HOME/.local/bin/pip3"]; then
+            echo "pip3 not installed, installing by downloading get-pip.py"
+            if [ ! -f "$DOTFILES_SCRIPT_PARENT/faaltu/get-pip.py" ]; then
+              curl https://bootstrap.pypa.io/get-pip.py -o $DOTFILES_SCRIPT_PARENT/faaltu/get-pip.py 
+            fi
+            /usr/bin/python3 $DOTFILES_SCRIPT_PARENT/faaltu/get-pip.py --user
+          fi
+          pip3 install --user virtualenv
+          VIRTUALENV_EXEC="$HOME/.local/bin/virtualenv"
+          if [ "$?" != "0" ]; then
+            echo "Error in installing virtualenv through pip"
+            echo "Command tried"
+            echo "/usr/bin/python3 -m pip install --user virtualenv"
+            return
+          fi
+        else
+          /usr/bin/python3 -m pip install --user virtualenv
+          VIRTUALENV_EXEC="$HOME/.local/bin/virtualenv"
+          if [ "$?" != "0" ]; then
+            echo "Error in installing virtualenv through pip"
+            echo "Command tried"
+            echo "/usr/bin/python3 -m pip install --user virtualenv"
+            return
+          fi
         fi
       fi
     fi
