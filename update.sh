@@ -168,308 +168,6 @@ function home_dir_symlink {
   fi
 }
 
-
-# script for adding llvm to environment
-home_dir_symlink llvm_scripts .
-# script for adding gcc to environment
-home_dir_symlink gcc_scripts .
-
-if [ -d ~/.vim/syntax ]; then
-  rm -rf ~/.vim/syntax
-fi
-
-# manual linking of dir inside ~/.vim 
-home_dir_symlink syntax .vim
-home_dir_symlink ftplugin .vim
-home_dir_symlink templates .vim
-
-# symlink directory for vimwiki
-home_dir_symlink vimwiki .
-
-# symlink i3 config
-home_dir_symlink i3 .config
-home_dir_symlink i3status .config
-
-home_dir_symlink .set_screen.sh .
-
-if [ -L ~/.toggletouchpad.sh ]; then
-  rm  ~/.toggletouchpad.sh
-fi
-
-if [ -L ~/.noctrlq.sh ]; then
-  rm  ~/.noctrlq.sh
-fi
-
-# # symlink toggletouchpad.sh
-# home_dir_symlink .toggletouchpad.sh .
-# # disable ctrlq for firefox
-# home_dir_symlink .noctrlq.sh .
-
-# if kde plasma get my shortcuts
-if [[ $DESKTOP_SESSION = *"plasma" ]]; then
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
-     echo "plasma (kde) detected"
-  fi
-  PLASMASHELL_VERSION=`eval plasmashell --version | sed -nr 's/plasmashell ([0-9][0-9]*\.*)/\1/p'`
-  PLASMASHELL_MAJOR=`plasmashell --version | sed -rn 's/plasmashell ([0-9])\.[0-9].*/\1/p'`
-  if [ $PLASMASHELL_MAJOR -eq 5 ]; then
-    home_dir_symlink kglobalshortcutsrc.kksrc .config
-    home_dir_symlink khotkeysrc .config
-    home_dir_symlink quicktile.cfg .config
-    home_dir_symlink Xmodmap .config
-  else
-    echo "Don't know how to handle this plasma version"
-    echo "PLASMASHELL_VERSION $PLASMASHELL_VERSION"
-    echo "PLASMASHELL_MAJOR $PLASMASHELL_MAJOR"
-    OUTPUT_PLASMASHELL=`eval plasmashell --version`
-    echo "plasmashell --version is $OUTPUT_PLASMASHELL"
-  fi
-else
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
-    echo "desktop session not plasma ($DESKTOP_SESSION)"
-  fi
-fi
-
-# plugin manager for vim
-if [ ! -d "$HOME/.vim/bundle/Vundle.vim" ]; then
-  git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
-  NEED_VIM_PLUGIN_INSTALL=1
-fi
-
-home_dir_symlink .vimrc .
-home_dir_symlink .my_ssh_agent .
-home_dir_symlink .my_profile .
-home_dir_symlink .my_bashrc .
-home_dir_symlink .my_entry .
-home_dir_symlink .tmux.conf .
-home_dir_symlink .latexmkrc .
-  
-if [ ! -f "$HOME/.my_vars" ]; then
-  touch $HOME/.my_vars
-fi
-
-
-mkdir -p $HOME/.vim/tags
-mkdir -p $HOME/.local/bin
-
-# setup virtualenv for python2 and python3
-function python_virtualenv_setup {
-  VERSION_NUMBER="$1"
-  VIRTUALENV_EXEC="virtualenv"
-
-  if [ -d "$HOME/venv" ]; then
-    if [ "$VERSION_NUMBER" == "3" ]; then
-      echo "virtualenv for python3 exists ($HOME/venv)"
-      return
-    fi
-  fi
-
-  if [ -d "$HOME/venv2" ]; then
-    if [ "$VERSION_NUMBER" == "2" ]; then
-      echo "virtualenv for python2 exists ($HOME/venv2)"
-      return
-    fi
-  fi
-
-  type $VIRTUALENV_EXEC 
-  if [ "$?" != "0" ]; then
-    #virtualenv not in path    
-    if [ ! -f $HOME/.local/bin/virtualenv ]; then
-      # /usr/bin/python3
-      if [ ! -f /usr/bin/python3 ] && [ ! -L /usr/bin/python3 ]; then
-        echo "From python_virtualenv_setup: Cannot find /usr/bin/python3"
-        echo "Cannot create virtualenv"
-        return
-      else
-        WHICH_PIP3=`which pip3`
-        if [ "$?" != "0" ] || [ "$WHICH_PIP3" == "$HOME/.local/bin/pip3"]; then
-          if [ "$WHICH_PIP3" != "$HOME/.local/bin/pip3"]; then
-            echo "pip3 not installed, installing by downloading get-pip.py"
-            if [ ! -f "$DOTFILES_SCRIPT_PARENT/faaltu/get-pip.py" ]; then
-              curl https://bootstrap.pypa.io/get-pip.py -o $DOTFILES_SCRIPT_PARENT/faaltu/get-pip.py 
-            fi
-            /usr/bin/python3 $DOTFILES_SCRIPT_PARENT/faaltu/get-pip.py --user
-          fi
-          pip3 install --user virtualenv
-          VIRTUALENV_EXEC="$HOME/.local/bin/virtualenv"
-          if [ "$?" != "0" ]; then
-            echo "Error in installing virtualenv through pip"
-            echo "Command tried"
-            echo "/usr/bin/python3 -m pip install --user virtualenv"
-            return
-          fi
-        else
-          /usr/bin/python3 -m pip install --user virtualenv
-          VIRTUALENV_EXEC="$HOME/.local/bin/virtualenv"
-          if [ "$?" != "0" ]; then
-            echo "Error in installing virtualenv through pip"
-            echo "Command tried"
-            echo "/usr/bin/python3 -m pip install --user virtualenv"
-            return
-          fi
-        fi
-      fi
-    fi
-  fi
-  # virtualenv should be in VIRTUALENV_EXE at this point
-  if [ "$VERSION_NUMBER" != "2" ] && [ "$VERSION_NUMBER" != "3" ]; then
-    echo "From python_virtualenv_setup: $VERSION_NUMBER is not supported"
-    return
-  else
-    if [ "$VERSION_NUMBER" == "2" ]; then
-      # /usr/bin/python2
-      if [ ! -f /usr/bin/python2 ] && [ ! -L /usr/bin/python2 ]; then
-        echo "From python_virtualenv_setup: Cannot find /usr/bin/python2"
-      else
-        $VIRTUALENV_EXEC -p /usr/bin/python2 $HOME/venv2
-      fi
-    elif [ "$VERSION_NUMBER" == "3" ]; then
-      # /usr/bin/python3
-      if [ ! -f /usr/bin/python3 ] && [ ! -L /usr/bin/python3 ]; then
-        echo "From python_virtualenv_setup: Cannot find /usr/bin/python3"
-      else
-        $VIRTUALENV_EXEC -p /usr/bin/python3 $HOME/venv
-      fi
-    fi
-  fi
-}
-
-python_virtualenv_setup 2
-python_virtualenv_setup 3
-
-if [ -f /usr/bin/pip3 ] || [ -L /usr/bin/pip3 ]; then
-  if [ ! -f $HOME/.local/bin/cmakelint ]; then
-    /usr/bin/pip3 install --user cmakelint
-  fi
-  if [ ! -f $HOME/.local/bin/cmake-format ]; then
-    /usr/bin/pip3 install --user cmake-format
-  fi
-fi
-
-# all symlink done (configuration structure established)
-
-update_bashrc "force_color_prompt=yes" $NEED_BASH_REFRESH "force_color_prompt already set" \
-              "sed -i 's/#force_color_prompt/force_color_prompt/g' ~/.bashrc"
-if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ] && [ DEBUG_SCRIPT -ne 0 ]; then
-  echo "force_color_prompt is setting NEED_BASH_REFRESH"
-fi
-NEED_BASH_REFRESH=$REFRESH
-
-update_bashrc DOTFILES_SCRIPT_PARENT=$SCRIPTPATH $NEED_BASH_REFRESH "DOTFILES_SCRIPT_PARENT env var set"
-if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ] && [ DEBUG_SCRIPT -ne 0 ]; then
-  echo "DOTFILES_SCRIPT_PARENT is setting NEED_BASH_REFRESH"
-fi
-NEED_BASH_REFRESH=$REFRESH
-
-update_bashrc "export DOTFILES_SCRIPT_PARENT" $NEED_BASH_REFRESH "DOTFILES_SCRIPT_PARENT env already exported"
-if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ] && [ DEBUG_SCRIPT -ne 0 ]; then
-  echo "export DOTFILES_SCRIPT_PARENT is setting NEED_BASH_REFRESH"
-fi
-NEED_BASH_REFRESH=$REFRESH
-
-
-update_bashrc "source ~/.my_bashrc" $NEED_ENTRY_REFRESH "removing source ~/.my_bashrc" \
-              "sed -i '/source ~\/.my_bashrc/d' ~/.bashrc"
-if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ]; then
-  REFRESH=0 
-else 
-  NEED_BASH_REFRESH=1 
-  if [ DEBUG_SCRIPT -ne 0 ]; then
-    echo "removing ~/.my_bashrc is setting NEED_BASH_REFRESH"
-  fi
-fi
-NEED_BASH_REFRESH=$REFRESH
-
-update_bashrc "source ~/.my_profile" $NEED_ENTRY_REFRESH "removing source ~/.my_profile" \
-              "sed -i '/source ~\/.my_profile/d' ~/.bashrc"
-if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ]; then
-  REFRESH=0
-else
-  NEED_BASH_REFRESH=1 
-  if [ DEBUG_SCRIPT -ne 0 ]; then
-    echo "removing ~/.my_profile is setting NEED_BASH_REFRESH"
-  fi
-fi
-NEED_BASH_REFRESH=$REFRESH
-
-update_bashrc "source ~/.my_entry" $NEED_ENTRY_REFRESH "already calling ~/.my_entry" 
-if [ $NEED_ENTRY_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ]; then
-  echo "souce ~/.my_entry is setting NEED_ENTRY_REFRESH"
-fi
-NEED_ENTRY_REFRESH=$REFRESH
-
-
-  echo "bef val of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_ENTRY_REFRESH"
-
-if [[ NEED_BASH_REFRESH -ne 0 ]]; then
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
-     echo "sourcing bashrc"
-  fi
-  #source ~/.bashrc # cannot source bashrc from script
-  source ~/.my_entry "$SCRIPTPATH"
-  NEED_ENTRY_REFRESH=0
-fi
-
-echo "after bash of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_ENTRY_REFRESH"
-
-if [[ NEED_ENTRY_REFRESH -ne 0 ]]; then
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
-     echo "sourcing my_entry"
-  fi
-  source ~/.my_entry
-fi
-
-echo "after prof val of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_ENTRY_REFRESH"
-
-if [[ NEED_VIM_PLUGIN_INSTALL -ne 0 ]]; then
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
-     echo "running vim +PluginInstall...."
-  fi
-  VIM_PLUGIN_HASH=$(cat $HOME/.vimrc | sed -n 's/\(^Plugin\)/\1/p' | md5sum | cut -d' ' -f1)
-  VIM_EXEC=vim
-  if [ -f $HOME/.local/bin/vim ]; then
-    VIM_EXEC=$HOME/.local/bin/vim
-  fi
-  if [ ! -f $SCRIPTPATH/faaltu/.vim_plugin.hash ]; then
-    VIM_PLUGIN_OLD_HASH="Nothing"
-    $VIM_EXEC +PluginInstall +qall
-  else
-    VIM_PLUGIN_OLD_HASH=$(cat $SCRIPTPATH/faaltu/.vim_plugin.hash)
-  fi
-  if [ "$VIM_PLUGIN_HASH" != "$VIM_PLUGIN_OLD_HASH" ]; then
-    $VIM_EXEC +PluginClean! +qall
-    $VIM_EXEC +PluginInstall +qall
-    $VIM_EXEC +PluginUpdate +qall
-    echo $VIM_PLUGIN_HASH > $SCRIPTPATH/faaltu/.vim_plugin.hash
-  fi
-
-fi
-
-# install YouCompleteMe only if not installed or if YCM is updated
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
-    echo "installing YouCompleteMe"
-  fi
-  make --version
-  MAKE_RET=$?
-  cmake --version
-  CMAKE_RET=$?
-  if [ $MAKE_RET -eq 0 ] && [ $CMAKE_RET -eq 0 ]; then
-    if [ -f $HOME/.vim/bundle/YouCompleteMe/install.py ]; then
-      YCM_HASH=$(git -C $HOME/.vim/bundle/YouCompleteMe/ rev-parse @)
-      if [ ! -f $SCRIPTPATH/faaltu/.clang+llvm.hash ]; then
-        YCM_OLD_HASH="Nothing"
-      else
-        YCM_OLD_HASH=$(cat $SCRIPTPATH/faaltu/.clang+llvm.hash)
-      fi
-      if [ "$YCM_HASH" != "$YCM_OLD_HASH" ]; then
-        $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer --java-completer
-        echo $YCM_HASH > $SCRIPTPATH/faaltu/.clang+llvm.hash
-      else 
-        echo "YouCompleteMe is latest"
-      fi
-    fi
-  fi
-
 wget --version > /dev/null
 WGET_RET="$?"
 
@@ -606,11 +304,11 @@ function install_vim {
       if [[ DEBUG_SCRIPT -ne 0 ]]; then
         echo "running vim install script"
       fi
-      (cd $VIM_REPO && ./configure --enable-pythoninterp --with-features=huge --enable-gui=auto --prefix=$HOME/.local )
+      (cd $VIM_REPO && ./configure --enable-python3interp --with-features=huge --enable-gui=auto --prefix=$HOME/.local )
       PREBUILD_RET=$?
       if [ $PREBUILD_RET -ne 0 ]; then
         echo "error in running configure"
-        echo "(cd $VIM_REPO && ./configure --enable-pythoninterp --with-features=huge --enable-gui=auto --prefix=$HOME/.local )"
+        echo "(cd $VIM_REPO && ./configure --enable-python3interp --with-features=huge --enable-gui=auto --prefix=$HOME/.local )"
         echo "returning......................"
         return
       fi
@@ -938,6 +636,259 @@ function install_brew {
   fi
 }
 
+
+# script for adding llvm to environment
+home_dir_symlink llvm_scripts .
+# script for adding gcc to environment
+home_dir_symlink gcc_scripts .
+
+if [ -d ~/.vim/syntax ]; then
+  rm -rf ~/.vim/syntax
+fi
+
+# manual linking of dir inside ~/.vim 
+home_dir_symlink syntax .vim
+home_dir_symlink ftplugin .vim
+home_dir_symlink templates .vim
+
+# symlink directory for vimwiki
+home_dir_symlink vimwiki .
+
+# symlink i3 config
+home_dir_symlink i3 .config
+home_dir_symlink i3status .config
+
+home_dir_symlink .set_screen.sh .
+
+if [ -L ~/.toggletouchpad.sh ]; then
+  rm  ~/.toggletouchpad.sh
+fi
+
+if [ -L ~/.noctrlq.sh ]; then
+  rm  ~/.noctrlq.sh
+fi
+
+# # symlink toggletouchpad.sh
+# home_dir_symlink .toggletouchpad.sh .
+# # disable ctrlq for firefox
+# home_dir_symlink .noctrlq.sh .
+
+# if kde plasma get my shortcuts
+if [[ $DESKTOP_SESSION = *"plasma" ]]; then
+  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+     echo "plasma (kde) detected"
+  fi
+  PLASMASHELL_VERSION=`eval plasmashell --version | sed -nr 's/plasmashell ([0-9][0-9]*\.*)/\1/p'`
+  PLASMASHELL_MAJOR=`plasmashell --version | sed -rn 's/plasmashell ([0-9])\.[0-9].*/\1/p'`
+  if [ $PLASMASHELL_MAJOR -eq 5 ]; then
+    home_dir_symlink kglobalshortcutsrc.kksrc .config
+    home_dir_symlink khotkeysrc .config
+    home_dir_symlink quicktile.cfg .config
+    home_dir_symlink Xmodmap .config
+  else
+    echo "Don't know how to handle this plasma version"
+    echo "PLASMASHELL_VERSION $PLASMASHELL_VERSION"
+    echo "PLASMASHELL_MAJOR $PLASMASHELL_MAJOR"
+    OUTPUT_PLASMASHELL=`eval plasmashell --version`
+    echo "plasmashell --version is $OUTPUT_PLASMASHELL"
+  fi
+else
+  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+    echo "desktop session not plasma ($DESKTOP_SESSION)"
+  fi
+fi
+
+# plugin manager for vim
+if [ ! -d "$HOME/.vim/bundle/Vundle.vim" ]; then
+  git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
+  NEED_VIM_PLUGIN_INSTALL=1
+fi
+
+home_dir_symlink .vimrc .
+home_dir_symlink .my_ssh_agent .
+home_dir_symlink .my_profile .
+home_dir_symlink .my_bashrc .
+home_dir_symlink .my_entry .
+home_dir_symlink .tmux.conf .
+home_dir_symlink .latexmkrc .
+  
+if [ ! -f "$HOME/.my_vars" ]; then
+  touch $HOME/.my_vars
+fi
+
+
+mkdir -p $HOME/.vim/tags
+mkdir -p $HOME/.local/bin
+
+# setup virtualenv for python2 and python3
+function python_virtualenv_setup {
+  VERSION_NUMBER="$1"
+  VIRTUALENV_EXEC="virtualenv"
+
+  if [ -d "$HOME/venv" ]; then
+    if [ "$VERSION_NUMBER" == "3" ]; then
+      echo "virtualenv for python3 exists ($HOME/venv)"
+      return
+    fi
+  fi
+
+  if [ -d "$HOME/venv2" ]; then
+    if [ "$VERSION_NUMBER" == "2" ]; then
+      echo "virtualenv for python2 exists ($HOME/venv2)"
+      return
+    fi
+  fi
+
+  type $VIRTUALENV_EXEC 
+  if [ "$?" != "0" ]; then
+    #virtualenv not in path    
+    if [ ! -f $HOME/.local/bin/virtualenv ]; then
+      # /usr/bin/python3
+      if [ ! -f /usr/bin/python3 ] && [ ! -L /usr/bin/python3 ]; then
+        echo "From python_virtualenv_setup: Cannot find /usr/bin/python3"
+        echo "Cannot create virtualenv"
+        return
+      else
+        WHICH_PIP3=`which pip3`
+        if [ "$?" != "0" ] || [ "$WHICH_PIP3" == "$HOME/.local/bin/pip3"]; then
+          if [ "$WHICH_PIP3" != "$HOME/.local/bin/pip3"]; then
+            echo "pip3 not installed, installing by downloading get-pip.py"
+            if [ ! -f "$DOTFILES_SCRIPT_PARENT/faaltu/get-pip.py" ]; then
+              curl https://bootstrap.pypa.io/get-pip.py -o $DOTFILES_SCRIPT_PARENT/faaltu/get-pip.py 
+            fi
+            /usr/bin/python3 $DOTFILES_SCRIPT_PARENT/faaltu/get-pip.py --user
+          fi
+          pip3 install --user virtualenv
+          VIRTUALENV_EXEC="$HOME/.local/bin/virtualenv"
+          if [ "$?" != "0" ]; then
+            echo "Error in installing virtualenv through pip"
+            echo "Command tried"
+            echo "/usr/bin/python3 -m pip install --user virtualenv"
+            return
+          fi
+        else
+          /usr/bin/python3 -m pip install --user virtualenv
+          VIRTUALENV_EXEC="$HOME/.local/bin/virtualenv"
+          if [ "$?" != "0" ]; then
+            echo "Error in installing virtualenv through pip"
+            echo "Command tried"
+            echo "/usr/bin/python3 -m pip install --user virtualenv"
+            return
+          fi
+        fi
+      fi
+    fi
+  fi
+  # virtualenv should be in VIRTUALENV_EXE at this point
+  if [ "$VERSION_NUMBER" != "2" ] && [ "$VERSION_NUMBER" != "3" ]; then
+    echo "From python_virtualenv_setup: $VERSION_NUMBER is not supported"
+    return
+  else
+    if [ "$VERSION_NUMBER" == "2" ]; then
+      # /usr/bin/python2
+      if [ ! -f /usr/bin/python2 ] && [ ! -L /usr/bin/python2 ]; then
+        echo "From python_virtualenv_setup: Cannot find /usr/bin/python2"
+      else
+        $VIRTUALENV_EXEC -p /usr/bin/python2 $HOME/venv2
+      fi
+    elif [ "$VERSION_NUMBER" == "3" ]; then
+      # /usr/bin/python3
+      if [ ! -f /usr/bin/python3 ] && [ ! -L /usr/bin/python3 ]; then
+        echo "From python_virtualenv_setup: Cannot find /usr/bin/python3"
+      else
+        $VIRTUALENV_EXEC -p /usr/bin/python3 $HOME/venv
+      fi
+    fi
+  fi
+}
+
+python_virtualenv_setup 2
+python_virtualenv_setup 3
+
+if [ -f /usr/bin/pip3 ] || [ -L /usr/bin/pip3 ]; then
+  if [ ! -f $HOME/.local/bin/cmakelint ]; then
+    /usr/bin/pip3 install --user cmakelint
+  fi
+  if [ ! -f $HOME/.local/bin/cmake-format ]; then
+    /usr/bin/pip3 install --user cmake-format
+  fi
+fi
+
+# all symlink done (configuration structure established)
+
+update_bashrc "force_color_prompt=yes" $NEED_BASH_REFRESH "force_color_prompt already set" \
+              "sed -i 's/#force_color_prompt/force_color_prompt/g' ~/.bashrc"
+if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ] && [ DEBUG_SCRIPT -ne 0 ]; then
+  echo "force_color_prompt is setting NEED_BASH_REFRESH"
+fi
+NEED_BASH_REFRESH=$REFRESH
+
+update_bashrc DOTFILES_SCRIPT_PARENT=$SCRIPTPATH $NEED_BASH_REFRESH "DOTFILES_SCRIPT_PARENT env var set"
+if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ] && [ DEBUG_SCRIPT -ne 0 ]; then
+  echo "DOTFILES_SCRIPT_PARENT is setting NEED_BASH_REFRESH"
+fi
+NEED_BASH_REFRESH=$REFRESH
+
+update_bashrc "export DOTFILES_SCRIPT_PARENT" $NEED_BASH_REFRESH "DOTFILES_SCRIPT_PARENT env already exported"
+if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ] && [ DEBUG_SCRIPT -ne 0 ]; then
+  echo "export DOTFILES_SCRIPT_PARENT is setting NEED_BASH_REFRESH"
+fi
+NEED_BASH_REFRESH=$REFRESH
+
+
+update_bashrc "source ~/.my_bashrc" $NEED_ENTRY_REFRESH "removing source ~/.my_bashrc" \
+              "sed -i '/source ~\/.my_bashrc/d' ~/.bashrc"
+if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ]; then
+  REFRESH=0 
+else 
+  NEED_BASH_REFRESH=1 
+  if [ DEBUG_SCRIPT -ne 0 ]; then
+    echo "removing ~/.my_bashrc is setting NEED_BASH_REFRESH"
+  fi
+fi
+NEED_BASH_REFRESH=$REFRESH
+
+update_bashrc "source ~/.my_profile" $NEED_ENTRY_REFRESH "removing source ~/.my_profile" \
+              "sed -i '/source ~\/.my_profile/d' ~/.bashrc"
+if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ]; then
+  REFRESH=0
+else
+  NEED_BASH_REFRESH=1 
+  if [ DEBUG_SCRIPT -ne 0 ]; then
+    echo "removing ~/.my_profile is setting NEED_BASH_REFRESH"
+  fi
+fi
+NEED_BASH_REFRESH=$REFRESH
+
+update_bashrc "source ~/.my_entry" $NEED_ENTRY_REFRESH "already calling ~/.my_entry" 
+if [ $NEED_ENTRY_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ]; then
+  echo "souce ~/.my_entry is setting NEED_ENTRY_REFRESH"
+fi
+NEED_ENTRY_REFRESH=$REFRESH
+
+
+  echo "bef val of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_ENTRY_REFRESH"
+
+if [[ NEED_BASH_REFRESH -ne 0 ]]; then
+  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+     echo "sourcing bashrc"
+  fi
+  #source ~/.bashrc # cannot source bashrc from script
+  source ~/.my_entry "$SCRIPTPATH"
+  NEED_ENTRY_REFRESH=0
+fi
+
+echo "after bash of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_ENTRY_REFRESH"
+
+if [[ NEED_ENTRY_REFRESH -ne 0 ]]; then
+  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+     echo "sourcing my_entry"
+  fi
+  source ~/.my_entry
+fi
+
+# all updating to variable/dotfiles done
+#calling install functions
 install_vim
 install_clang_llvm
 install_ctags
@@ -945,8 +896,59 @@ install_gitlfs
 # install_i3wmIPC
 install_cmake
 install_googletest
-
 #install_brew
+
+echo "after prof val of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_ENTRY_REFRESH"
+
+if [[ NEED_VIM_PLUGIN_INSTALL -ne 0 ]]; then
+  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+     echo "running vim +PluginInstall...."
+  fi
+  VIM_PLUGIN_HASH=$(cat $HOME/.vimrc | sed -n 's/\(^Plugin\)/\1/p' | md5sum | cut -d' ' -f1)
+  VIM_EXEC=vim
+  if [ -f $HOME/.local/bin/vim ]; then
+    VIM_EXEC=$HOME/.local/bin/vim
+  fi
+  if [ ! -f $SCRIPTPATH/faaltu/.vim_plugin.hash ]; then
+    VIM_PLUGIN_OLD_HASH="Nothing"
+    $VIM_EXEC +PluginInstall +qall
+  else
+    VIM_PLUGIN_OLD_HASH=$(cat $SCRIPTPATH/faaltu/.vim_plugin.hash)
+  fi
+  if [ "$VIM_PLUGIN_HASH" != "$VIM_PLUGIN_OLD_HASH" ]; then
+    $VIM_EXEC +PluginClean! +qall
+    $VIM_EXEC +PluginInstall +qall
+    $VIM_EXEC +PluginUpdate +qall
+    echo $VIM_PLUGIN_HASH > $SCRIPTPATH/faaltu/.vim_plugin.hash
+  fi
+
+fi
+
+# install YouCompleteMe only if not installed or if YCM is updated
+  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing YouCompleteMe"
+  fi
+  make --version
+  MAKE_RET=$?
+  cmake --version
+  CMAKE_RET=$?
+  if [ $MAKE_RET -eq 0 ] && [ $CMAKE_RET -eq 0 ]; then
+    if [ -f $HOME/.vim/bundle/YouCompleteMe/install.py ]; then
+      YCM_HASH=$(git -C $HOME/.vim/bundle/YouCompleteMe/ rev-parse @)
+      if [ ! -f $SCRIPTPATH/faaltu/.clang+llvm.hash ]; then
+        YCM_OLD_HASH="Nothing"
+      else
+        YCM_OLD_HASH=$(cat $SCRIPTPATH/faaltu/.clang+llvm.hash)
+      fi
+      if [ "$YCM_HASH" != "$YCM_OLD_HASH" ]; then
+        python3 $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer --java-completer
+        echo $YCM_HASH > $SCRIPTPATH/faaltu/.clang+llvm.hash
+        echo "Installed/Updated YouCompleteMe"
+      else 
+        echo "YouCompleteMe is latest"
+      fi
+    fi
+  fi
 
 # # install vim-ycm-latex-semantic-completer
 #  if [[ DEBUG_SCRIPT -ne 0 ]]; then
