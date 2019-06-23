@@ -636,6 +636,34 @@ function install_brew {
   fi
 }
 
+function install_ycm {
+# install YouCompleteMe only if not installed or if YCM is updated
+  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing YouCompleteMe"
+  fi
+  make --version
+  MAKE_RET=$?
+  cmake --version
+  CMAKE_RET=$?
+  if [ $MAKE_RET -eq 0 ] && [ $CMAKE_RET -eq 0 ]; then
+    if [ -f $HOME/.vim/bundle/YouCompleteMe/install.py ]; then
+      YCM_HASH=$(git -C $HOME/.vim/bundle/YouCompleteMe/ rev-parse @)
+      if [ ! -f $SCRIPTPATH/faaltu/.clang+llvm.hash ]; then
+        YCM_OLD_HASH="Nothing"
+      else
+        YCM_OLD_HASH=$(cat $SCRIPTPATH/faaltu/.clang+llvm.hash)
+      fi
+      if [ "$YCM_HASH" != "$YCM_OLD_HASH" ]; then
+        python3 $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer --java-completer
+        echo $YCM_HASH > $SCRIPTPATH/faaltu/.clang+llvm.hash
+        echo "Installed/Updated YouCompleteMe"
+      else 
+        echo "YouCompleteMe is latest"
+      fi
+    fi
+  fi
+}
+
 
 # script for adding llvm to environment
 home_dir_symlink llvm_scripts .
@@ -897,6 +925,7 @@ install_gitlfs
 install_cmake
 install_googletest
 #install_brew
+install_ycm
 
 echo "after prof val of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_ENTRY_REFRESH"
 
@@ -923,32 +952,6 @@ if [[ NEED_VIM_PLUGIN_INSTALL -ne 0 ]]; then
   fi
 
 fi
-
-# install YouCompleteMe only if not installed or if YCM is updated
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
-    echo "installing YouCompleteMe"
-  fi
-  make --version
-  MAKE_RET=$?
-  cmake --version
-  CMAKE_RET=$?
-  if [ $MAKE_RET -eq 0 ] && [ $CMAKE_RET -eq 0 ]; then
-    if [ -f $HOME/.vim/bundle/YouCompleteMe/install.py ]; then
-      YCM_HASH=$(git -C $HOME/.vim/bundle/YouCompleteMe/ rev-parse @)
-      if [ ! -f $SCRIPTPATH/faaltu/.clang+llvm.hash ]; then
-        YCM_OLD_HASH="Nothing"
-      else
-        YCM_OLD_HASH=$(cat $SCRIPTPATH/faaltu/.clang+llvm.hash)
-      fi
-      if [ "$YCM_HASH" != "$YCM_OLD_HASH" ]; then
-        python3 $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer --java-completer
-        echo $YCM_HASH > $SCRIPTPATH/faaltu/.clang+llvm.hash
-        echo "Installed/Updated YouCompleteMe"
-      else 
-        echo "YouCompleteMe is latest"
-      fi
-    fi
-  fi
 
 # # install vim-ycm-latex-semantic-completer
 #  if [[ DEBUG_SCRIPT -ne 0 ]]; then
