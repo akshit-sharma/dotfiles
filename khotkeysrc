@@ -254,7 +254,7 @@ TriggersCount=1
 
 [Data_2_1Triggers0]
 GesturePointData[$d]
-Key=Print
+Key=
 Type=SHORTCUT
 Uuid={5d314ecd-669a-4a5d-afa2-e4395ab4a946}
 
@@ -286,7 +286,7 @@ TriggersCount=1
 
 [Data_2_2Triggers0]
 GesturePointData[$d]
-Key=Shift+Print
+Key=
 Type=SHORTCUT
 Uuid={3dd1a9f6-4cb6-499d-9c26-f3ee54f7ac83}
 
@@ -318,7 +318,7 @@ TriggersCount=1
 
 [Data_2_3Triggers0]
 GesturePointData[$d]
-Key=Meta+Print
+Key=
 Type=SHORTCUT
 Uuid={86a1de0a-ed4b-4d61-8d81-88897d18b047}
 
@@ -350,7 +350,7 @@ TriggersCount=1
 
 [Data_2_4Triggers0]
 GesturePointData[$d]
-Key=Meta+Shift+Print
+Key=
 Type=SHORTCUT
 Uuid={8d1a61fd-8085-4b9b-a3bf-bb981fbc6abd}
 

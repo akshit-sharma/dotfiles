@@ -10,6 +10,13 @@ else
   SSH_OFF=${SSH_VAR}
 fi
 
+if [ -f $file_name ]; then
+  SSH_OFF="1"
+  SSH_FOUND="1"
+else
+  SSH_FOUND="0"
+fi
+
 if [ -z ${DOTFILES_SCRIPT_DIR} ]; then
   SCRIPT_PATH=$DEFAULTPATH
 else 
@@ -185,7 +192,7 @@ if [ ! -d $SCRIPT_PATH ]; then
       git lfs clone git@github.com:akshit-sharma/dotfiles.git $SCRIPT_PATH
       DOTFILES_DOWNLOAD="1"
     else
-      if [ "$SSH_OFF" == "0" ]; then
+      if [ "$SSH_OFF" == "0" ] || [ "$SSH_FOUND" == "1" ]; then
         git clone git@github.com:akshit-sharma/dotfiles.git $SCRIPT_PATH
         DOTFILES_DOWNLOAD="1"
       else
