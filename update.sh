@@ -664,6 +664,21 @@ function install_ycm {
   fi
 }
 
+function install_vcpkg {
+  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing vcpkg"
+  fi
+  if [ ! -d $HOME/Softwares ]; then
+    mkdir -p $HOME/Softwares
+  fi
+  if [ -d $HOME/Softwares ] && [ ! -d $HOME/Softwares/vcpkg ]; then
+    git clone https://github.com/Microsoft/vcpkg.git $HOME/Softwares/vcpkg
+  fi
+  if [ -d $HOME/Softwares/vcpkg ]; then
+    (cd $HOME/Softwares/vcpkg && ./bootstrap-vcpkg.sh)
+  fi 
+}
+
 
 # script for adding llvm to environment
 home_dir_symlink llvm_scripts .
@@ -926,6 +941,7 @@ install_cmake
 install_googletest
 #install_brew
 install_ycm
+install_vcpkg
 
 echo "after prof val of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_ENTRY_REFRESH"
 
