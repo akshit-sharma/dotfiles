@@ -30,7 +30,9 @@ if [ -d $SW_HOME/gcc/bin/ ]; then
 fi
 
 if [ -d $SW_HOME/vcpkg ]; then
-  PATH=$PATH:$SW_HOME/vcpkg
+ PATH=$PATH:$SW_HOME/vcpkg
+ VCPKG_ROOT=$SW_HOME/vcpkg/
+ export VCPKG_ROOT
 fi
 
 if [ -f /usr/lib/x86_64-linux-gnu/libOpenCL.so.1 ]; then
