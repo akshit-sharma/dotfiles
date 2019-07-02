@@ -668,6 +668,10 @@ function install_vcpkg {
   if [[ DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing vcpkg"
   fi
+  type vcpkg
+  if [ "$?" != 0 ]; then
+    return
+  fi
   if [ ! -d $HOME/Softwares ]; then
     mkdir -p $HOME/Softwares
   fi
