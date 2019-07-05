@@ -12,28 +12,28 @@ function parent_directory {
   while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
     TARGET="$(readlink "$SOURCE")"
     if [[ $TARGET == /* ]]; then
-      if [ DEBUG_SCRIPT -ne 0]; then
+      if [ $DEBUG_SCRIPT -ne 0]; then
         echo "SOURCE '$SOURCE' is an absolute symlink to '$TARGET'"
       fi
       SOURCE="$TARGET"
     else
       DIR="$( dirname "$SOURCE" )"
-      if [[ DEBUG_SCRIPT -ne 0 ]]; then
+      if [[ $DEBUG_SCRIPT -ne 0 ]]; then
         echo "SOURCE '$SOURCE' is a relative symlink to '$TARGET' (relative to '$DIR')"
       fi
       SOURCE="$DIR/$TARGET" # if $SOURCE was a relative symlink, 
                             # we need to resolve it relative to the path where the symlink file was located
     fi
   done
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "SOURCE is '$SOURCE'"
   fi
   RDIR="$( dirname "$SOURCE" )"
   DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-  if [ "$DIR" != "$RDIR" ] && [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [ "$DIR" != "$RDIR" ] && [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "DIR '$RDIR' resolves to '$DIR'"
   fi
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "DIR is '$DIR'"
   fi
   SCRIPT_PARENT_DIRECTORY=$DIR
@@ -56,7 +56,7 @@ function update_bashrc {
   RET_CAT=$?
   if [ $RET_CAT -eq 0 ];
   then
-    if [[ DEBUG_SCRIPT -ne 0 ]]; then
+    if [[ $DEBUG_SCRIPT -ne 0 ]]; then
       echo "~/.bashrc $MSG_IF_PRESENT"
     fi
   else
@@ -72,12 +72,12 @@ function update_bashrc {
 
 if [ ! "$DOTFILES_SCRIPT_PARENT" ]; then
   parent_directory
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "Found parent directory as $SCRIPT_PARENT_DIRECTORY"
   fi
   SCRIPTPATH=$SCRIPT_PARENT_DIRECTORY
 else
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "DOTFILES_SCRIPT_PARENT already set to $DOTFILES_SCRIPT_PARENT"
   fi
   SCRIPTPATH=$DOTFILES_SCRIPT_PARENT
@@ -111,7 +111,7 @@ function home_dir_symlink {
     return
   fi
 
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "symlink $HOME/$dir/$filename ---> $SCRIPTPATH/$filename"
   fi
   if [ ! -d $HOME/$dir ]; then
@@ -119,7 +119,7 @@ function home_dir_symlink {
   fi
   if [ ! -f $SCRIPTPATH/$filename ] && [ ! -d $SCRIPTPATH/$filename ]; then 
                                                             # pretty much use less after getting files
-    if [[ DEBUG_SCRIPT -ne 0 ]]; then
+    if [[ $DEBUG_SCRIPT -ne 0 ]]; then
       echo "copying $HOME/$dir/$filename to $SCRIPTPATH/$filename"
     fi
     if [ -f $HOME/$dir/$filename ]; then
@@ -144,7 +144,7 @@ function home_dir_symlink {
 #  script_file_md5=`eval md5sum < $SCRIPTPATH/$filename | cut -d\  -f1`
 #  destination_file_md5=`eval md5sum < $SCRIPTPATH/$filename | cut -d\  -f1`
       if [ ! -f "$HOME/$dir/$filename.bk" ] && [ ! -d "$HOME/$dir/$filename.bk" ] && [ ! -L "$HOME/$dir/$filename.bk" ]; then
-        if [[ DEBUG_SCRIPT -ne 0 ]]; then
+        if [[ $DEBUG_SCRIPT -ne 0 ]]; then
           echo "backing up $HOME/$dir/$filename to $HOME/$dir/$filename.bk"
         fi
         mv "$HOME/$dir/$filename" "$HOME/$dir/$filename.bk"
@@ -154,7 +154,7 @@ function home_dir_symlink {
     fi
     if [ ! -L "$HOME/$dir/$filename" ]; then
       if [ -f "$SCRIPTPATH/$filename" ] || [ -d "$SCRIPTPATH/$filename" ]; then
-        if [[ DEBUG_SCRIPT -ne 0 ]]; then
+        if [[ $DEBUG_SCRIPT -ne 0 ]]; then
           echo "linking $SCRIPTPATH/$filename to $HOME/$dir/$filename"
         fi
         ln -sT $SCRIPTPATH/$filename $HOME/$dir/$filename
@@ -248,7 +248,7 @@ function download_and_extract {
 
 # install vim only if update is available
 function install_vim {
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing/updating vim"
   fi
   if false; then
@@ -261,7 +261,7 @@ function install_vim {
     VIM_FINGERPRINT="Random123"
     VIM_INSTALL=0
     if [ ! -d $VIM_REPO ]; then
-      if [[ DEBUG_SCRIPT -ne 0 ]]; then
+      if [[ $DEBUG_SCRIPT -ne 0 ]]; then
         echo "cloning vim git repo into $VIM_REPO"
       fi
       git clone https://github.com/vim/vim.git $VIM_REPO
@@ -288,7 +288,7 @@ function install_vim {
     VIM_REMOTE=$(git -C $VIM_REPO rev-parse "$UPSTREAM")
     VIM_BASE=$(git -C $VIM_REPO merge-base @ "$UPSTREAM")
 
-    # if [[ DEBUG_SCRIPT -ne 0 ]]; then
+    # if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     #   echo "Value of VIM_LOCAL is $VIM_LOCAL"
     #   echo "Value of VIM_REMOTE is $VIM_REMOTE"
     #   echo "Value of VIM_BASE is $VIM_BASE"
@@ -301,7 +301,7 @@ function install_vim {
       VIM_INSTALL=1
     fi
     if [ $VIM_INSTALL == 1 ]; then
-      if [[ DEBUG_SCRIPT -ne 0 ]]; then
+      if [[ $DEBUG_SCRIPT -ne 0 ]]; then
         echo "running vim install script"
       fi
       (cd $VIM_REPO && ./configure --enable-python3interp --with-features=huge --enable-gui=auto --prefix=$HOME/.local )
@@ -336,7 +336,7 @@ function install_vim {
 
 # install ctags only if not installed or MD5 changed
 function install_ctags {
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing ctags"
   fi
   if [ $WGET_RET == 0 ]; then
@@ -378,7 +378,7 @@ function install_ctags {
 
 # install clang+llvm only if not installed or MD5 changed
 function install_clang_llvm {
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing clang+llvm"
   fi
   if [ $WGET_RET == 0 ]; then 
@@ -426,7 +426,7 @@ function install_clang_llvm {
 
 # install git large file system (git lfs) if not installed or version updated
 function install_gitlfs {
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing git lfs"
   fi
   GIT_LFS_MD5="a8363aba7fa60e1769571c4f49affbcb"
@@ -486,7 +486,7 @@ function install_i3wmIPC {
     echo "i3 --version returned ${I3_RET}"
     return
   fi
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "building i3wmIPC"
   fi
 
@@ -547,7 +547,7 @@ function install_i3wmIPC {
 
 # install cmake
 function install_cmake {
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing cmake"
   fi
   CMAKE_MD5="762dda556a9a1c84cd7ded37c3c5191f"
@@ -575,7 +575,7 @@ function install_cmake {
 
 # install googletest
 function install_googletest {
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing googletest"
   fi
   GOOGLETEST_MD5="2e6fbeb6a91310a16efe181886c59596"
@@ -631,14 +631,14 @@ function install_googletest {
 
 # install Homebrew
 function install_brew {
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing HomeBrew"
   fi
 }
 
 function install_ycm {
 # install YouCompleteMe only if not installed or if YCM is updated
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing YouCompleteMe"
   fi
   make --version
@@ -665,7 +665,7 @@ function install_ycm {
 }
 
 function install_vcpkg {
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing vcpkg"
   fi
   type vcpkg
@@ -722,7 +722,7 @@ fi
 
 # if kde plasma get my shortcuts
 if [[ $DESKTOP_SESSION = *"plasma" ]]; then
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
      echo "plasma (kde) detected"
   fi
   PLASMASHELL_VERSION=`eval plasmashell --version | sed -nr 's/plasmashell ([0-9][0-9]*\.*)/\1/p'`
@@ -740,7 +740,7 @@ if [[ $DESKTOP_SESSION = *"plasma" ]]; then
     echo "plasmashell --version is $OUTPUT_PLASMASHELL"
   fi
 else
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "desktop session not plasma ($DESKTOP_SESSION)"
   fi
 fi
@@ -865,19 +865,19 @@ fi
 
 update_bashrc "force_color_prompt=yes" $NEED_BASH_REFRESH "force_color_prompt already set" \
               "sed -i 's/#force_color_prompt/force_color_prompt/g' ~/.bashrc"
-if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ] && [ DEBUG_SCRIPT -ne 0 ]; then
+if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ] && [ $DEBUG_SCRIPT -ne 0 ]; then
   echo "force_color_prompt is setting NEED_BASH_REFRESH"
 fi
 NEED_BASH_REFRESH=$REFRESH
 
 update_bashrc DOTFILES_SCRIPT_PARENT=$SCRIPTPATH $NEED_BASH_REFRESH "DOTFILES_SCRIPT_PARENT env var set"
-if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ] && [ DEBUG_SCRIPT -ne 0 ]; then
+if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ] && [ $DEBUG_SCRIPT -ne 0 ]; then
   echo "DOTFILES_SCRIPT_PARENT is setting NEED_BASH_REFRESH"
 fi
 NEED_BASH_REFRESH=$REFRESH
 
 update_bashrc "export DOTFILES_SCRIPT_PARENT" $NEED_BASH_REFRESH "DOTFILES_SCRIPT_PARENT env already exported"
-if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ] && [ DEBUG_SCRIPT -ne 0 ]; then
+if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ] && [ $DEBUG_SCRIPT -ne 0 ]; then
   echo "export DOTFILES_SCRIPT_PARENT is setting NEED_BASH_REFRESH"
 fi
 NEED_BASH_REFRESH=$REFRESH
@@ -889,7 +889,7 @@ if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ]; then
   REFRESH=0 
 else 
   NEED_BASH_REFRESH=1 
-  if [ DEBUG_SCRIPT -ne 0 ]; then
+  if [ $DEBUG_SCRIPT -ne 0 ]; then
     echo "removing ~/.my_bashrc is setting NEED_BASH_REFRESH"
   fi
 fi
@@ -901,7 +901,7 @@ if [ $NEED_BASH_REFRESH -eq 0 ] && [ $REFRESH -ne 0 ]; then
   REFRESH=0
 else
   NEED_BASH_REFRESH=1 
-  if [ DEBUG_SCRIPT -ne 0 ]; then
+  if [ $DEBUG_SCRIPT -ne 0 ]; then
     echo "removing ~/.my_profile is setting NEED_BASH_REFRESH"
   fi
 fi
@@ -917,7 +917,7 @@ NEED_ENTRY_REFRESH=$REFRESH
   echo "bef val of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_ENTRY_REFRESH"
 
 if [[ NEED_BASH_REFRESH -ne 0 ]]; then
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
      echo "sourcing bashrc"
   fi
   #source ~/.bashrc # cannot source bashrc from script
@@ -928,7 +928,7 @@ fi
 echo "after bash of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_ENTRY_REFRESH"
 
 if [[ NEED_ENTRY_REFRESH -ne 0 ]]; then
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
      echo "sourcing my_entry"
   fi
   source ~/.my_entry
@@ -950,7 +950,7 @@ install_vcpkg
 echo "after prof val of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_ENTRY_REFRESH"
 
 if [[ NEED_VIM_PLUGIN_INSTALL -ne 0 ]]; then
-  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
      echo "running vim +PluginInstall...."
   fi
   VIM_PLUGIN_HASH=$(cat $HOME/.vimrc | sed -n 's/\(^Plugin\)/\1/p' | md5sum | cut -d' ' -f1)
@@ -974,7 +974,7 @@ if [[ NEED_VIM_PLUGIN_INSTALL -ne 0 ]]; then
 fi
 
 # # install vim-ycm-latex-semantic-completer
-#  if [[ DEBUG_SCRIPT -ne 0 ]]; then
+#  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
 #    echo "install latex ycm for vim"
 #  fi
 #  YCM_COMPLETERS_DIR="$HOME/.vim/bundle/YouCompleteMe/third_party/ycmd/ycmd/completers"

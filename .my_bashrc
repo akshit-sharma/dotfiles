@@ -29,8 +29,8 @@ if [ -d $SW_HOME/gcc/bin/ ]; then
   PATH=$PATH:$SW_HOME/gcc/bin
 fi
 
+PATH=$PATH:$SW_HOME/vcpkg
 if [ -d $SW_HOME/vcpkg ]; then
- PATH=$PATH:$SW_HOME/vcpkg
  VCPKG_ROOT=$SW_HOME/vcpkg/
  export VCPKG_ROOT
 fi
