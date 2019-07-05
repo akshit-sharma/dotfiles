@@ -181,7 +181,8 @@ function download_and_extract {
       echo "git lfs install unsuccessful"
     fi
   fi
-
+  
+GIT_LFS_INSTALL_SUCC="1" # bypassing git lfs clone (ssh) statement
 DOTFILES_DOWNLOAD="0"
 if [ ! -d $SCRIPT_PATH ]; then
   git --version
