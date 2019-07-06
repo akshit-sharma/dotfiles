@@ -69,5 +69,7 @@ export COMPUTECPP_DIR
 export INTEL_OPENCL_LIBRARY
 export GTEST_DIR
 
+eval "`dircolors ~/.mydircolors`"
+
 source $HOME/.my_vars
 

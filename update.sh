@@ -669,7 +669,7 @@ function install_vcpkg {
     echo "installing vcpkg"
   fi
   type vcpkg
-  if [ "$?" != 0 ]; then
+  if [ "$?" == 0 ]; then
     return
   fi
   if [ ! -d $HOME/Softwares ]; then
@@ -758,6 +758,7 @@ home_dir_symlink .my_bashrc .
 home_dir_symlink .my_entry .
 home_dir_symlink .tmux.conf .
 home_dir_symlink .latexmkrc .
+home_dir_symlink .mydircolors .
   
 if [ ! -f "$HOME/.my_vars" ]; then
   touch $HOME/.my_vars
