@@ -43,6 +43,10 @@ if [ -f $LIB_HOME/vulkan-from-src/1.1.82.1/setup-env.sh ]; then
   source $LIB_HOME/vulkan-from-src/1.1.82.1/setup-env.sh
 fi
 
+if [ -f $LIB_HOME/vulkansdk/vulkan/setup-env.sh ]; then
+  source $LIB_HOME/vulkansdk/vulkan/setup-env.sh
+fi
+
 alias vi='vim'
 alias vr='vim -R'
 
