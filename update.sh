@@ -228,6 +228,9 @@ function download_and_extract {
     elif [[ $DOWNLOAD_HOME/$DOWNLOAD_FILE == *.gz ]]; then
       tar -zxf $DOWNLOAD_HOME/$DOWNLOAD_FILE -C $DOWNLOAD_HOME
       SCRIPT_SUCC=1
+    elif [[ $DOWNLOAD_HOME/$DOWNLOAD_FILE == *bz2 ]]; then
+      tar -xjf $DOWNLOAD_HOME/$DOWNLOAD_FILE -C $DOWNLOAD_HOME
+      SCRIPT_SUCC=1
     elif [[ $DOWNLOAD_FILE == *.sh ]]; then
       if [[ -x "$DOWNLOAD_HOME/$DOWNLOAD_FILE" ]]; then
         echo "file already executable"
@@ -683,6 +686,64 @@ function install_vcpkg {
   fi 
 }
 
+function install_valgrind {
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing valgrind"
+  fi
+
+  if [ $WGET_RET == 0 ]; then
+    echo "wget found"
+
+    VALGRIND_MD5="46e5fbdcbc3502a5976a317a0860a975"
+    VALGRIND_VER="3.15"
+    VALGRIND_SUB_VER="0"
+    VALGRIND_DIR="valgrind-${VALGRIND_VER}.${VALGRIND_SUB_VER}"
+    VALGRIND_TAR="valgrind-${VALGRIND_VER}.${VALGRIND_SUB_VER}.tar.bz2"
+    VALGRIND_URL="https://sourceware.org/pub/valgrind/${VALGRIND_TAR}"
+
+    VALGRIND_INSTALL_DIR="${SCRIPTPATH}/faaltu/${VALGRIND_DIR}"
+
+    VALGRIND_INSTALL="1"
+ 
+    if [ ! -d ${VALGRIND_INSTALL_DIR} ]; then
+      mkdir -p ${VALGRIND_INSTALL_DIR}
+    fi
+
+    if [ -d ${SCRIPTPATH}/faaltu/valgrind/bin ]; then
+      VALGRIND_INSTALL_VER=`eval ${SCRIPTPATH}/faaltu/valgrind/bin/valgrind --version | head -n1 | cut -d'-' -f2`
+      if [ "${VALGRIND_INSTALL_VER}" != "${VALGRIND_VER}.${VALGRIND_SUB_VER}" ]; then
+        VALGRIND_INSTALL="0"
+      else
+        echo "valgrind up-to-date"
+      fi
+    else 
+        VALGRIND_INSTALL="0"
+    fi
+
+    if [ ${VALGRIND_INSTALL} == 0 ]; then
+      if [ -d ${SCRIPTPATH}/faaltu/valgrind ]; then
+        rm -rf ${SCRIPTPATH}/faaltu/valgrind/*
+      fi
+      download_and_extract $SCRIPTPATH/faaltu ${SCRIPTPATH}/faaltu/${VALGRIND_DIR} ${VALGRIND_TAR} ${VALGRIND_URL} ${VALGRIND_MD5}
+      (cd ${SCRIPTPATH}/faaltu/${VALGRIND_DIR} && ./configure --prefix=${SCRIPTPATH}/faaltu/valgrind/)
+      make -C ${SCRIPTPATH}/faaltu/${VALGRIND_DIR}
+      make -C ${SCRIPTPATH}/faaltu/${VALGRIND_DIR} install
+    fi
+    if [ ! -L ${HOME}/Softwares/valgrind ]; then
+      ln -sT $SCRIPTPATH/faaltu/valgrind ${HOME}/Softwares/valgrind
+    else
+      VALGRIND_CURRENT_LINK=`eval readlink -f ${HOME}/Softwares/valgrind`
+      if [ "$VALGRIND_CURRENT_LINK" != "${SCRIPTPATH}/faaltu/valgrind" ]; then
+        rm ${HOME}/Softwares/valgrind
+        ln -sT ${SCRIPTPATH}/faaltu/valgrind ${HOME}/Softwares/valgrind
+      fi
+    fi
+  else
+    echo "wget not found, cannot download LLVM Pre Binary"
+  fi
+
+}
+
 
 # script for adding llvm to environment
 home_dir_symlink llvm_scripts .
@@ -947,6 +1008,7 @@ install_googletest
 #install_brew
 install_ycm
 install_vcpkg
+install_valgrind
 
 echo "after prof val of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_ENTRY_REFRESH"
 
