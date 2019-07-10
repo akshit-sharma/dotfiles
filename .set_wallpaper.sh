@@ -4,8 +4,8 @@
 
 function set_wallpaper() 
 {
-  feh --randomize --bg-fill ~/.config/i3/bgImages/*
-  while sleep 600; do feh --randomize --bg-fill ~/.config/i3/bgImages/*; done &
+  sleep 60; feh --randomize --bg-center ~/.config/i3/bgImages/*
+  while sleep 600; do feh --randomize --bg-center ~/.config/i3/bgImages/*; done &
 }
 
 type feh > /dev/null
