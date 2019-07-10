@@ -637,10 +637,10 @@ function install_ycm {
         YCM_OLD_HASH=$(cat $SCRIPTPATH/faaltu/ycm.hash)
       fi
       if [ "$YCM_HASH" != "$YCM_OLD_HASH" ]; then
-        python3 $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer --java-completer
+        python3 $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer 
         if [ "$?" != "0" ]; then
           echo "error running"
-          echo "python3 $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer --java-completer"
+          echo "python3 $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer"
           echo "returning......"
           return  
         fi
