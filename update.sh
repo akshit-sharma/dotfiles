@@ -259,79 +259,59 @@ function install_vim {
       rm -rf $HOME/.local
     fi
   else
-    VIM_DIR="vim"
-    VIM_REPO=$SCRIPTPATH/faaltu/$VIM_DIR
-    VIM_FINGERPRINT="Random123"
-    VIM_INSTALL=0
-    if [ ! -d $VIM_REPO ]; then
-      if [[ $DEBUG_SCRIPT -ne 0 ]]; then
-        echo "cloning vim git repo into $VIM_REPO"
-      fi
-      git clone https://github.com/vim/vim.git $VIM_REPO
-      VIM_INSTALL=1
-    else 
-      if [ ! -f $SCRIPTPATH/faaltu/vim.done ]; then
-        echo "No $SCRIPTPATH/faaltu/vim.done file found"
-        make -C $VIM_REPO distclean
-        VIM_INSTALL=1
+    if [ -d ${SCRIPTPATH}/faaltu/vim/.git ]; then
+      rm -rf ${SCRIPTPATH}/faaltu/vim
+    fi
+
+    VIM_MD5="b35e794140c196ff59b492b56c1e73db"
+    VIM_MAJOR_VER="8"
+    VIM_MINOR_VER="0"
+    VIM_DIR="vim${VIM_MAJOR_VER}${VIM_MINOR_VER}"
+    VIM_TAR="vim-${VIM_MAJOR_VER}.${VIM_MINOR_VER}.tar.bz2"
+    VIM_URL="https://ftp.nluug.nl/pub/vim/unix/${VIM_TAR}"
+
+    VIM_INSTALL="1"
+
+    if [ ! -d ${SCRIPTPATH}/faaltu/vim/bin ]; then
+      VIM_INSTALL="0"
+    else
+      VIM_INSTALL_VER=`eval ${SCRIPTPATH}/faaltu/vim/bin/vim --version | head -n1 | cut -d' ' -f5`
+      if [ "${VIM_INSTALL_VER}" != "${VIM_MAJOR_VER}.${VIM_MINOR_VER}" ]; then
+        VIM_INSTALL="0"
       else
-        VIM_FINGERPRINT_FOUND=`cat $SCRIPTPATH/faaltu/vim.done`
-        if [ $VIM_FINGERPRINT != $VIM_FINGERPRINT_FOUND ]; then
-          echo "$VIM_FINGERPRINT != $VIM_FINGERPRINT_FOUND"
-          echo "reinstalling vim"
-          make -C $VIM_REPO distclean
-          VIM_INSTALL=1
-        fi
+        echo "vim up-to-date"
       fi
     fi
-    git -C $VIM_REPO remote update
 
-    VIM_UPSTREAM='@{u}'
-    VIM_LOCAL=$(git -C $VIM_REPO rev-parse @)
-    VIM_REMOTE=$(git -C $VIM_REPO rev-parse "$UPSTREAM")
-    VIM_BASE=$(git -C $VIM_REPO merge-base @ "$UPSTREAM")
-
-    # if [[ $DEBUG_SCRIPT -ne 0 ]]; then
-    #   echo "Value of VIM_LOCAL is $VIM_LOCAL"
-    #   echo "Value of VIM_REMOTE is $VIM_REMOTE"
-    #   echo "Value of VIM_BASE is $VIM_BASE"
-    # fi
-
-    if [ $VIM_LOCAL = $VIM_BASE ] && [[ ! ($VIM_LOCAL = $VIM_REMOTE) ]]; then
-      echo "vim update available"
-      git -C $VIM_REPO pull origin master
-      make -C $VIM_REPO distclean
-      VIM_INSTALL=1
-    fi
-    if [ $VIM_INSTALL == 1 ]; then
-      if [[ $DEBUG_SCRIPT -ne 0 ]]; then
-        echo "running vim install script"
+    if [ ${VIM_INSTALL} == 0]; then
+      if [ -d ${SCRIPTPATH}/faaltu/vim ]; then
+        rm -rf ${SCRIPTPATH}/faaltu/vim/*
       fi
-      (cd $VIM_REPO && ./configure --enable-python3interp --with-features=huge --enable-gui=auto --prefix=$HOME/.local )
+      download_and_extract ${SCRIPTPATH}/faaltu ${SCRIPTPATH}/faaltu/${VIM_DIR} ${VIM_TAR} ${VIM_URL} ${VIM_MD5}
+      (cd ${SCRIPTPATH}/faaltu/${VIM_DIR} && ./configure --enable-python3interp --with-features=huge --enable-gui=auto --prefix=${SCRIPTPATH}/faaltu/vim)
       PREBUILD_RET=$?
       if [ $PREBUILD_RET -ne 0 ]; then
         echo "error in running configure"
-        echo "(cd $VIM_REPO && ./configure --enable-python3interp --with-features=huge --enable-gui=auto --prefix=$HOME/.local )"
+        echo "(cd ${SCRIPTPATH}/faaltu/${VIM_DIR} && ./configure --enable-python3interp --with-features=huge --enable-gui=auto --prefix=$HOME/.local )"
         echo "returning......................"
         return
       fi
-      make -C $VIM_REPO -j 8
+      make -C ${SCRIPTPATH}/faaltu/${VIM_DIR} -j 8 
       BUILD_RET=$?
       if [ $BUILD_RET -ne 0 ]; then
         echo "error in running make"
-        echo "make -C $VIM_REPO -j 8"
+        echo "make -C ${SCRIPTPATH}/faaltu/${VIM_DIR} -j 8"
         echo "returning......................"
         return
       fi
-      make -C $VIM_REPO install
+      make -C ${SCRIPTPATH}/faaltu/${VIM_DIR} install
       INSTALL_RET=$?
       if [ $INSTALL_RET -ne 0 ]; then
         echo "error in running make install"
-        echo "make -C $VIM_REPO install"
+        echo "make -C ${SCRIPTPATH}/faaltu/${VIM_DIR} install"
         echo "returning......................"
         return
-      fi
-      echo $VIM_FINGERPRINT > $SCRIPTPATH/faaltu/vim.done
+      fi 
     fi
   fi
 }
