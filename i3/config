@@ -35,7 +35,8 @@ floating_modifier $mod
 # Starting things with i3
 # exec --no-startup-id xcompmgr -C &    # Bare compositor to allow transparency
 for_window [class="yakuake"] floating enable
-exec --no-startup-id feh --bg-scale ~/Pictures/wallpaper.jpg
+# exec --no-startup-id feh --bg-scale ~/Pictures/wallpaper.jpg
+exec --no-startup-id ~/.set_wallpaper.sh
 
 ## Plasma Integration
 # Try to kill the wallpaper set by Plasma (it takes up the entire workspace and hides everythiing)
@@ -63,6 +64,8 @@ for_window [window_role="Preferences"] floating enable
 for_window [window_role="About"] floating enable 
 for_window [window_type="dialog"] floating enable
 for_window [window_type="menu"] floating enable
+
+for_window [class="Wine"] floating enable; border none
 
 # start a terminal
 # bindsym $mod+Return exec i3-sensible-terminal

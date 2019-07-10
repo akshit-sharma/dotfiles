@@ -767,6 +767,7 @@ home_dir_symlink i3 .config
 home_dir_symlink i3status .config
 
 home_dir_symlink .set_screen.sh .
+home_dir_symlink .set_wallpaper.sh .
 
 if [ -L ~/.toggletouchpad.sh ]; then
   rm  ~/.toggletouchpad.sh
