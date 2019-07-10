@@ -631,14 +631,20 @@ function install_ycm {
   if [ $MAKE_RET -eq 0 ] && [ $CMAKE_RET -eq 0 ]; then
     if [ -f $HOME/.vim/bundle/YouCompleteMe/install.py ]; then
       YCM_HASH=$(git -C $HOME/.vim/bundle/YouCompleteMe/ rev-parse @)
-      if [ ! -f $SCRIPTPATH/faaltu/.clang+llvm.hash ]; then
+      if [ ! -f $SCRIPTPATH/faaltu/ycm.hash ]; then
         YCM_OLD_HASH="Nothing"
       else
-        YCM_OLD_HASH=$(cat $SCRIPTPATH/faaltu/.clang+llvm.hash)
+        YCM_OLD_HASH=$(cat $SCRIPTPATH/faaltu/ycm.hash)
       fi
       if [ "$YCM_HASH" != "$YCM_OLD_HASH" ]; then
         python3 $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer --java-completer
-        echo $YCM_HASH > $SCRIPTPATH/faaltu/.clang+llvm.hash
+        if [ "$?" != "0" ]; then
+          echo "error running"
+          echo "python3 $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer --java-completer"
+          echo "returning......"
+          return  
+        fi
+        echo $YCM_HASH > $SCRIPTPATH/faaltu/ycm.hash
         echo "Installed/Updated YouCompleteMe"
       else 
         echo "YouCompleteMe is latest"
