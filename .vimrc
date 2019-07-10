@@ -249,7 +249,7 @@ autocmd BufNewFile, BufRead *.cu set filetype=cpp
 
 " ALE Lint 
 let clang_home = '$DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm'
-let g:ale_completion_enabled = 1
+let g:ale_completion_enabled = 0
 let g:ale_linters = {
       \ 'c' : ['clang','clangd','clangtidy'],
       \ 'cpp' : ['clang','clangd','clangtidy'],
@@ -263,6 +263,7 @@ let g:ale_fixers = {
   \ }
 let g:ale_lint_on_save = 1
 let g:ale_fix_on_save = 1
+let g:ale_set_highlights = 0 " Disable highligting
 let g:ale_c_build_dir_name = ['build','Build','bin']
 let g:ale_c_parse_compile_commands = 1
 let g:ale_c_clang_executable = expand(clang_home).'/bin/clang'
