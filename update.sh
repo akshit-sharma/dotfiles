@@ -283,7 +283,7 @@ function install_vim {
       fi
     fi
 
-    if [ ${VIM_INSTALL} == 0]; then
+    if [ ${VIM_INSTALL} == 0 ]; then
       if [ -d ${SCRIPTPATH}/faaltu/vim ]; then
         rm -rf ${SCRIPTPATH}/faaltu/vim/*
       fi
