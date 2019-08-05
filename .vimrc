@@ -74,14 +74,14 @@ Plugin 'lervag/vimtex'
 
 " Gutentags 
 Plugin 'ludovicchabant/vim-gutentags'
-
+"
 " vim-cmake 
 Plugin 'sigidagi/vim-cmake-project'
 " vimux
 Plugin 'benmills/vimux'
 
 " Asynchronous linting/fixing for Vim and Language Server Protocol
-Plugin 'w0rp/ale'
+Plugin 'dense-analysis/ale'
 
 " vim-clang-format
 Plugin 'rhysd/vim-clang-format'
@@ -230,21 +230,26 @@ map <S-F11> :!cd .git && ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extr
 " set completeopt=menuone,menu,longest,preview
  
 " YCM (YouCompleteMe)
-" let g:ycm_compilation_database_folder = 'build'
+let g:ycm_compilation_database_folder = 'build'
+let g:ycm_server_log_level = 'debug'
 let g:ycm_enable_diagnostic_signs = 0
 let g:ycm_enable_diagnostic_highlighting = 0
 let g:ycm_always_populate_location_list = 0 "default 0
 let g:ycm_open_loclist_on_ycm_diags = 0 "default 1
 let g:ycm_global_ycm_extra_conf = expand(config_home).'/.ycm_extra_conf.py'
-let g:ycm_confirm_extra_conf = 0 " 1 (for now, asks everytime instead of just once)
+let g:ycm_confirm_extra_conf = 1 " (for now, asks everytime instead of just once)
 let g:ycm_key_invoke_completion = '<C-space>'
 let g:ycm_autoclose_preview_after_completion = 0
 let g:ycm_autoclose_preview_after_insertion = 1
 let g:ycm_max_diagnostics_to_display = 100
 nnoremap <Leader><C-k> :lprevious<CR>
 nnoremap <Leader><C-j> :lnext<CR>
+nnoremap <Leader>cl :YcmCompleter GoToDeclaration<CR>
+nnoremap <Leader>cf :YcmCompleter GoToDefinition<CR>
+nnoremap <Leader>cg :YcmCompleter GoToImprecise<CR>
+nnoremap <Leader>ci :YcmCompleter GoToInclude<CR>
 " Map cuda files to c++ so that Ycm can parse 
-autocmd BufNewFile, BufRead *.cu set filetype=cpp
+"autocmd BufNewFile, BufRead *.cu set filetype=cpp
 " autocmd FileType cuda set ft=cpp
 
 " ALE Lint 
@@ -264,7 +269,7 @@ let g:ale_fixers = {
 let g:ale_lint_on_save = 1
 let g:ale_fix_on_save = 1
 let g:ale_set_highlights = 0 " Disable highligting
-let g:ale_c_build_dir_name = ['build','Build','bin']
+let g:ale_c_build_dir_names = ['build','Build','bin']
 let g:ale_c_parse_compile_commands = 1
 let g:ale_c_clang_executable = expand(clang_home).'/bin/clang'
 let g:ale_cpp_clang_executable = expand(clang_home).'/bin/clang++'
@@ -472,7 +477,7 @@ endif
 let g:gutentags_modules = ['ctags']
 let g:gutentags_project_root = ['.git']
 let g:gutentags_cache_dir = expand('~/.cache/tags')
-" let g:gutentags_auto_add_gtags_cscope = 0
+ let g:gutentags_auto_add_gtags_cscope = 0
 let g:gutentags_plus_nomap = 1
 noremap <leader>gs :GscopeFind s <C-R><C-W><cr>
 noremap <leader>gg :GscopeFind g <C-R><C-W><cr>
