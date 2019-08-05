@@ -2,10 +2,10 @@ import os
 import os.path
 import fnmatch
 import logging
-import ycm_core
+# import ycm_core
 import re
 
-BASE_FLAGS = [
+C_BASE_FLAGS = [
         '-Wall',
         '-Wextra',
         '-Werror',
@@ -14,19 +14,48 @@ BASE_FLAGS = [
         '-fexceptions',
         '-ferror-limit=10000',
         '-DNDEBUG',
-        '-std=c++11',
-        '-xc++',
-        '-I/usr/lib/',
-        '-I/usr/include/'
+        '-std=c11',
+        '-isystem/usr/lib/',
+        '-isystem/usr/include/'
         ]
 
-SOURCE_EXTENSIONS = [
+CPP_BASE_FLAGS = [
+        '-Wall',
+        '-Wextra',
+        '-Wno-long-long',
+        '-Wno-variadic-macros',
+        '-fexceptions',
+        '-ferror-limit=10000',
+        '-DNDEBUG',
+        '-std=c++1z',
+        '-xc++',
+        '-isystem/usr/lib/',
+        '-isystem/usr/include/'
+        ]
+
+CUDA_HOME_ENV = os.getenv( 'CUDA_HOME', '/usr/local/cuda' )
+
+CU_BASE_FLAGS = [
+        '-Wall',
+        '-xcuda',
+        '-isystem'+CUDA_HOME_ENV+'/include',
+        '-isystem'+CUDA_HOME_ENV+'/lib64'
+        ]
+
+C_SOURCE_EXTENSIONS = [
+        '.c'
+        ]
+
+CPP_SOURCE_EXTENSIONS = [
         '.cpp',
         '.cxx',
         '.cc',
-        '.c',
         '.m',
         '.mm'
+        ]
+
+CU_SOURCE_EXTENSIONS = [
+        '.cu'
         ]
 
 SOURCE_DIRECTORIES = [
@@ -45,6 +74,12 @@ HEADER_DIRECTORIES = [
         'include'
         ]
 
+BUILD_DIRECTORY = 'build'
+
+def IsSourceFile(filename):
+    extension = os.path.splitext(filename)[1]
+    return extension in C_SOURCE_EXTENSIONS + CPP_SOURCE_EXTENSIONS + CU_SOURCE_EXTENSIONS
+
 def IsHeaderFile(filename):
     extension = os.path.splitext(filename)[1]
     return extension in HEADER_EXTENSIONS
@@ -52,7 +87,7 @@ def IsHeaderFile(filename):
 def GetCompilationInfoForFile(database, filename):
     if IsHeaderFile(filename):
         basename = os.path.splitext(filename)[0]
-        for extension in SOURCE_EXTENSIONS:
+        for extension in C_SOURCE_EXTENSIONS + CPP_SOURCE_EXTENSIONS + CU_SOURCE_EXTENSIONS:
             # Get info from the source files by replacing the extension.
             replacement_file = basename + extension
             if os.path.exists(replacement_file):
@@ -70,11 +105,11 @@ def GetCompilationInfoForFile(database, filename):
         return None
     return database.GetCompilationInfoForFile(filename)
 
-def FindNearest(path, target, build_folder):
+def FindNearest(path, target, build_folder=None):
     candidate = os.path.join(path, target)
     if(os.path.isfile(candidate) or os.path.isdir(candidate)):
         logging.info("Found nearest " + target + " at " + candidate)
-        return candidate;
+        return candidate
 
     parent = os.path.dirname(os.path.abspath(path));
     if(parent == path):
@@ -84,7 +119,7 @@ def FindNearest(path, target, build_folder):
         candidate = os.path.join(parent, build_folder, target)
         if(os.path.isfile(candidate) or os.path.isdir(candidate)):
             logging.info("Found nearest " + target + " in build folder at " + candidate)
-            return candidate;
+            return candidate
 
     return FindNearest(parent, target, build_folder)
 
@@ -93,7 +128,7 @@ def MakeRelativePathsInFlagsAbsolute(flags, working_directory):
         return list(flags)
     new_flags = []
     make_next_absolute = False
-    path_flags = [ '-isystem', '-I', '-iquote', '--sysroot=' ]
+    path_flags = ['-isystem', '-I', '-iquote', '--sysroot=']
     for flag in flags:
         new_flag = flag
 
@@ -114,6 +149,7 @@ def MakeRelativePathsInFlagsAbsolute(flags, working_directory):
 
         if new_flag:
             new_flags.append(new_flag)
+    logging.debug("value of new_flags in MakeRelativePathsInFlagsAbsolute is {} ".format(new_flags))
     return new_flags
 
 
@@ -141,9 +177,9 @@ def FlagsForCompilationDatabase(root, filename):
     try:
         # Last argument of next function is the name of the build folder for
         # out of source projects
-        compilation_db_path = FindNearest(root, 'compile_commands.json', 'build')
+        compilation_db_path = FindNearest(root, 'compile_commands.json', BUILD_DIRECTORY)
         compilation_db_dir = os.path.dirname(compilation_db_path)
-        logging.info("Set compilation database directory to " + compilation_db_dir)
+        logging.debug("Set compilation database directory to " + compilation_db_dir)
         compilation_db =  ycm_core.CompilationDatabase(compilation_db_dir)
         if not compilation_db:
             logging.info("Compilation database file found but unable to load")
@@ -152,19 +188,33 @@ def FlagsForCompilationDatabase(root, filename):
         if not compilation_info:
             logging.info("No compilation info for " + filename + " in compilation database")
             return None
+        logging.debug("Callng MakeRelativePathsInFlagsAbsolute in .ycm_extra_conf.py")
         return MakeRelativePathsInFlagsAbsolute(
                 compilation_info.compiler_flags_,
                 compilation_info.compiler_working_dir_)
-    except:
+    except Exception as e:
+        logging.info("value of e is {}".format(str(e)))
+        logging.info("Inside except of FlagsForCompilationDatabase in .ycm_extra_conf.py")
         return None
 
 def FlagsForFile(filename):
+    # import ycm_core
     root = os.path.realpath(filename);
     compilation_db_flags = FlagsForCompilationDatabase(root, filename)
+    logging.debug("compilation_db_flags is set to {}".format(compilation_db_flags))
     if compilation_db_flags:
+        logging.debug("compilation_db_flags is setting final_flags")
         final_flags = compilation_db_flags
     else:
-        final_flags = BASE_FLAGS
+        if IsSourceFile(filename):
+            extension = os.path.splitext(filename)[1]
+            if extension in C_SOURCE_EXTENSIONS:
+                final_flags = C_BASE_FLAGS
+            elif extension in CU_SOURCE_EXTENSIONS:
+                final_flags = CU_BASE_FLAGS
+            else:
+                final_flags = CPP_BASE_FLAGS
+
         clang_flags = FlagsForClangComplete(root)
         if clang_flags:
             final_flags = final_flags + clang_flags
@@ -175,3 +225,8 @@ def FlagsForFile(filename):
             'flags': final_flags,
             'do_cache': True
             }
+
+# def Settings( **kwargs ):
+#     import ycm_core
+#     # return { 'flags': [ '-x', 'c++' ] }
+
