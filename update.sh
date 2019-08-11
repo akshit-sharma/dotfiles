@@ -918,11 +918,11 @@ function python_virtualenv_setup {
         if [ "$?" != "0" ] || [ "$WHICH_PIP3" == "$HOME/.local/bin/pip3" ]; then
           if [ "$WHICH_PIP3" != "$HOME/.local/bin/pip3" ]; then
             echo "pip3 not installed, installing by downloading get-pip.py"
-            dpkg -l python-distutils-extra
+            dpkg -l python3-distutils
             DISTUTILS_RET=$?
             if [ $DISTUTILS_RET -ne 0 ]; then
               echo "python distutils not found"
-              echo "dkpg -l python-distutils is non zero"
+              echo "dkpg -l python3-distutils is non zero"
               return
             fi
             if [ ! -f "$DOTFILES_SCRIPT_PARENT/faaltu/get-pip.py" ]; then
