@@ -213,7 +213,7 @@ function download_and_extract {
 
     if [ ! -f $DOWNLOAD_HOME/$DOWNLOAD_FILE ]; then
       echo "downloading $DOWNLOAD_FILE to $DOWNLOAD_HOME"
-      wget $DOWNLOAD_URL -O $DOWNLOAD_HOME/$DOWNLOAD_FILE > script_output.txt
+      wget $DOWNLOAD_URL -O $DOWNLOAD_HOME/$DOWNLOAD_FILE 2>&1> script_output.txt
     fi
 
       EXISTING_MD5=`eval md5sum $DOWNLOAD_HOME/$DOWNLOAD_FILE | cut -d' ' -f1`
