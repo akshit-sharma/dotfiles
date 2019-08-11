@@ -278,7 +278,7 @@ function install_ncurses {
   # install libncurses
   if [ ${LIBNCURSES_DEV_INSTALLED} == "1" ] && [ ! -d ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} ]; then
     download_and_extract ${SCRIPTPATH}/faaltu ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} ${LIBNCURSES_TAR} ${LIBNCURSES_URL} ${LIBNCURSES_MD5}
-    (cd ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} && ./configure --prefix=${SCRIPTPATH}/faaltu/ncurses > script_output.txt)    
+    (cd ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} && ./configure --prefix=${SCRIPTPATH}/faaltu/ncurses 2>&1> script_output.txt)    
     PREBUILD_RET=$?
     if [ $PREBUILD_RET -ne 0 ]; then
       echo "error in running configure"
@@ -286,7 +286,7 @@ function install_ncurses {
       echo "returning......................"
       return
     fi
-    make -C ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR}  > script_output.txt
+    make -C ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} 2>&1> script_output.txt
     BUILD_RET=$?
     if [ $BUILD_RET -ne 0 ]; then
       echo "error in running make"
@@ -294,7 +294,7 @@ function install_ncurses {
       echo "returning......................"
       return
     fi
-    make -C ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} install > script_output.txt
+    make -C ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} install 2>&1> script_output.txt
     INSTALL_RET=$?
     if [ $INSTALL_RET -ne 0 ]; then
       echo "error in running make install"
@@ -354,7 +354,7 @@ function install_vim {
         echo "returning......................"
         return
       fi
-      make -C ${SCRIPTPATH}/faaltu/${VIM_DIR} -j 8  > script_output.txt
+      make -C ${SCRIPTPATH}/faaltu/${VIM_DIR} -j 8  2>&1> script_output.txt
       BUILD_RET=$?
       if [ $BUILD_RET -ne 0 ]; then
         echo "error in running make"
@@ -362,7 +362,7 @@ function install_vim {
         echo "returning......................"
         return
       fi
-      make -C ${SCRIPTPATH}/faaltu/${VIM_DIR} install > script_output.txt
+      make -C ${SCRIPTPATH}/faaltu/${VIM_DIR} install 2>&1> script_output.txt
       INSTALL_RET=$?
       if [ $INSTALL_RET -ne 0 ]; then
         echo "error in running make install"
@@ -388,10 +388,10 @@ function install_ctags {
     CTAGS_URL="https://superb-dca2.dl.sourceforge.net/project/ctags/ctags/${CTAGS_VER}/${CTAGS_TAR}"
     CTAGS_INSTALL="0"
   
-    ctags --version > script_output.txt
+    ctags --version 2>&1> script_output.txt
     CTAGS_RET="$?"
 
-    $HOME/bin/ctags --version > script_output.txt
+    $HOME/bin/ctags --version 2>&1> script_output.txt
     MY_CTAGS_RET="$?"
 
     if [[ $CTAGS_RET != 0 ]] && [[ $MY_CTAGS_RET != 0 ]]; then
@@ -405,8 +405,8 @@ function install_ctags {
       if [[ $CTAGS_INSTALL == 1 ]]; then
         if [ -f "$SCRIPTPATH/faaltu/$CTAGS_DIR/configure" ]; then
           (cd $SCRIPTPATH/faaltu/$CTAGS_DIR/ && ./configure --prefix=$HOME)
-          make -C $SCRIPTPATH/faaltu/$CTAGS_DIR > script_output.txt
-          make -C $SCRIPTPATH/faaltu/$CTAGS_DIR install > script_output.txt
+          make -C $SCRIPTPATH/faaltu/$CTAGS_DIR 2>&1> script_output.txt
+          make -C $SCRIPTPATH/faaltu/$CTAGS_DIR install 2>&1> script_output.txt
         else
           echo "$SCRIPTPATH/faaltu/$CTAGS_DIR/configure not found"
         fi
@@ -517,7 +517,7 @@ function install_gitlfs {
 
 # install i3wmIPC only if 
 function install_i3wmIPC {
-  i3 --version > script_output.txt
+  i3 --version 2>&1> script_output.txt
   I3_RET="$?"
   if [[ I3_RET -eq 127 ]]; then # i3 not installed
     echo "i3 not installed, returning..."
@@ -648,7 +648,7 @@ function install_googletest {
       echo "returning........................"
       return
     fi
-    make -C $GOOGLETEST_BUILD_DIR -j 8 > script_output.txt
+    make -C $GOOGLETEST_BUILD_DIR -j 8 2>&1> script_output.txt
     BUILD_RET=$?
     if [ $BUILD_RET -ne 0 ]; then
       echo "error in running make"
@@ -656,7 +656,7 @@ function install_googletest {
       echo "returning......................"
       return
     fi
-    make -C $GOOGLETEST_BUILD_DIR install > script_output.txt
+    make -C $GOOGLETEST_BUILD_DIR install 2>&1> script_output.txt
     INSTALL_RET=$?
     if [ $INSTALL_RET -ne 0 ]; then
       echo "error in running make install"
@@ -770,8 +770,8 @@ function install_valgrind {
       fi
       download_and_extract $SCRIPTPATH/faaltu ${SCRIPTPATH}/faaltu/${VALGRIND_DIR} ${VALGRIND_TAR} ${VALGRIND_URL} ${VALGRIND_MD5}
       (cd ${SCRIPTPATH}/faaltu/${VALGRIND_DIR} && ./configure --prefix=${SCRIPTPATH}/faaltu/valgrind/)
-      make -C ${SCRIPTPATH}/faaltu/${VALGRIND_DIR} > script_output.txt
-      make -C ${SCRIPTPATH}/faaltu/${VALGRIND_DIR} install > script_output.txt
+      make -C ${SCRIPTPATH}/faaltu/${VALGRIND_DIR} 2>&1> script_output.txt
+      make -C ${SCRIPTPATH}/faaltu/${VALGRIND_DIR} install 2>&1> script_output.txt
     fi
     if [ ! -L ${HOME}/Softwares/valgrind ]; then
       ln -sT $SCRIPTPATH/faaltu/valgrind ${HOME}/Softwares/valgrind
