@@ -63,7 +63,7 @@ Plugin 'tpope/vim-git'
 " " syntastic for syntax checking
 " Plugin 'vim-syntastic/syntastic'  gives unwanted space at { (possible issue with brackets)
 
-" cpp autocomplete
+" " cpp autocomplete
 Plugin 'Valloric/YouCompleteMe'
 
 " YCM-Generator
@@ -229,15 +229,15 @@ map <S-F11> :!cd .git && ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extr
 " au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
 " set completeopt=menuone,menu,longest,preview
  
-" YCM (YouCompleteMe)
+" " YCM (YouCompleteMe)
 let g:ycm_compilation_database_folder = 'build'
 let g:ycm_server_log_level = 'debug'
 let g:ycm_enable_diagnostic_signs = 0
 let g:ycm_enable_diagnostic_highlighting = 0
 let g:ycm_always_populate_location_list = 0 "default 0
 let g:ycm_open_loclist_on_ycm_diags = 0 "default 1
-let g:ycm_global_ycm_extra_conf = expand(config_home).'/.ycm_extra_conf.py'
-let g:ycm_confirm_extra_conf = 1 " (for now, asks everytime instead of just once)
+" let g:ycm_global_ycm_extra_conf = expand(config_home).'/.ycm_extra_conf.py'
+" let g:ycm_confirm_extra_conf = 1 " (for now, asks everytime instead of just once)
 let g:ycm_key_invoke_completion = '<C-space>'
 let g:ycm_autoclose_preview_after_completion = 0
 let g:ycm_autoclose_preview_after_insertion = 1

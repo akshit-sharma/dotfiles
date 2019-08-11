@@ -149,7 +149,6 @@ def MakeRelativePathsInFlagsAbsolute(flags, working_directory):
 
         if new_flag:
             new_flags.append(new_flag)
-    logging.debug("value of new_flags in MakeRelativePathsInFlagsAbsolute is {} ".format(new_flags))
     return new_flags
 
 
@@ -175,6 +174,7 @@ def FlagsForInclude(root):
 
 def FlagsForCompilationDatabase(root, filename):
     try:
+        import ycm_core
         # Last argument of next function is the name of the build folder for
         # out of source projects
         compilation_db_path = FindNearest(root, 'compile_commands.json', BUILD_DIRECTORY)
@@ -188,17 +188,15 @@ def FlagsForCompilationDatabase(root, filename):
         if not compilation_info:
             logging.info("No compilation info for " + filename + " in compilation database")
             return None
-        logging.debug("Callng MakeRelativePathsInFlagsAbsolute in .ycm_extra_conf.py")
         return MakeRelativePathsInFlagsAbsolute(
                 compilation_info.compiler_flags_,
                 compilation_info.compiler_working_dir_)
     except Exception as e:
-        logging.info("value of e is {}".format(str(e)))
-        logging.info("Inside except of FlagsForCompilationDatabase in .ycm_extra_conf.py")
+        logging.debug("value of e is {}".format(str(e)))
+        logging.debug("Inside except of FlagsForCompilationDatabase in .ycm_extra_conf.py")
         return None
 
 def FlagsForFile(filename):
-    # import ycm_core
     root = os.path.realpath(filename);
     compilation_db_flags = FlagsForCompilationDatabase(root, filename)
     logging.debug("compilation_db_flags is set to {}".format(compilation_db_flags))
@@ -226,7 +224,8 @@ def FlagsForFile(filename):
             'do_cache': True
             }
 
-# def Settings( **kwargs ):
-#     import ycm_core
-#     # return { 'flags': [ '-x', 'c++' ] }
 
+def Settings( **kwargs ):
+    import ycm_core
+    filename = kwargs['filename']
+    return FlagsForFile(filename)

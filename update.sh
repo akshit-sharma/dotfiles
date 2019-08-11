@@ -216,6 +216,15 @@ function download_and_extract {
       wget $DOWNLOAD_URL -O $DOWNLOAD_HOME/$DOWNLOAD_FILE
     fi
 
+      EXISTING_MD5=`eval md5sum $DOWNLOAD_HOME/$DOWNLOAD_FILE | cut -d' ' -f1`
+    if [ ! -f $DOWNLOAD_HOME/$DOWNLOAD_FILE ] || [ "$DOWNLOAD_MD5" != "$EXISTING_MD5" ]; then
+      echo "md5sum still not same expected(${DOWNLOAD_MD5}) and got(${EXISTING_MD5})"
+      echo "file in ${DOWNLOAD_HOME}/${DOWNLOAD_FILE} not as expected"
+      echo "download location was ${DOWNLOAD_URL} with command"
+      echo "wget ${DOWNLOAD_URL} -O ${DOWNLOAD_HOME}/${DOWNLOAD_FILE}"
+    fi
+
+
     if [ ! -f ${DOWNLOAD_HOME}/${DOWNLOAD_FILE} ]; then
       echo "downloaded file from $DOWNLOAD_URL"
       echo "not found as ${DOWNLOAD_HOME}/${DOWNLOAD_FILE}"
@@ -247,6 +256,54 @@ function download_and_extract {
     echo "DOWNLOAD_DIR is $DOWNLOAD_DIR"
     echo "DOWNLOAD_DIR should start with same string as DOWNLOAD_HOME"
   fi
+}
+
+# install ncurses library if not available
+function install_ncurses {
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing/updating ncurses library"
+  fi
+ 
+  LIBNCURSES_MD5="98c889aaf8d23910d2b92d65be2e737a"
+  LIBNCURSES_MAJOR_VER="6"
+  LIBNCURSES_MINOR_VER="1"
+  LIBNCURSES_DIR="ncurses-${LIBNCURSES_MAJOR_VER}.${LIBNCURSES_MINOR_VER}"
+  LIBNCURSES_TAR="ncurses-${LIBNCURSES_MAJOR_VER}.${LIBNCURSES_MINOR_VER}.tar.gz"
+  LIBNCURSES_URL="https://ftp.gnu.org/pub/gnu/ncurses/${LIBNCURSES_TAR}"
+#https://ftp.gnu.org/pub/gnu/ncurses/ncurses-5.9.tar.gz
+
+  dpkg -l "libncurses${LIBNCURSES_MAJOR_VER}-dev" | grep '^ii'
+  LIBNCURSES_DEV_INSTALLED="$?"
+
+  # install libncurses
+  if [ ${LIBNCURSES_DEV_INSTALLED} == "1" ] && [ ! -d ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} ]; then
+    download_and_extract ${SCRIPTPATH}/faaltu ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} ${LIBNCURSES_TAR} ${LIBNCURSES_URL} ${LIBNCURSES_MD5}
+    (cd ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} && ./configure --prefix=${SCRIPTPATH}/faaltu/ncurses)    
+    PREBUILD_RET=$?
+    if [ $PREBUILD_RET -ne 0 ]; then
+      echo "error in running configure"
+      echo "(cd ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} && ./configure --prefix=${SCRIPTPATH}/faaltu/ncurses)"
+      echo "returning......................"
+      return
+    fi
+    make -C ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} 
+    BUILD_RET=$?
+    if [ $BUILD_RET -ne 0 ]; then
+      echo "error in running make"
+      echo "make -C ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR}"
+      echo "returning......................"
+      return
+    fi
+    make -C ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} install
+    INSTALL_RET=$?
+    if [ $INSTALL_RET -ne 0 ]; then
+      echo "error in running make install"
+      echo "make -C ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} install"
+      echo "returning......................"
+      return
+    fi 
+  fi
+
 }
 
 # install vim only if update is available
@@ -288,6 +345,7 @@ function install_vim {
         rm -rf ${SCRIPTPATH}/faaltu/vim/*
       fi
       download_and_extract ${SCRIPTPATH}/faaltu ${SCRIPTPATH}/faaltu/${VIM_DIR} ${VIM_TAR} ${VIM_URL} ${VIM_MD5}
+      install_ncurses
       (cd ${SCRIPTPATH}/faaltu/${VIM_DIR} && ./configure --enable-python3interp --with-features=huge --enable-gui=auto --prefix=${SCRIPTPATH}/faaltu/vim)
       PREBUILD_RET=$?
       if [ $PREBUILD_RET -ne 0 ]; then
@@ -985,6 +1043,7 @@ fi
 
 # all updating to variable/dotfiles done
 #calling install functions
+install_ncurses
 install_vim
 install_clang_llvm
 install_ctags
