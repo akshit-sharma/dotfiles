@@ -76,6 +76,7 @@ if [ ! "$DOTFILES_SCRIPT_PARENT" ]; then
     echo "Found parent directory as $SCRIPT_PARENT_DIRECTORY"
   fi
   SCRIPTPATH=$SCRIPT_PARENT_DIRECTORY
+  export DOTFILES_SCRIPT_PARENT=$SCRIPTPATH
 else
   if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "DOTFILES_SCRIPT_PARENT already set to $DOTFILES_SCRIPT_PARENT"
