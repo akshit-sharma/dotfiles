@@ -213,7 +213,7 @@ function download_and_extract {
 
     if [ ! -f $DOWNLOAD_HOME/$DOWNLOAD_FILE ]; then
       echo "downloading $DOWNLOAD_FILE to $DOWNLOAD_HOME"
-      wget $DOWNLOAD_URL -O $DOWNLOAD_HOME/$DOWNLOAD_FILE
+      wget $DOWNLOAD_URL -O $DOWNLOAD_HOME/$DOWNLOAD_FILE > /dev/null
     fi
 
       EXISTING_MD5=`eval md5sum $DOWNLOAD_HOME/$DOWNLOAD_FILE | cut -d' ' -f1`
@@ -278,7 +278,7 @@ function install_ncurses {
   # install libncurses
   if [ ${LIBNCURSES_DEV_INSTALLED} == "1" ] && [ ! -d ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} ]; then
     download_and_extract ${SCRIPTPATH}/faaltu ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} ${LIBNCURSES_TAR} ${LIBNCURSES_URL} ${LIBNCURSES_MD5}
-    (cd ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} && ./configure --prefix=${SCRIPTPATH}/faaltu/ncurses)    
+    (cd ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} && ./configure --prefix=${SCRIPTPATH}/faaltu/ncurses > /dev/null)    
     PREBUILD_RET=$?
     if [ $PREBUILD_RET -ne 0 ]; then
       echo "error in running configure"
@@ -286,7 +286,7 @@ function install_ncurses {
       echo "returning......................"
       return
     fi
-    make -C ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} 
+    make -C ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR}  > /dev/null
     BUILD_RET=$?
     if [ $BUILD_RET -ne 0 ]; then
       echo "error in running make"
@@ -294,7 +294,7 @@ function install_ncurses {
       echo "returning......................"
       return
     fi
-    make -C ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} install
+    make -C ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} install > /dev/null
     INSTALL_RET=$?
     if [ $INSTALL_RET -ne 0 ]; then
       echo "error in running make install"
@@ -354,7 +354,7 @@ function install_vim {
         echo "returning......................"
         return
       fi
-      make -C ${SCRIPTPATH}/faaltu/${VIM_DIR} -j 8 
+      make -C ${SCRIPTPATH}/faaltu/${VIM_DIR} -j 8  > /dev/null
       BUILD_RET=$?
       if [ $BUILD_RET -ne 0 ]; then
         echo "error in running make"
@@ -362,7 +362,7 @@ function install_vim {
         echo "returning......................"
         return
       fi
-      make -C ${SCRIPTPATH}/faaltu/${VIM_DIR} install
+      make -C ${SCRIPTPATH}/faaltu/${VIM_DIR} install > /dev/null
       INSTALL_RET=$?
       if [ $INSTALL_RET -ne 0 ]; then
         echo "error in running make install"
@@ -405,8 +405,8 @@ function install_ctags {
       if [[ $CTAGS_INSTALL == 1 ]]; then
         if [ -f "$SCRIPTPATH/faaltu/$CTAGS_DIR/configure" ]; then
           (cd $SCRIPTPATH/faaltu/$CTAGS_DIR/ && ./configure --prefix=$HOME)
-          make -C $SCRIPTPATH/faaltu/$CTAGS_DIR 
-          make -C $SCRIPTPATH/faaltu/$CTAGS_DIR install
+          make -C $SCRIPTPATH/faaltu/$CTAGS_DIR > /dev/null 
+          make -C $SCRIPTPATH/faaltu/$CTAGS_DIR install > /dev/null
         else
           echo "$SCRIPTPATH/faaltu/$CTAGS_DIR/configure not found"
         fi
@@ -648,7 +648,7 @@ function install_googletest {
       echo "returning........................"
       return
     fi
-    make -C $GOOGLETEST_BUILD_DIR -j 8
+    make -C $GOOGLETEST_BUILD_DIR -j 8 > /dev/null
     BUILD_RET=$?
     if [ $BUILD_RET -ne 0 ]; then
       echo "error in running make"
@@ -656,7 +656,7 @@ function install_googletest {
       echo "returning......................"
       return
     fi
-    make -C $GOOGLETEST_BUILD_DIR install
+    make -C $GOOGLETEST_BUILD_DIR install > /dev/null
     INSTALL_RET=$?
     if [ $INSTALL_RET -ne 0 ]; then
       echo "error in running make install"
@@ -770,8 +770,8 @@ function install_valgrind {
       fi
       download_and_extract $SCRIPTPATH/faaltu ${SCRIPTPATH}/faaltu/${VALGRIND_DIR} ${VALGRIND_TAR} ${VALGRIND_URL} ${VALGRIND_MD5}
       (cd ${SCRIPTPATH}/faaltu/${VALGRIND_DIR} && ./configure --prefix=${SCRIPTPATH}/faaltu/valgrind/)
-      make -C ${SCRIPTPATH}/faaltu/${VALGRIND_DIR}
-      make -C ${SCRIPTPATH}/faaltu/${VALGRIND_DIR} install
+      make -C ${SCRIPTPATH}/faaltu/${VALGRIND_DIR} > /dev/null
+      make -C ${SCRIPTPATH}/faaltu/${VALGRIND_DIR} install > /dev/null
     fi
     if [ ! -L ${HOME}/Softwares/valgrind ]; then
       ln -sT $SCRIPTPATH/faaltu/valgrind ${HOME}/Softwares/valgrind
