@@ -912,7 +912,7 @@ function python_virtualenv_setup {
           if [ "$WHICH_PIP3" != "$HOME/.local/bin/pip3" ]; then
             echo "pip3 not installed, installing by downloading get-pip.py"
             if [ ! -f "$DOTFILES_SCRIPT_PARENT/faaltu/get-pip.py" ]; then
-              curl https://bootstrap.pypa.io/get-pip.py -o $DOTFILES_SCRIPT_PARENT/faaltu/get-pip.py 
+              curl https://bootstrap.pypa.io/get-pip.py -o ${DOTFILES_SCRIPT_PARENT}/faaltu/get-pip.py 
             fi
             /usr/bin/python3 $DOTFILES_SCRIPT_PARENT/faaltu/get-pip.py --user
           fi
@@ -1071,17 +1071,21 @@ if [[ NEED_VIM_PLUGIN_INSTALL -ne 0 ]]; then
   if [ -f $HOME/.local/bin/vim ]; then
     VIM_EXEC=$HOME/.local/bin/vim
   fi
-  if [ ! -f $SCRIPTPATH/faaltu/.vim_plugin.hash ]; then
-    VIM_PLUGIN_OLD_HASH="Nothing"
-    $VIM_EXEC +PluginInstall +qall
-  else
-    VIM_PLUGIN_OLD_HASH=$(cat $SCRIPTPATH/faaltu/.vim_plugin.hash)
-  fi
-  if [ "$VIM_PLUGIN_HASH" != "$VIM_PLUGIN_OLD_HASH" ]; then
-    $VIM_EXEC +PluginClean! +qall
-    $VIM_EXEC +PluginInstall +qall
-    $VIM_EXEC +PluginUpdate +qall
-    echo $VIM_PLUGIN_HASH > $SCRIPTPATH/faaltu/.vim_plugin.hash
+  type $VIM_EXEC
+  VIM_RET="$?"
+  if [ ${VIM_RET} -eq "0" ]; then
+    if [ ! -f $SCRIPTPATH/faaltu/.vim_plugin.hash ]; then
+      VIM_PLUGIN_OLD_HASH="Nothing"
+      $VIM_EXEC +PluginInstall +qall
+    else
+      VIM_PLUGIN_OLD_HASH=$(cat $SCRIPTPATH/faaltu/.vim_plugin.hash)
+    fi
+    if [ "$VIM_PLUGIN_HASH" != "$VIM_PLUGIN_OLD_HASH" ]; then
+      $VIM_EXEC +PluginClean! +qall
+      $VIM_EXEC +PluginInstall +qall
+      $VIM_EXEC +PluginUpdate +qall
+      echo $VIM_PLUGIN_HASH > $SCRIPTPATH/faaltu/.vim_plugin.hash
+    fi
   fi
 
 fi
