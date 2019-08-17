@@ -231,6 +231,7 @@ map <S-F11> :!cd .git && ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extr
  
 " YCM (YouCompleteMe)
 " let g:ycm_compilation_database_folder = 'build'
+let g:ycm_log_level = 'debug'
 let g:ycm_enable_diagnostic_signs = 0
 let g:ycm_enable_diagnostic_highlighting = 0
 let g:ycm_always_populate_location_list = 0 "default 0

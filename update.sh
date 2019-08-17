@@ -846,8 +846,8 @@ function python_virtualenv_setup {
         return
       else
         WHICH_PIP3=`which pip3`
-        if [ "$?" != "0" ] || [ "$WHICH_PIP3" == "$HOME/.local/bin/pip3"]; then
-          if [ "$WHICH_PIP3" != "$HOME/.local/bin/pip3"]; then
+        if [ "$?" != "0" ] || [ "$WHICH_PIP3" == "$HOME/.local/bin/pip3" ]; then
+          if [ "$WHICH_PIP3" != "$HOME/.local/bin/pip3" ]; then
             echo "pip3 not installed, installing by downloading get-pip.py"
             if [ ! -f "$DOTFILES_SCRIPT_PARENT/faaltu/get-pip.py" ]; then
               curl https://bootstrap.pypa.io/get-pip.py -o $DOTFILES_SCRIPT_PARENT/faaltu/get-pip.py 
