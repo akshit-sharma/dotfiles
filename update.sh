@@ -76,6 +76,13 @@ if [ ! "$DOTFILES_SCRIPT_PARENT" ]; then
     echo "Found parent directory as $SCRIPT_PARENT_DIRECTORY"
   fi
   SCRIPTPATH=$SCRIPT_PARENT_DIRECTORY
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
+    echo "exporting DOTFILES_SCRIPT_PARENT=$SCRIPTPATH"
+  fi
+  export DOTFILES_SCRIPT_PARENT=$SCRIPTPATH
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
+    echo "value of DOTFILES_SCRIPT_PARENT is ${DOTFILES_SCRIPT_PARENT}"
+  fi
 else
   if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "DOTFILES_SCRIPT_PARENT already set to $DOTFILES_SCRIPT_PARENT"
@@ -213,8 +220,21 @@ function download_and_extract {
 
     if [ ! -f $DOWNLOAD_HOME/$DOWNLOAD_FILE ]; then
       echo "downloading $DOWNLOAD_FILE to $DOWNLOAD_HOME"
-      wget $DOWNLOAD_URL -O $DOWNLOAD_HOME/$DOWNLOAD_FILE
+      wget $DOWNLOAD_URL -q -O $DOWNLOAD_HOME/$DOWNLOAD_FILE 
+      WGET_RETURN="$?"
+      if [ $WGET_RETURN -ne "0" ]; then
+        echo "Download $DOWNLOAD_HOME/$DOWNLOAD_FILE not successful from $DOWNLOAD_URL"
+      fi
     fi
+
+      EXISTING_MD5=`eval md5sum $DOWNLOAD_HOME/$DOWNLOAD_FILE | cut -d' ' -f1`
+    if [ ! -f $DOWNLOAD_HOME/$DOWNLOAD_FILE ] || [ "$DOWNLOAD_MD5" != "$EXISTING_MD5" ]; then
+      echo "md5sum still not same expected(${DOWNLOAD_MD5}) and got(${EXISTING_MD5})"
+      echo "file in ${DOWNLOAD_HOME}/${DOWNLOAD_FILE} not as expected"
+      echo "download location was ${DOWNLOAD_URL} with command"
+      echo "wget ${DOWNLOAD_URL} -O ${DOWNLOAD_HOME}/${DOWNLOAD_FILE}"
+    fi
+
 
     if [ ! -f ${DOWNLOAD_HOME}/${DOWNLOAD_FILE} ]; then
       echo "downloaded file from $DOWNLOAD_URL"
@@ -247,6 +267,54 @@ function download_and_extract {
     echo "DOWNLOAD_DIR is $DOWNLOAD_DIR"
     echo "DOWNLOAD_DIR should start with same string as DOWNLOAD_HOME"
   fi
+}
+
+# install ncurses library if not available
+function install_ncurses {
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing/updating ncurses library"
+  fi
+ 
+  LIBNCURSES_MD5="98c889aaf8d23910d2b92d65be2e737a"
+  LIBNCURSES_MAJOR_VER="6"
+  LIBNCURSES_MINOR_VER="1"
+  LIBNCURSES_DIR="ncurses-${LIBNCURSES_MAJOR_VER}.${LIBNCURSES_MINOR_VER}"
+  LIBNCURSES_TAR="ncurses-${LIBNCURSES_MAJOR_VER}.${LIBNCURSES_MINOR_VER}.tar.gz"
+  LIBNCURSES_URL="https://ftp.gnu.org/pub/gnu/ncurses/${LIBNCURSES_TAR}"
+#https://ftp.gnu.org/pub/gnu/ncurses/ncurses-5.9.tar.gz
+
+  dpkg -l "libncurses${LIBNCURSES_MAJOR_VER}-dev" | grep '^ii'
+  LIBNCURSES_DEV_INSTALLED="$?"
+
+  # install libncurses
+  if [ ${LIBNCURSES_DEV_INSTALLED} == "1" ] && [ ! -d ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} ]; then
+    download_and_extract ${SCRIPTPATH}/faaltu ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} ${LIBNCURSES_TAR} ${LIBNCURSES_URL} ${LIBNCURSES_MD5}
+    (cd ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} && ./configure --prefix=${SCRIPTPATH}/faaltu/ncurses 2>&1> script_output.txt)    
+    PREBUILD_RET=$?
+    if [ $PREBUILD_RET -ne 0 ]; then
+      echo "error in running configure"
+      echo "(cd ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} && ./configure --prefix=${SCRIPTPATH}/faaltu/ncurses)"
+      echo "returning......................"
+      return
+    fi
+    make -C ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} 2>&1> script_output.txt
+    BUILD_RET=$?
+    if [ $BUILD_RET -ne 0 ]; then
+      echo "error in running make"
+      echo "make -C ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR}"
+      echo "returning......................"
+      return
+    fi
+    make -C ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} install 2>&1> script_output.txt
+    INSTALL_RET=$?
+    if [ $INSTALL_RET -ne 0 ]; then
+      echo "error in running make install"
+      echo "make -C ${SCRIPTPATH}/faaltu/${LIBNCURSES_DIR} install"
+      echo "returning......................"
+      return
+    fi 
+  fi
+
 }
 
 # install vim only if update is available
@@ -283,11 +351,12 @@ function install_vim {
       fi
     fi
 
-    if [ ${VIM_INSTALL} == 0]; then
+    if [ ${VIM_INSTALL} == 0 ]; then
       if [ -d ${SCRIPTPATH}/faaltu/vim ]; then
         rm -rf ${SCRIPTPATH}/faaltu/vim/*
       fi
       download_and_extract ${SCRIPTPATH}/faaltu ${SCRIPTPATH}/faaltu/${VIM_DIR} ${VIM_TAR} ${VIM_URL} ${VIM_MD5}
+      install_ncurses
       (cd ${SCRIPTPATH}/faaltu/${VIM_DIR} && ./configure --enable-python3interp --with-features=huge --enable-gui=auto --prefix=${SCRIPTPATH}/faaltu/vim)
       PREBUILD_RET=$?
       if [ $PREBUILD_RET -ne 0 ]; then
@@ -296,7 +365,7 @@ function install_vim {
         echo "returning......................"
         return
       fi
-      make -C ${SCRIPTPATH}/faaltu/${VIM_DIR} -j 8 
+      make -C ${SCRIPTPATH}/faaltu/${VIM_DIR} -j 8  2>&1> script_output.txt
       BUILD_RET=$?
       if [ $BUILD_RET -ne 0 ]; then
         echo "error in running make"
@@ -304,7 +373,7 @@ function install_vim {
         echo "returning......................"
         return
       fi
-      make -C ${SCRIPTPATH}/faaltu/${VIM_DIR} install
+      make -C ${SCRIPTPATH}/faaltu/${VIM_DIR} install 2>&1> script_output.txt
       INSTALL_RET=$?
       if [ $INSTALL_RET -ne 0 ]; then
         echo "error in running make install"
@@ -330,10 +399,10 @@ function install_ctags {
     CTAGS_URL="https://superb-dca2.dl.sourceforge.net/project/ctags/ctags/${CTAGS_VER}/${CTAGS_TAR}"
     CTAGS_INSTALL="0"
   
-    ctags --version > /dev/null
+    ctags --version 2>&1> script_output.txt
     CTAGS_RET="$?"
 
-    $HOME/bin/ctags --version > /dev/null
+    $HOME/bin/ctags --version 2>&1> script_output.txt
     MY_CTAGS_RET="$?"
 
     if [[ $CTAGS_RET != 0 ]] && [[ $MY_CTAGS_RET != 0 ]]; then
@@ -347,8 +416,8 @@ function install_ctags {
       if [[ $CTAGS_INSTALL == 1 ]]; then
         if [ -f "$SCRIPTPATH/faaltu/$CTAGS_DIR/configure" ]; then
           (cd $SCRIPTPATH/faaltu/$CTAGS_DIR/ && ./configure --prefix=$HOME)
-          make -C $SCRIPTPATH/faaltu/$CTAGS_DIR 
-          make -C $SCRIPTPATH/faaltu/$CTAGS_DIR install
+          make -C $SCRIPTPATH/faaltu/$CTAGS_DIR 2>&1> script_output.txt
+          make -C $SCRIPTPATH/faaltu/$CTAGS_DIR install 2>&1> script_output.txt
         else
           echo "$SCRIPTPATH/faaltu/$CTAGS_DIR/configure not found"
         fi
@@ -459,7 +528,7 @@ function install_gitlfs {
 
 # install i3wmIPC only if 
 function install_i3wmIPC {
-  i3 --version > /dev/null
+  i3 --version 2>&1> script_output.txt
   I3_RET="$?"
   if [[ I3_RET -eq 127 ]]; then # i3 not installed
     echo "i3 not installed, returning..."
@@ -590,7 +659,7 @@ function install_googletest {
       echo "returning........................"
       return
     fi
-    make -C $GOOGLETEST_BUILD_DIR -j 8
+    make -C $GOOGLETEST_BUILD_DIR -j 8 2>&1> script_output.txt
     BUILD_RET=$?
     if [ $BUILD_RET -ne 0 ]; then
       echo "error in running make"
@@ -598,7 +667,7 @@ function install_googletest {
       echo "returning......................"
       return
     fi
-    make -C $GOOGLETEST_BUILD_DIR install
+    make -C $GOOGLETEST_BUILD_DIR install 2>&1> script_output.txt
     INSTALL_RET=$?
     if [ $INSTALL_RET -ne 0 ]; then
       echo "error in running make install"
@@ -712,8 +781,8 @@ function install_valgrind {
       fi
       download_and_extract $SCRIPTPATH/faaltu ${SCRIPTPATH}/faaltu/${VALGRIND_DIR} ${VALGRIND_TAR} ${VALGRIND_URL} ${VALGRIND_MD5}
       (cd ${SCRIPTPATH}/faaltu/${VALGRIND_DIR} && ./configure --prefix=${SCRIPTPATH}/faaltu/valgrind/)
-      make -C ${SCRIPTPATH}/faaltu/${VALGRIND_DIR}
-      make -C ${SCRIPTPATH}/faaltu/${VALGRIND_DIR} install
+      make -C ${SCRIPTPATH}/faaltu/${VALGRIND_DIR} 2>&1> script_output.txt
+      make -C ${SCRIPTPATH}/faaltu/${VALGRIND_DIR} install 2>&1> script_output.txt
     fi
     if [ ! -L ${HOME}/Softwares/valgrind ]; then
       ln -sT $SCRIPTPATH/faaltu/valgrind ${HOME}/Softwares/valgrind
@@ -849,8 +918,15 @@ function python_virtualenv_setup {
         if [ "$?" != "0" ] || [ "$WHICH_PIP3" == "$HOME/.local/bin/pip3" ]; then
           if [ "$WHICH_PIP3" != "$HOME/.local/bin/pip3" ]; then
             echo "pip3 not installed, installing by downloading get-pip.py"
+            dpkg -l python3-distutils
+            DISTUTILS_RET=$?
+            if [ $DISTUTILS_RET -ne 0 ]; then
+              echo "python distutils not found"
+              echo "dkpg -l python3-distutils is non zero"
+              return
+            fi
             if [ ! -f "$DOTFILES_SCRIPT_PARENT/faaltu/get-pip.py" ]; then
-              curl https://bootstrap.pypa.io/get-pip.py -o $DOTFILES_SCRIPT_PARENT/faaltu/get-pip.py 
+              curl https://bootstrap.pypa.io/get-pip.py -o ${DOTFILES_SCRIPT_PARENT}/faaltu/get-pip.py 
             fi
             /usr/bin/python3 $DOTFILES_SCRIPT_PARENT/faaltu/get-pip.py --user
           fi
@@ -985,6 +1061,7 @@ fi
 
 # all updating to variable/dotfiles done
 #calling install functions
+install_ncurses
 install_vim
 install_clang_llvm
 install_ctags
@@ -1008,17 +1085,21 @@ if [[ NEED_VIM_PLUGIN_INSTALL -ne 0 ]]; then
   if [ -f $HOME/.local/bin/vim ]; then
     VIM_EXEC=$HOME/.local/bin/vim
   fi
-  if [ ! -f $SCRIPTPATH/faaltu/.vim_plugin.hash ]; then
-    VIM_PLUGIN_OLD_HASH="Nothing"
-    $VIM_EXEC +PluginInstall +qall
-  else
-    VIM_PLUGIN_OLD_HASH=$(cat $SCRIPTPATH/faaltu/.vim_plugin.hash)
-  fi
-  if [ "$VIM_PLUGIN_HASH" != "$VIM_PLUGIN_OLD_HASH" ]; then
-    $VIM_EXEC +PluginClean! +qall
-    $VIM_EXEC +PluginInstall +qall
-    $VIM_EXEC +PluginUpdate +qall
-    echo $VIM_PLUGIN_HASH > $SCRIPTPATH/faaltu/.vim_plugin.hash
+  type $VIM_EXEC
+  VIM_RET="$?"
+  if [ ${VIM_RET} -eq "0" ]; then
+    if [ ! -f $SCRIPTPATH/faaltu/.vim_plugin.hash ]; then
+      VIM_PLUGIN_OLD_HASH="Nothing"
+      $VIM_EXEC +PluginInstall +qall
+    else
+      VIM_PLUGIN_OLD_HASH=$(cat $SCRIPTPATH/faaltu/.vim_plugin.hash)
+    fi
+    if [ "$VIM_PLUGIN_HASH" != "$VIM_PLUGIN_OLD_HASH" ]; then
+      $VIM_EXEC +PluginClean! +qall
+      $VIM_EXEC +PluginInstall +qall
+      $VIM_EXEC +PluginUpdate +qall
+      echo $VIM_PLUGIN_HASH > $SCRIPTPATH/faaltu/.vim_plugin.hash
+    fi
   fi
 
 fi
