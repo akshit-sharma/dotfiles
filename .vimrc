@@ -229,7 +229,6 @@ map <S-F11> :!cd .git && ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extr
 " au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
 " set completeopt=menuone,menu,longest,preview
  
-<<<<<<< HEAD
 " YCM (YouCompleteMe)
 let g:ycm_compilation_database_folder = 'build'
 let g:ycm_server_log_level = 'debug'
