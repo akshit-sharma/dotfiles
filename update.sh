@@ -751,7 +751,7 @@ function install_conan {
     return
   fi
   type pip3
-  pip3 install conan
+  pip3 install --user conan
  
 }
 
