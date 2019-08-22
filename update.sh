@@ -741,6 +741,20 @@ function install_vcpkg {
   fi 
 }
 
+function install_conan {
+
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing conan"
+  fi
+  type conan
+  if [ "$?" == "0" ]; then 
+    return
+  fi
+  type pip3
+  pip3 install conan
+ 
+}
+
 function install_valgrind {
   if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing valgrind"
@@ -1071,6 +1085,7 @@ install_cmake
 install_googletest
 #install_brew
 install_ycm
+install_conan
 install_vcpkg
 install_valgrind
 
