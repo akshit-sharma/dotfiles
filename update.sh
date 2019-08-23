@@ -602,9 +602,9 @@ function install_cmake {
   if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing cmake"
   fi
-  CMAKE_MD5="762dda556a9a1c84cd7ded37c3c5191f"
-  CMAKE_VER="3.12"
-  CMAKE_SUB_VER="4"
+  CMAKE_MD5="493b48e1e72b76e05c718f06bb9151e1"
+  CMAKE_VER="3.15"
+  CMAKE_SUB_VER="2"
   CMAKE_DIR="cmake"
   CMAKE_SCRIPT="cmake-${CMAKE_VER}.${CMAKE_SUB_VER}-Linux-x86_64.sh"
   CMAKE_URL="https://cmake.org/files/v${CMAKE_VER}/${CMAKE_SCRIPT}"
