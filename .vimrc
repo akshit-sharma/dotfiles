@@ -46,11 +46,9 @@ Plugin 'luochen1990/rainbow'
 " " Async run commands in shell
 " Plugin 'skywind3000/asyncrun.vim'
 
-" vim-cmake-syntax
-Plugin 'pboettch/vim-cmake-syntax'
-
-" GLFW syntax Highlighting
-Plugin 'bfrg/vim-glfw-syntax'
+" " vim-cmake-syntax
+" Plugin 'pboettch/vim-cmake-syntax'
+ Plugin 'vhdirk/vim-cmake'
 
 " vimwiki
 Plugin 'vimwiki/vimwiki'
@@ -75,18 +73,18 @@ Plugin 'lervag/vimtex'
 " Gutentags 
 Plugin 'ludovicchabant/vim-gutentags'
 "
-" vim-cmake 
-Plugin 'sigidagi/vim-cmake-project'
-" vimux
-Plugin 'benmills/vimux'
+" " vim-cmake 
+" Plugin 'sigidagi/vim-cmake-project'
+" " vimux
+" Plugin 'benmills/vimux'
 
-" Asynchronous linting/fixing for Vim and Language Server Protocol
-Plugin 'dense-analysis/ale'
+" " Asynchronous linting/fixing for Vim and Language Server Protocol
+" Plugin 'dense-analysis/ale'
 
-" vim-clang-format
-Plugin 'rhysd/vim-clang-format'
-Plugin 'kana/vim-operator-user'
-Plugin 'Shougo/vimproc.vim'
+" " vim-clang-format
+" Plugin 'rhysd/vim-clang-format'
+" Plugin 'kana/vim-operator-user'
+" Plugin 'Shougo/vimproc.vim'
 
 " vim table mode
 Plugin 'dhruvasagar/vim-table-mode'
@@ -149,6 +147,7 @@ if has("autocmd")
   augroup templates
     autocmd BufNewFile *.sh 0r ~/.vim/templates/skeleton.sh
     autocmd BufNewFile *.tex 0r ~/.vim/templates/skeleton.tex
+    autocmd BufNewFile CMakeLists.txt 0r ~/.vim/templates/skeleton.cmake
   augroup END
 endif
 
