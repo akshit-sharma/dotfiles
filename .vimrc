@@ -79,7 +79,7 @@ Plugin 'ludovicchabant/vim-gutentags'
 " Plugin 'benmills/vimux'
 
 " " Asynchronous linting/fixing for Vim and Language Server Protocol
-" Plugin 'dense-analysis/ale'
+ Plugin 'dense-analysis/ale'
 
 " " vim-clang-format
 " Plugin 'rhysd/vim-clang-format'
