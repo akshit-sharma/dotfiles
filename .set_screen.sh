@@ -95,10 +95,10 @@ if [ "$dp_msg" != "" ]; then
   i3-msg "$dp_msg" > /dev/null
 fi
 
-pgrep -x "feh" > /dev/null
-PGREP_RET=$?
-if [ $PGREP_RET -eq 1 ]; then
-  feh --randomize --bg-fill ~/.config/i3/bgImages/*
-  while sleep 600; do feh --randomize --bg-fill ~/.config/i3/bgImages/*; done &
-fi
+# pgrep -x "feh" > /dev/null
+# PGREP_RET=$?
+# if [ $PGREP_RET -eq 1 ]; then
+#   feh --randomize --bg-fill ~/.config/i3/bgImages/*
+#   while sleep 600; do feh --randomize --bg-fill ~/.config/i3/bgImages/*; done &
+# fi
 

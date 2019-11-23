@@ -74,9 +74,9 @@ Plugin 'lervag/vimtex'
 Plugin 'ludovicchabant/vim-gutentags'
 "
 " " vim-cmake 
-" Plugin 'sigidagi/vim-cmake-project'
+Plugin 'sigidagi/vim-cmake-project'
 " " vimux
-" Plugin 'benmills/vimux'
+Plugin 'benmills/vimux'
 
 " " Asynchronous linting/fixing for Vim and Language Server Protocol
  Plugin 'dense-analysis/ale'
@@ -125,6 +125,17 @@ filetype plugin indent on 	" required
 
 " highlighting with vulkan1.0.vim
 autocmd FileType cpp,c source ~/.vim/syntax/vulkan1.0.vim
+autocmd FileType cuda,cu source ~/.vim/syntax/cuda.vim
+
+" For cuda files
+" Highlight keywords from CUDA Runtime API
+let g:cuda_runtime_api_highlight = 1
+" Highlight keywords from CUDA Driver API
+let g:cuda_driver_api_highlight = 1
+" Highlight keywords from CUDA Thrust library
+let g:cuda_thrust_highlight = 1
+" Disable highlighting of CUDA kernel calls
+let g:cuda_no_kernel_highlight = 1
 
 " highlighting with opengl.vim
 "autocmd FileType cpp,c source ~/.vim/syntax/opengl.vim
