@@ -226,11 +226,11 @@ mouse_warping none # does not move mouse if focused across screens
 workspace_auto_back_and_forth yes
 
 # Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id amixer -q set Master 2dB+ unmute
-bindsym XF86AudioLowerVolume exec --no-startup-id amixer -q set Master 2dB- unmute
-bindsym Shift+XF86AudioRaiseVolume exec --no-startup-id amixer -q set Master 1dB+ unmute
-bindsym Shift+XF86AudioLowerVolume exec --no-startup-id amixer -q set Master 1dB- unmute
-bindsym XF86AudioMute exec amixer -q set Master toggle
+bindsym XF86AudioRaiseVolume exec --no-startup-id amixer -q -D pulse sset Master 4%+ unmute
+bindsym XF86AudioLowerVolume exec --no-startup-id amixer -q -D pulse sset Master 4%- unmute
+bindsym Shift+XF86AudioRaiseVolume exec --no-startup-id amixer -q -D pulse sset Master 1%+ unmute
+bindsym Shift+XF86AudioLowerVolume exec --no-startup-id amixer -q -D pulse sset Master 1%- unmute
+bindsym XF86AudioMute exec amixer -q sset -D pulse Master toggle
 # bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
 # bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
 # bindsym Shift+XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +1% #increase sound volume
