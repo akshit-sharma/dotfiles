@@ -435,8 +435,8 @@ function install_clang_llvm {
   fi
   if [ $WGET_RET == 0 ]; then 
     echo "wget found"
-    LLVM_CORRECT_MD5="a35a41f734e673d0104f5bd16a3b9380"
-    LLVM_PREBINARY_VER="7.0.0"
+    LLVM_CORRECT_MD5="b3c5618fb3a5d268c371539e9f6a4b1f"
+    LLVM_PREBINARY_VER="9.0.0"
     LLVM_PREBINARY_DIR="clang+llvm-${LLVM_PREBINARY_VER}-x86_64-linux-gnu-ubuntu-16.04"
     LLVM_PREBINARY_TAR="${LLVM_PREBINARY_DIR}.tar.xz"
     LLVM_PREBINARY_URL="http://releases.llvm.org/${LLVM_PREBINARY_VER}/${LLVM_PREBINARY_TAR}"
@@ -752,6 +752,78 @@ function install_conan {
   fi
   type pip3
   pip3 install --user conan
+ 
+}
+
+function install_doxygen {
+  
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing doxygen"
+  fi
+  type doxygen
+  if [ "$?" == "0" ]; then
+    return
+  fi
+  type cmake
+  type make
+
+  DOXYGEN_CORRECT_MD5="7997a15c73a8bd6d003eaba5c2ee2b47"
+  DOXYGEN_VER="1.8.17"
+  DOXYGEN_DIR="doxygen-${DOXYGEN_VER}.src"
+  DOXYGEN_SRC_DIR="doxygen-${DOXYGEN_VER}"
+  DOXYGEN_BUILD_DIR="doxygen-${DOXYGEN_VER}/build"
+  DOXYGEN_TAR="doxygen-${DOXYGEN_VER}.src.tar.gz"
+  DOXYGEN_URL="http://doxygen.nl/files/${DOXYGEN_TAR}" 
+
+  DOXYGEN_INSTALL_DIR="$HOME/Softwares/doxygen/"
+  DOXYGEN_CMAKE_CMD="-B${SCRIPTPATH}/faaltu/${DOXYGEN_BUILD_DIR} -H${SCRIPTPATH}/faaltu/${DOXYGEN_SRC_DIR} -DCMAKE_INSTALL_PREFIX=${DOXYGEN_INSTALL_DIR}"
+ 
+  type doxygen
+  if [ "$?" == 0 ]; then
+    return
+  fi
+
+  if [[ ! -f "${SCRIPTPATH}/faaltu/${DOXYGEN_BUILD_DIR}/CMakeCache.txt" ]]; then
+    download_and_extract ${SCRIPTPATH}/faaltu ${SCRIPTPATH}/faaltu/${DOXYGEN_DIR} ${DOXYGEN_TAR} ${DOXYGEN_URL} ${DOXYGEN_CORRECT_MD5}
+    if [[ ! -f "${SCRIPTPATH}/faaltu/${DOXYGEN_BUILD_DIR}/CMakeCache.txt" ]]; then
+      mkdir ${SCRIPTPATH}/faaltu/${DOXYGEN_BUILD_DIR}
+      cmake ${DOXYGEN_CMAKE_CMD}
+      PREBUILD_RET="$?"
+      if [ $PREBUILD_RET -ne 0 ]; then
+        echo "error in running cmake"
+        echo "cmake ${DOXYGEN_CMAKE_CMD}"
+        echo "returning........................"
+        return
+      fi
+     
+      make -C${SCRIPTPATH}/faaltu/${DOXYGEN_BUILD_DIR} -j 8
+      BUILD_RET="$?"
+      if [ $BUILD_RET -ne 0 ]; then
+        echo "error in running make"
+        echo "make -C${DOXYGEN_BUILD_DIR}"
+        echo "returning......................."
+        return
+      fi
+      
+      make -C${SCRIPTPATH}/faaltu/${DOXYGEN_BUILD_DIR} install
+
+    fi 
+  fi
+
+}
+
+function install_breathe_and_sphnix {
+
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing breathe and sphinx"
+  fi
+  type sphinx-build
+  if [ "$?" == "0" ]; then 
+    return
+  fi
+  type pip3
+  pip3 install --user breathe
+  pip3 install --user sphinx
  
 }
 
@@ -1088,6 +1160,8 @@ install_googletest
 #install_brew
 install_ycm
 install_conan
+install_doxygen
+install_breathe_and_sphnix
 install_vcpkg
 install_valgrind
 

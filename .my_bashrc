@@ -25,6 +25,9 @@ COMPUTECPP_DIR=$LIB_HOME/ComputeCpp
 CMAKE_HOME=$SW_HOME/cmake
 PATH=$CMAKE_HOME/bin:$PATH
 
+DOXYGEN_HOME=$SW_HOME/doxygen
+PATH=$DOXYGEN_HOME/bin:$PATH
+
 GTEST_DIR=$SW_HOME/googletest
 
 if [ -d $SW_HOME/gcc/bin/ ]; then
