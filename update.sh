@@ -385,7 +385,6 @@ function install_vim {
   fi
 }
 
-
 # install ctags only if not installed or MD5 changed
 function install_ctags {
   if [[ $DEBUG_SCRIPT -ne 0 ]]; then
@@ -1149,8 +1148,8 @@ fi
 
 # all updating to variable/dotfiles done
 #calling install functions
-install_ncurses
-install_vim
+# install_ncurses
+# install_vim
 install_clang_llvm
 install_ctags
 install_gitlfs
