@@ -30,6 +30,9 @@ PATH=$DOXYGEN_HOME/bin:$PATH
 
 GTEST_DIR=$SW_HOME/googletest
 
+LLVM_HOME=$HOME/dotfiles/faaltu/clang+llvm
+PATH=$LLVM_HOME/bin:$PATH
+
 if [ -d $SW_HOME/gcc/bin/ ]; then
   PATH=$PATH:$SW_HOME/gcc/bin
 fi
@@ -64,6 +67,8 @@ alias iccpp="export CUDA_VISIBLE_DEVICES=\"\""       # not working on nvidia gpu
 alias vccpp="export PATH=$COMPUTECPP_DIR:$PATH"
 
 alias ycmgen='$HOME/.vim/bundle/YCM-Generator/config_gen.py --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .'
+
+alias cpp_project='$DOTFILES_SCRIPT_PARENT/cpp'
 
 VISUAL=vim
 EDITOR="$VISUAL"

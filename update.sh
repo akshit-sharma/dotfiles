@@ -317,6 +317,7 @@ function install_ncurses {
 
 }
 
+# uninstall local vim
 function uninstall_local_vim {
   if [ -d ${SCRIPTPATH}/faaltu/vim ]; then
     rm -rf ${SCRIPTPATH}/faaltu/vim*
@@ -331,6 +332,44 @@ function uninstall_local_vim {
     rm ${HOME}/.local/bin/vimtutor
     rm ${HOME}/.local/bin/xxd
   fi
+}
+
+# install anaconda3
+function install_anaconda3 {
+  CONDA_YEAR="2019"
+  CONDA_MINOR_VERSION="10"
+  CONDA_SCRIPT_FILE="Anaconda3-${CONDA_YEAR}.${CONDA_MINOR_VERSION}-Linux-x86_64.sh"
+  CONDA_URL="https://repo.anaconda.com/archive/${CONDA_SCRIPT_FILE}"
+  CONDA_DOWNLOAD_DIR=${SCRIPTPATH}/faaltu/anaconda3
+  CONDA_INSTALL_DIR=${HOME}/anaconda3
+
+  CONDA_MD5="b77a71c3712b45c8f33c7b2ecade366c"
+
+  if [ ! -f ${CONDA_DOWNLOAD_DIR}/${CONDA_SCRIPT_FILE} ]; then
+    download_and_extract ${CONDA_DOWNLOAD_DIR} ${CONDA_DOWNLOAD_DIR} ${CONDA_SCRIPT_FILE} ${CONDA_URL} ${CONDA_MD5}
+  fi
+
+  if [ ! -f ${CONDA_DOWNLOAD_DIR}/${CONDA_SCRIPT_FILE} ]; then
+    echo "${CONDA_DOWNLOAD_DIR}/${CONDA_SCRIPT_FILE} not found"
+    echo "anaconda3 install unsuccessful"
+    return
+  fi
+
+  # --- script available for install ---
+
+  if [ -f ${CONDA_INSTALL_DIR}/bin/conda ]; then
+    echo "anaconda3 already installed"
+    return
+  fi
+
+  # --- anaconda3 not installed or reinstall ---
+
+  if [ -d ${CONDA_INSTALL_DIR} ]; then
+    rm -r ${CONDA_INSTALL_DIR}
+  fi
+
+  ${CONDA_DOWNLOAD_DIR}/${CONDA_SCRIPT_FILE} -b -f -p ${CONDA_INSTALL_DIR}
+  
 }
 
 # install vim only if update is available
@@ -1167,6 +1206,7 @@ fi
 # install_ncurses
 # install_vim
 uninstall_local_vim
+install_anaconda3
 install_clang_llvm
 install_ctags
 install_gitlfs
