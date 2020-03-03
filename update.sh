@@ -317,6 +317,22 @@ function install_ncurses {
 
 }
 
+function uninstall_local_vim {
+  if [ -d ${SCRIPTPATH}/faaltu/vim ]; then
+    rm -rf ${SCRIPTPATH}/faaltu/vim*
+  fi
+  if [ -d ${HOME}/.local/bin/vim ]; then
+    rm ${HOME}/.local/bin/ex
+    rm ${HOME}/.local/bin/rview
+    rm ${HOME}/.local/bin/rvim
+    rm ${HOME}/.local/bin/view
+    rm ${HOME}/.local/bin/vim
+    rm ${HOME}/.local/bin/vimdiff
+    rm ${HOME}/.local/bin/vimtutor
+    rm ${HOME}/.local/bin/xxd
+  fi
+}
+
 # install vim only if update is available
 function install_vim {
   if [[ $DEBUG_SCRIPT -ne 0 ]]; then
@@ -1150,6 +1166,7 @@ fi
 #calling install functions
 # install_ncurses
 # install_vim
+uninstall_local_vim
 install_clang_llvm
 install_ctags
 install_gitlfs
