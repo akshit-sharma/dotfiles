@@ -95,9 +95,11 @@ function copy_project_files {
   SRC_DIR=$1
   DST_DIR=$2
 
-  if [ "$(ls -A $DST_DIR)" ]; then 
-    echo "$DST_DIR should be empty"
-    exit 4
+  if [ -d $DST_DIR ]; then
+    if [ "$(ls -A $DST_DIR)" ]; then 
+      echo "$DST_DIR should be empty"
+      exit 4
+    fi
   fi
 
   cp -r $SRC_DIR $DST_DIR
