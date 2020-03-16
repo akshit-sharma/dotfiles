@@ -111,15 +111,16 @@ fi
 function home_dir_symlink {
   filename="$1"
   dir="${2:-}"
-  if [ ! -f $HOME/$dir/$filename ] && [ ! -d $HOME/$dir/$filename ] && [ ! -L $HOME/$dir/$filename ] \
+  file=$(basename ${filename})
+  if [ ! -f $HOME/$dir/$file ] && [ ! -d $HOME/$dir/$file ] && [ ! -L $HOME/$dir/$file ] \
     && [ ! -f $SCRIPTPATH/$filename ] && [ ! -d $SCRIPTPATH/$filename ] && [ ! -L $SCRIPTPATH/$filename ]; then
-    echo "Could not determine if $HOME/$dir/$filename or $SCRIPTPATH/$filename are file, directory or symlink"
+    echo "Could not determine if $HOME/$dir/$file or $SCRIPTPATH/$filename are file, directory or symlink"
     echo "return ............."
     return
   fi
 
   if [[ $DEBUG_SCRIPT -ne 0 ]]; then
-    echo "symlink $HOME/$dir/$filename ---> $SCRIPTPATH/$filename"
+    echo "symlink $HOME/$dir/$file ---> $SCRIPTPATH/$filename"
   fi
   if [ ! -d $HOME/$dir ]; then
     mkdir -p $HOME/$dir
@@ -127,15 +128,15 @@ function home_dir_symlink {
   if [ ! -f $SCRIPTPATH/$filename ] && [ ! -d $SCRIPTPATH/$filename ]; then 
                                                             # pretty much use less after getting files
     if [[ $DEBUG_SCRIPT -ne 0 ]]; then
-      echo "copying $HOME/$dir/$filename to $SCRIPTPATH/$filename"
+      echo "copying $HOME/$dir/$file to $SCRIPTPATH/$filename"
     fi
-    if [ -f $HOME/$dir/$filename ]; then
-      cp $HOME/$dir/$filename $SCRIPTPATH/$filename   # usefull to add new files in the script
+    if [ -f $HOME/$dir/$file ]; then
+      cp $HOME/$dir/$file $SCRIPTPATH/$filename   # usefull to add new files in the script
                                                       # instead of manually moving/copying
-    elif [ -d $HOME/$dir/$filename ]; then
-      cp -r $HOME/$dir/$filename $SCRIPTPATH/$filename
+    elif [ -d $HOME/$dir/$file ]; then
+      cp -r $HOME/$dir/$file $SCRIPTPATH/$filename
     else 
-      echo "don't know how to copy $HOME/$dir/$filename to $SCRIPTPATH/$filename"
+      echo "don't know how to copy $HOME/$dir/$file to $SCRIPTPATH/$filename"
       echo "return ............."
       return
     fi
@@ -146,29 +147,30 @@ function home_dir_symlink {
     echo "return ................"
     return
   fi
-  if [ ! -L "$HOME/$dir/$filename" ]; then
-    if [ -d "$HOME/$dir/$filename" ] || [ -f "$HOME/$dir/$filename" ]; then
+  if [ ! -L "$HOME/$dir/$file" ]; then
+    if [ -d "$HOME/$dir/$file" ] || [ -f "$HOME/$dir/$file" ]; then
 #  script_file_md5=`eval md5sum < $SCRIPTPATH/$filename | cut -d\  -f1`
 #  destination_file_md5=`eval md5sum < $SCRIPTPATH/$filename | cut -d\  -f1`
-      if [ ! -f "$HOME/$dir/$filename.bk" ] && [ ! -d "$HOME/$dir/$filename.bk" ] && [ ! -L "$HOME/$dir/$filename.bk" ]; then
+      if [ ! -f "$HOME/$dir/$file.bk" ] && [ ! -d "$HOME/$dir/$file.bk" ] && [ ! -L "$HOME/$dir/$file.bk" ]; then
         if [[ $DEBUG_SCRIPT -ne 0 ]]; then
-          echo "backing up $HOME/$dir/$filename to $HOME/$dir/$filename.bk"
+          echo "backing up $HOME/$dir/$file to $HOME/$dir/$file.bk"
         fi
-        mv "$HOME/$dir/$filename" "$HOME/$dir/$filename.bk"
+        mv "$HOME/$dir/$file" "$HOME/$dir/$file.bk"
       else
-        echo "$HOME/$dir/$filename.bk already present skipping backup"
+        echo "$HOME/$dir/$file.bk already present skipping backup"
       fi
     fi
-    if [ ! -L "$HOME/$dir/$filename" ]; then
+    if [ ! -L "$HOME/$dir/$file" ]; then
       if [ -f "$SCRIPTPATH/$filename" ] || [ -d "$SCRIPTPATH/$filename" ]; then
         if [[ $DEBUG_SCRIPT -ne 0 ]]; then
-          echo "linking $SCRIPTPATH/$filename to $HOME/$dir/$filename"
+          echo "linking $SCRIPTPATH/$filename to $HOME/$dir/$file"
         fi
-        ln -sT $SCRIPTPATH/$filename $HOME/$dir/$filename
+        ln -sT $SCRIPTPATH/$filename $HOME/$dir/$file
       else
         echo "Don't know how to link"
         echo "dir is $dir"
         echo "filename is $filename"
+        echo "file is $file"
         exit 5
       fi
     fi
@@ -966,6 +968,8 @@ home_dir_symlink .gdbinit .
 
 home_dir_symlink .set_screen.sh .
 home_dir_symlink .set_wallpaper.sh .
+
+home_dir_symlink cpp_project/new_cpp_project.sh .local/bin
 
 if [ -L ~/.toggletouchpad.sh ]; then
   rm  ~/.toggletouchpad.sh
