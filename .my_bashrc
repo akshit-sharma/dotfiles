@@ -30,8 +30,9 @@ PATH=$DOXYGEN_HOME/bin:$PATH
 
 GTEST_DIR=$SW_HOME/googletest
 
-LLVM_HOME=$HOME/dotfiles/faaltu/clang+llvm
-PATH=$LLVM_HOME/bin:$PATH
+#LLVM_HOME=$HOME/dotfiles/faaltu/clang+llvm
+#PATH=$LLVM_HOME/bin:$PATH
+#LD_LIBRARY_PATH=$LLVM/lib:$LD_LIBRARY_PATH
 
 if [ -d $SW_HOME/gcc/bin/ ]; then
   PATH=$PATH:$SW_HOME/gcc/bin

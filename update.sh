@@ -953,6 +953,7 @@ fi
 home_dir_symlink syntax .vim
 home_dir_symlink ftplugin .vim
 home_dir_symlink templates .vim
+home_dir_symlink colors .vim
 
 # symlink directory for vimwiki
 home_dir_symlink vimwiki .

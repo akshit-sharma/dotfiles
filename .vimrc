@@ -111,6 +111,7 @@ set wildignore+=*/tmp/*,*.so,*.swp,*.zip
 " Glaive coverage plugin[mappings]
 
 filetype plugin indent on 	" required
+
 " To ignore plugin indent changes, instead use:
 " filetype plugin on
 "
@@ -142,7 +143,7 @@ let g:cuda_no_kernel_highlight = 1
 
 "autocmd FileType *.py set shiftwidth=2|set softtabstop=2|set tabstop=2|set expandtab
 
-" for vim wiki plugin
+colo jellybeans
 syntax on
 
 function! s:DiffWithSaved()
