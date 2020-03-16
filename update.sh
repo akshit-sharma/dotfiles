@@ -324,7 +324,7 @@ function uninstall_local_vim {
   if [ -d ${SCRIPTPATH}/faaltu/vim ]; then
     rm -rf ${SCRIPTPATH}/faaltu/vim*
   fi
-  if [ -d ${HOME}/.local/bin/vim ]; then
+  if [ -f ${HOME}/.local/bin/vim ]; then
     rm ${HOME}/.local/bin/ex
     rm ${HOME}/.local/bin/rview
     rm ${HOME}/.local/bin/rvim
@@ -1234,9 +1234,9 @@ if [[ NEED_VIM_PLUGIN_INSTALL -ne 0 ]]; then
   fi
   VIM_PLUGIN_HASH=$(cat $HOME/.vimrc | sed -n 's/\(^Plugin\)/\1/p' | md5sum | cut -d' ' -f1)
   VIM_EXEC=vim
-  if [ -f $HOME/.local/bin/vim ]; then
-    VIM_EXEC=$HOME/.local/bin/vim
-  fi
+  # if [ -f $HOME/.local/bin/vim ]; then
+  #   VIM_EXEC=$HOME/.local/bin/vim
+  # fi
   type $VIM_EXEC
   VIM_RET="$?"
   if [ ${VIM_RET} -eq "0" ]; then
