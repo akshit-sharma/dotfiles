@@ -111,7 +111,11 @@ fi
 function home_dir_symlink {
   filename="$1"
   dir="${2:-}"
-  file=$(basename ${filename})
+  if [ -f ${filename} ]; then
+    file=$(basename ${filename})
+  else
+    file=$filename
+  fi
   if [ ! -f $HOME/$dir/$file ] && [ ! -d $HOME/$dir/$file ] && [ ! -L $HOME/$dir/$file ] \
     && [ ! -f $SCRIPTPATH/$filename ] && [ ! -d $SCRIPTPATH/$filename ] && [ ! -L $SCRIPTPATH/$filename ]; then
     echo "Could not determine if $HOME/$dir/$file or $SCRIPTPATH/$filename are file, directory or symlink"
@@ -1015,7 +1019,12 @@ if [ ! -d "$HOME/.vim/bundle/Vundle.vim" ]; then
   NEED_VIM_PLUGIN_INSTALL=1
 fi
 
+if [ ! -d $HOME/.config ]; then
+  mkdir $HOME/.config
+fi
+
 home_dir_symlink .vimrc .
+home_dir_symlink .nvim .config
 home_dir_symlink .my_ssh_agent .
 home_dir_symlink .my_profile .
 home_dir_symlink .my_bashrc .
