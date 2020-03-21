@@ -1032,6 +1032,7 @@ home_dir_symlink .my_entry .
 home_dir_symlink .tmux.conf .
 home_dir_symlink .latexmkrc .
 home_dir_symlink .mydircolors .
+home_dir_symlink .condarc .
   
 if [ ! -f "$HOME/.my_vars" ]; then
   touch $HOME/.my_vars
