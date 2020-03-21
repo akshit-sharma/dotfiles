@@ -751,6 +751,17 @@ function install_brew {
   fi
 }
 
+function install_neovim {
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing neovim"
+  fi
+  type nvim
+  if [ "$?" == 0 ]; then
+    return
+  fi
+  brew install neovim
+}
+
 function install_ycm {
 # install YouCompleteMe only if not installed or if YCM is updated
   if [[ $DEBUG_SCRIPT -ne 0 ]]; then
@@ -1231,13 +1242,14 @@ install_gitlfs
 # install_i3wmIPC
 install_cmake
 install_googletest
-#install_brew
+install_brew
 install_ycm
 install_conan
 install_doxygen
 install_breathe_and_sphnix
 install_vcpkg
 install_valgrind
+install_neovim
 
 echo "after prof val of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_ENTRY_REFRESH"
 
