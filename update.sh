@@ -746,6 +746,9 @@ function install_brew {
   if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing HomeBrew"
   fi
+  if [ ! -d $HOME/.linuxbrew ]; then
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+  fi
 }
 
 function install_ycm {

@@ -34,6 +34,9 @@ GTEST_DIR=$SW_HOME/googletest
 #PATH=$LLVM_HOME/bin:$PATH
 #LD_LIBRARY_PATH=$LLVM/lib:$LD_LIBRARY_PATH
 
+BREW_HOME=$HOME/.linuxbrew
+PATH=$PATH:$BREW_HOME/bin
+
 if [ -d $SW_HOME/gcc/bin/ ]; then
   PATH=$PATH:$SW_HOME/gcc/bin
 fi
