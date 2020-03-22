@@ -764,6 +764,18 @@ function install_brew {
 
 }
 
+function install_node {
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing neovim"
+  fi
+  type node
+  if [ "$?" == 0 ]; then
+    return
+  fi
+  brew install node
+}
+
+
 function install_neovim {
   if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing neovim"
@@ -1268,6 +1280,7 @@ install_doxygen
 install_breathe_and_sphnix
 install_vcpkg
 install_valgrind
+install_node
 install_neovim
 
 echo "after prof val of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_ENTRY_REFRESH"

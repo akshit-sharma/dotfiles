@@ -59,6 +59,8 @@ if [ -f $LIB_HOME/vulkansdk/vulkan/setup-env.sh ]; then
   source $LIB_HOME/vulkansdk/vulkan/setup-env.sh
 fi
 
+DOT_CLANG_HOME=$HOME/dotfiles/faaltu/clang+llvm
+
 alias vi='vim'
 alias vr='vim -R'
 
@@ -86,6 +88,7 @@ export COMPUTECPP_HOME
 export COMPUTECPP_DIR
 export INTEL_OPENCL_LIBRARY
 export GTEST_DIR
+export DOT_CLANG_HOME
 
 eval "`dircolors ~/.mydircolors`"
 
