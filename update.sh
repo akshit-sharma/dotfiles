@@ -1053,8 +1053,12 @@ if [ ! -d $HOME/.config ]; then
   mkdir $HOME/.config
 fi
 
+if [ -f $HOME/.nvim ]; then
+  rm $HOME/.nvim
+fi
+
 home_dir_symlink .vimrc .
-home_dir_symlink .nvim .config
+home_dir_symlink nvim .config
 home_dir_symlink .my_ssh_agent .
 home_dir_symlink .my_profile .
 home_dir_symlink .my_bashrc .
