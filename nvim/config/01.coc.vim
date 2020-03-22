@@ -104,9 +104,96 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
   
 call coc#config('languageserver', {
       \ 'clangd': {
-      \ "command": "${DOT_CLANG_HOME}/bin/clangd",
-      \ "args":  ["--background-index"],
-      \ "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
-      \ "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"]
-      \ }
+        \ "command": "${DOT_CLANG_HOME}/bin/clangd",
+        \ "args":  ["--background-index"],
+        \ "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
+        \ "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"]
+      \ },
+      \ "cmake": {
+        \ "command": "cmake-language-server",
+          \ "filetypes": ["cmake"],
+          \ "rootPatterns": [
+          \  "build/"
+        \ ],
+        \ "initializationOptions": {
+        \   "buildDirectory": "build"
+        \  }
+      \ },
+      \   "bash": {
+      \     "command": "bash-language-server",
+      \     "args": ["start"],
+      \     "filetypes": ["sh"],
+      \     "ignoredRootPaths": ["~"]
+      \    },
+      \ "digestif": {
+          \ "command": "digestif",
+          \ "filetypes": ["tex", "plaintex", "context"]
+      \ },
+\  "python": {
+\    "command": "python",
+\    "args": [
+\      "-mpyls",
+\      "-vv",
+\      "--log-file",
+\      "/tmp/lsp_python.log"
+\    ],
+\    "trace.server": "verbose",
+\    "filetypes": [
+\      "python"
+\    ],
+\    "settings": {
+\      "pyls": {
+\        "enable": 1,
+\        "trace": {
+\          "server": "verbose"
+\        },
+\        "commandPath": "",
+\        "configurationSources": [
+\          "pycodestyle"
+\        ],
+\        "plugins": {
+\          "jedi_completion": {
+\            "enabled": 1
+\          },
+\          "jedi_hover": {
+\            "enabled": 1
+\          },
+\          "jedi_references": {
+\            "enabled": 1
+\          },
+\          "jedi_signature_help": {
+\            "enabled": 1
+\          },
+\          "jedi_symbols": {
+\            "enabled": 1,
+\            "all_scopes": 1
+\          },
+\          "mccabe": {
+\            "enabled": 1,
+\            "threshold": 15
+\          },
+\          "preload": {
+\            "enabled": 1
+\          },
+\          "pycodestyle": {
+\            "enabled": 1
+\          },
+\          "pydocstyle": {
+\            "enabled": 0,
+\            "match": "(?!test_).*\\.py",
+\            "matchDir": "[^\\.].*"
+\          },
+\          "pyflakes": {
+\            "enabled": 1
+\          },
+\          "rope_completion": {
+\            "enabled": 1
+\          },
+\          "yapf": {
+\            "enabled": 1
+\          }
+\        }
+\      }
+\    }
+\  }
       \ })

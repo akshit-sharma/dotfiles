@@ -854,6 +854,62 @@ function install_conan {
  
 }
 
+function install_cmake_language_server {
+
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing cmake-language-server"
+  fi
+  type cmake-language-server
+  if [ "$?" == "0" ]; then 
+    return
+  fi
+  type pip3
+  pip3 install --user cmake-language-server
+ 
+}
+
+function install_bash_language_server {
+
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing bash-language-server"
+  fi
+  type bash-language-server
+  if [ "$?" == "0" ]; then 
+    return
+  fi
+  type npm
+  npm i -g bash-language-server
+ 
+}
+
+function install_digestif_language_server { # for latex
+
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing digestif"
+  fi
+  type digestif
+  if [ "$?" == "0" ]; then 
+    return
+  fi
+  type luarocks
+  luarocks install digestif
+
+}
+
+function install_python_language_server {
+ 
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing python-language-server"
+  fi
+  type cmake-language-server
+  if [ "$?" == "0" ]; then 
+    return
+  fi
+  type pip3
+  pip3 install --user 'python-language-server[all]'
+ 
+}
+
 function install_doxygen {
   
   if [[ $DEBUG_SCRIPT -ne 0 ]]; then
@@ -1282,6 +1338,10 @@ install_vcpkg
 install_valgrind
 install_node
 install_neovim
+install_cmake_language_server
+install_bash_language_server
+install_digestif_language_server  # for latex
+install_python_language_server
 
 echo "after prof val of bash and prof refresh are $NEED_BASH_REFRESH and $NEED_ENTRY_REFRESH"
 
