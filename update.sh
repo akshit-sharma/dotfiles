@@ -111,11 +111,8 @@ fi
 function home_dir_symlink {
   filename="$1"
   dir="${2:-}"
-  if [ -f ${filename} ]; then
-    file=$(basename ${filename})
-  else
-    file=$filename
-  fi
+  file=$(basename ${filename})
+  
   if [ ! -f $HOME/$dir/$file ] && [ ! -d $HOME/$dir/$file ] && [ ! -L $HOME/$dir/$file ] \
     && [ ! -f $SCRIPTPATH/$filename ] && [ ! -d $SCRIPTPATH/$filename ] && [ ! -L $SCRIPTPATH/$filename ]; then
     echo "Could not determine if $HOME/$dir/$file or $SCRIPTPATH/$filename are file, directory or symlink"
@@ -746,9 +743,25 @@ function install_brew {
   if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing HomeBrew"
   fi
-  if [ ! -d $HOME/.linuxbrew ]; then
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+  if [ ! -d ${SCRIPTPATH}/faaltu/homebrew ]; then
+    if [ -d $HOME/.linuxbrew ]; then
+      rm -rf $HOME/.linuxbrew
+    fi
+    mkdir ${SCRIPTPATH}/faaltu/homebrew
   fi
+  BREW_MD5="c28a9e6918e776f8aa18e718e81b386c"
+  BREW_URL="https://github.com/Homebrew/brew/tarball/master"
+  BREW_EXTRACT_DIR=${SCRIPTPATH}/faaltu/homebrew/.linuxbrew
+  
+  download_and_extract ${SCRIPTPATH}/faaltu/homebrew/ ${BREW_EXTRACT_DIR} homebrew.tar.gz ${BREW_URL} ${BREW_MD5}
+
+  if [ -d ${SCRIPTPATH}/faaltu/homebrew/Homebrew-brew-* ]; then
+    if [[ $DEBUG_SCRIPT -ne 0 ]]; then
+      echo "moving Homebrew-brew-* to .linuxbrew"
+    fi
+    mv ${SCRIPTPATH}/faaltu/homebrew/Homebrew-brew-* ${SCRIPTPATH}/faaltu/homebrew/.linuxbrew
+  fi
+
 }
 
 function install_neovim {
@@ -959,6 +972,7 @@ function install_valgrind {
 
 }
 
+install_brew # home_dir_symlink for linuxbrew depends on this
 
 # script for adding llvm to environment
 home_dir_symlink llvm_scripts .
@@ -986,6 +1000,8 @@ home_dir_symlink .gdbinit .
 
 home_dir_symlink .set_screen.sh .
 home_dir_symlink .set_wallpaper.sh .
+
+home_dir_symlink faaltu/homebrew/.linuxbrew .
 
 home_dir_symlink cpp_project/new_cpp_project.sh .local/bin
 
@@ -1242,7 +1258,6 @@ install_gitlfs
 # install_i3wmIPC
 install_cmake
 install_googletest
-install_brew
 install_ycm
 install_conan
 install_doxygen
