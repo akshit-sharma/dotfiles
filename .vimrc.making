@@ -1,0 +1,165 @@
+set nocompatible  		" be iMproved, required
+filetype off 	    		" required
+
+set background=dark
+
+let user_home = '$HOME'
+let config_home = '$DOTFILES_SCRIPT_PARENT'
+let clang_home = '$DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm'
+
+" set the runtime path to include Vundle and initialize
+" git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+" call vundle#begin("~/some/path/here")
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" make status bar prettier
+Plugin 'itchyny/lightline.vim'
+
+" Rainbow brackets
+Plugin 'luochen1990/rainbow'
+
+" cpp enhanced highlight
+Plugin 'octol/vim-cpp-enhanced-highlight'
+
+" jump to words
+Plugin 'easymotion/vim-easymotion'
+
+" syntax-aware plugin for easy commenting
+Plugin 'tomtom/tcomment_vim'
+
+" show git modifications
+Plugin 'airblade/vim-gitgutter'
+
+" vimwiki
+Plugin 'vimwiki/vimwiki'
+
+" cpp autocomplete
+Plugin 'Valloric/YouCompleteMe'
+
+" " Asynchronous linting/fixing for Vim and Language Server Protocol
+"  Plugin 'dense-analysis/ale'
+
+" All of your Plugins must be added before the following line
+call vundle#end() 		" required
+
+" enable syntax and plugins (for netrw)
+syntax enable 
+filetype plugin on
+
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+
+" Search down into subfolders
+" Provides tab-completion for all file-related tasks
+set path+=** " finding files 
+
+" Display all matching files when we tab complete
+set wildmenu
+
+" itchyny/lightline.vim
+" Always show statusline
+set laststatus=2
+let g:lightline = {
+  \   'active': {
+  \     'left': [['mode', 'paste'], [ 'readonly', 'filename', 'modified', 'gitbranch' ]],
+  \     'right': [['lineinfo'], ['percent'], ['fileformat', 'fileencoding', 'filetype']]
+  \   },
+  \   'component_function' : {
+  \     'gitbranch': 'fugitive#head'
+  \   }
+  \ }
+
+" luochen1990/rainbow
+" 0 if you want to enable it later via :RainbowToggle
+let g:rainbow_active = 1
+let g:rainbow_conf = {
+  \  'separately': {
+  \       'cmake': 0,
+  \    }
+  \ }
+
+" octol/vim-cpp-enhanced-highlight
+" optional features for octol/vim-cpp-enhanced-highlight
+let g:cpp_class_scope_highlight = 1
+let g:cpp_member_variable_highlight = 1
+let g:cpp_class_decl_highlight = 1
+let g:cpp_concepts_highlight = 1
+let g:cpp_no_function_highlight = 1
+let g:cpp_experimental_simple_template_highlight = 1
+
+" easymotion/vim-easymotion 
+" Configuration for easymotion
+let g:EasyMotion_leader_key='f'
+" <Leader>f{char} to move to {char}
+map <Plug>(easymotion-prefix)f <Plug>(easymotion-bd-f)
+map <Plug>(easymotion-prefix)f <Plug>(easymotion-overwin-f)
+" s{char}{char} to move to {char}{char}
+nmap <Plug>(easymotion-prefix)s <Plug>(easymotion-overwin-f2)
+" Move to line
+map <Plug>(easymotion-prefix)L <Plug>(easymotion-bd-jk)
+nmap <Plug>(easymotion-prefix)L <Plug>(easymotion-overwin-line)
+" Move to word
+map <Plug>(easymotion-prefix)w <Plug>(easymotion-bd-w)
+nmap <Plug>(easymotion-prefix)w <Plug>(easymotion-overwin-w)
+
+" Valloric/YouCompleteMe
+" YCM (YouCompleteMe)
+let g:ycm_compilation_database_folder = 'build'
+let g:ycm_server_log_level = 'debug'
+let g:ycm_enable_diagnostic_signs = 0
+let g:ycm_enable_diagnostic_highlighting = 0
+let g:ycm_always_populate_location_list = 0 "default 0
+let g:ycm_open_loclist_on_ycm_diags = 0 "default 1
+let g:ycm_global_ycm_extra_conf = expand(config_home).'/.ycm_extra_conf.py'
+let g:ycm_confirm_extra_conf = 1 " (for now, asks everytime instead of just once)
+let g:ycm_key_invoke_completion = '<C-space>'
+let g:ycm_autoclose_preview_after_completion = 0
+let g:ycm_autoclose_preview_after_insertion = 1
+let g:ycm_max_diagnostics_to_display = 100
+nnoremap <Leader><C-k> :lprevious<CR>
+nnoremap <Leader><C-j> :lnext<CR>
+nnoremap <Leader>cl :YcmCompleter GoToDeclaration<CR>
+nnoremap <Leader>cf :YcmCompleter GoToDefinition<CR>
+nnoremap <Leader>cg :YcmCompleter GoToImprecise<CR>
+nnoremap <Leader>ci :YcmCompleter GoToInclude<CR>
+" Map cuda files to c++ so that Ycm can parse 
+"autocmd BufNewFile, BufRead *.cu set filetype=cpp
+" autocmd FileType cuda set ft=cpp
+
+" " ALE Lint 
+" let clang_home = '$DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm'
+" let g:ale_completion_enabled = 0
+" let g:ale_linters = {
+"       \ 'c' : ['clang','clangd','clangtidy'],
+"       \ 'cpp' : ['clang','clangd','clangtidy'],
+"       \ 'cuda' : ['clang','clangd','clangtidy','nvcc'],
+"       \ }
+" let g:ale_fixers = {
+"   \ 'c' : ['clang-format'],
+"   \ 'cpp' : ['clang-format'],
+"   \ 'cuda' : ['clang-format'],
+"   \ 'cmake' : ['cmakeformat'],
+"   \ }
+" let g:ale_lint_on_save = 1
+" let g:ale_fix_on_save = 1
+" let g:ale_set_highlights = 0 " Disable highligting
+" let g:ale_c_build_dir_names = ['build','Build','bin']
+" let g:ale_c_parse_compile_commands = 1
+" let g:ale_c_clang_executable = expand(clang_home).'/bin/clang'
+" let g:ale_cpp_clang_executable = expand(clang_home).'/bin/clang++'
+" let g:ale_c_clangd_executable = expand(clang_home).'/bin/clangd'
+" let g:ale_cpp_clangd_executable = expand(clang_home).'/bin/clangd'
+" let g:ale_c_clangformat_executable = expand(clang_home).'/bin/clang-format'
+" let g:ale_cpp_clangformat_executable = expand(clang_home).'/bin/clang-format'
+" let g:ale_c_clangtidy_executable = expand(clang_home).'/bin/clang-tidy'
+" let g:ale_cpp_clangtidy_executable = expand(clang_home).'/bin/clang-tidy'
+" let g:ale_c_clangtidy_checks = ['bugprone','cppcoreguidelines','clang_analyzer','llvm','misc','modernize','performance','portability','readability']
+" let g:ale_cpp_clangtidy_checks = ['bugprone','cppcoreguidelines','clang_analyzer','llvm','misc','modernize','performance','portability','readability']
+" let g:ale_cmake_cmakelint_executable = expand(user_home).'/.local/bin/cmakelint'
+" let g:ale_cmake_cmakelint_options = '--config='.expand(config_home).'/.cmakelintrc'
+" let g:ale_cmake_cmakeformat_executable = expand(user_home).'/.local/bin/cmake-format'
+" let g:ale_cmake_cmakeformat_options = '-c '.expand(config_home).'/.clang-format.yml'

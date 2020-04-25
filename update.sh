@@ -787,6 +787,17 @@ function install_neovim {
   brew install neovim
 }
 
+function install_act {
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing act"
+  fi
+  type act
+  if [ "$?" == 0]; then
+    return
+  fi
+  brew install nektos/tap/act
+}
+
 function install_ycm {
 # install YouCompleteMe only if not installed or if YCM is updated
   if [[ $DEBUG_SCRIPT -ne 0 ]]; then
@@ -1135,6 +1146,7 @@ home_dir_symlink .tmux.conf .
 home_dir_symlink .latexmkrc .
 home_dir_symlink .mydircolors .
 home_dir_symlink .condarc .
+home_dir_symlink .actrc .
   
 if [ ! -f "$HOME/.my_vars" ]; then
   touch $HOME/.my_vars
@@ -1338,6 +1350,7 @@ install_vcpkg
 install_valgrind
 install_node
 install_neovim
+install_act
 install_cmake_language_server
 install_bash_language_server
 install_digestif_language_server  # for latex

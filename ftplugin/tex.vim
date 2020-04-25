@@ -1,3 +1,6 @@
 
-set textwidth=0
+set textwidth=80
+set wrapmargin=90
+
+au BufRead,BufNewFile *.tex setlocal textwidth=80
 

@@ -1,0 +1,36 @@
+image: ubuntu:18.04
+
+update_path:
+  before_script:
+    - apt-get update
+    - apt-get install -y build-essential wget git python3 curl tar unzip python3-distutils
+    # - apt-get install -y git vim
+  script:
+    - ./update.sh
+  after_script:
+    - cat ~/.bashrc
+    - echo ${DOTFILES_SCRIPT_PARENT}
+    - echo ${SCRIPTPATH}
+    - echo ${PATH}
+    - echo ${PWD}
+    - ls ~/.local/bin
+    - whereis vim
+  tags:
+    - cuda
+
+download_and_install_path:
+  before_script:
+    - apt-get update
+    - apt-get install -y build-essential wget git python3 curl tar unzip python3-distutils
+    # - apt-get install -y git vim
+  script:
+    - ./download_and_install.sh
+  after_script:
+    - echo ${PATH}
+    - echo ${PWD}
+    - ls ~/.local/bin
+    - whereis vim
+  tags:
+    - cuda
+
+
