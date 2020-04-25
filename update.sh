@@ -805,7 +805,7 @@ function install_act {
     echo "installing act"
   fi
   type act
-  if [ "$?" == 0]; then
+  if [ "$?" == 0 ]; then
     return
   fi
   brew install nektos/tap/act
