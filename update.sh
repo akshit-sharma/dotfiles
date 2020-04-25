@@ -457,7 +457,7 @@ function install_ctags {
     CTAGS_VER="5.8"
     CTAGS_DIR="ctags-${CTAGS_VER}"
     CTAGS_TAR="ctags-${CTAGS_VER}.tar.gz"
-    CTAGS_URL="https://superb-dca2.dl.sourceforge.net/project/ctags/ctags/${CTAGS_VER}/${CTAGS_TAR}"
+    CTAGS_URL="https://superb-dca2.dl.sourceforge.net/project/ctags/files/ctags/${CTAGS_VER}/${CTAGS_TAR}"
     CTAGS_INSTALL="0"
   
     ctags --version 2>&1> script_output.txt
@@ -467,6 +467,10 @@ function install_ctags {
     MY_CTAGS_RET="$?"
 
     if [[ $CTAGS_RET != 0 ]] && [[ $MY_CTAGS_RET != 0 ]]; then
+
+      echo "ctags download link broken"
+      echo "not downloading"
+      return
 
       if [ ! -f "$SCRIPTPATH/faaltu/$CTAGS_TAR" ]; then
         download_and_extract $SCRIPTPATH/faaltu/ $SCRIPTPATH/faaltu/$CTAGS_DIR $CTAGS_TAR $CTAGS_URL $CTAGS_MD5
