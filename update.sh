@@ -223,6 +223,7 @@ function download_and_extract {
 
     if [ ! -f $DOWNLOAD_HOME/$DOWNLOAD_FILE ]; then
       echo "downloading $DOWNLOAD_FILE to $DOWNLOAD_HOME"
+      echo "wget $DOWNLOAD_URL -q -O $DOWNLOAD_HOME/$DOWNLOAD_FILE"
       wget $DOWNLOAD_URL -q -O $DOWNLOAD_HOME/$DOWNLOAD_FILE 
       WGET_RETURN="$?"
       if [ $WGET_RETURN -ne "0" ]; then
@@ -230,7 +231,7 @@ function download_and_extract {
       fi
     fi
 
-      EXISTING_MD5=`eval md5sum $DOWNLOAD_HOME/$DOWNLOAD_FILE | cut -d' ' -f1`
+    EXISTING_MD5=`eval md5sum $DOWNLOAD_HOME/$DOWNLOAD_FILE | cut -d' ' -f1`
     if [ ! -f $DOWNLOAD_HOME/$DOWNLOAD_FILE ] || [ "$DOWNLOAD_MD5" != "$EXISTING_MD5" ]; then
       echo "md5sum still not same expected(${DOWNLOAD_MD5}) and got(${EXISTING_MD5})"
       echo "file in ${DOWNLOAD_HOME}/${DOWNLOAD_FILE} not as expected"
@@ -246,12 +247,15 @@ function download_and_extract {
       return
     fi
     if [[ $DOWNLOAD_HOME/$DOWNLOAD_FILE == *.xz ]]; then
+      echo "extracing (tar -xf $DOWNLOAD_HOME/$DOWNLOAD_FILE -C $DOWNLOAD_HOME)"
       tar -xf $DOWNLOAD_HOME/$DOWNLOAD_FILE -C $DOWNLOAD_HOME
       SCRIPT_SUCC=1
     elif [[ $DOWNLOAD_HOME/$DOWNLOAD_FILE == *.gz ]]; then
+      echo "extracting (tar -zxf $DOWNLOAD_HOME/$DOWNLOAD_FILE -C $DOWNLOAD_HOME)"
       tar -zxf $DOWNLOAD_HOME/$DOWNLOAD_FILE -C $DOWNLOAD_HOME
       SCRIPT_SUCC=1
     elif [[ $DOWNLOAD_HOME/$DOWNLOAD_FILE == *bz2 ]]; then
+      echo "extracting (tar -xjf $DOWNLOAD_HOME/$DOWNLOAD_FILE -C $DOWNLOAD_HOME)"
       tar -xjf $DOWNLOAD_HOME/$DOWNLOAD_FILE -C $DOWNLOAD_HOME
       SCRIPT_SUCC=1
     elif [[ $DOWNLOAD_FILE == *.sh ]]; then
@@ -453,7 +457,7 @@ function install_ctags {
     CTAGS_VER="5.8"
     CTAGS_DIR="ctags-${CTAGS_VER}"
     CTAGS_TAR="ctags-${CTAGS_VER}.tar.gz"
-    CTAGS_URL="https://superb-dca2.dl.sourceforge.net/project/ctags/ctags/${CTAGS_VER}/${CTAGS_TAR}"
+    CTAGS_URL="https://superb-dca2.dl.sourceforge.net/project/ctags/files/ctags/${CTAGS_VER}/${CTAGS_TAR}"
     CTAGS_INSTALL="0"
   
     ctags --version 2>&1> script_output.txt
@@ -463,6 +467,10 @@ function install_ctags {
     MY_CTAGS_RET="$?"
 
     if [[ $CTAGS_RET != 0 ]] && [[ $MY_CTAGS_RET != 0 ]]; then
+
+      echo "ctags download link broken"
+      echo "not downloading"
+      return
 
       if [ ! -f "$SCRIPTPATH/faaltu/$CTAGS_TAR" ]; then
         download_and_extract $SCRIPTPATH/faaltu/ $SCRIPTPATH/faaltu/$CTAGS_DIR $CTAGS_TAR $CTAGS_URL $CTAGS_MD5
@@ -749,6 +757,11 @@ function install_brew {
     fi
     mkdir ${SCRIPTPATH}/faaltu/homebrew
   fi
+
+    echo "brew installaton not working"
+    echo "returning..."
+    return
+
   BREW_MD5="c28a9e6918e776f8aa18e718e81b386c"
   BREW_URL="https://github.com/Homebrew/brew/tarball/master"
   BREW_EXTRACT_DIR=${SCRIPTPATH}/faaltu/homebrew/.linuxbrew
