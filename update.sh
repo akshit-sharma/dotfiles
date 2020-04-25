@@ -756,10 +756,12 @@ function install_brew {
       rm -rf $HOME/.linuxbrew
     fi
     mkdir ${SCRIPTPATH}/faaltu/homebrew
-  else
-    echo "brew installaton not handling existing case"
-    return
   fi
+
+    echo "brew installaton not working"
+    echo "returning..."
+    return
+
   BREW_MD5="c28a9e6918e776f8aa18e718e81b386c"
   BREW_URL="https://github.com/Homebrew/brew/tarball/master"
   BREW_EXTRACT_DIR=${SCRIPTPATH}/faaltu/homebrew/.linuxbrew
