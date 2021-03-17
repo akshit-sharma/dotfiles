@@ -848,6 +848,17 @@ function install_act {
   brew install nektos/tap/act
 }
 
+function install_cppcheck {
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing cppcheck"
+  fi
+  type cppcheck
+  if [ "$?" == 0 ]; then
+    return
+  fi
+  brew install cppcheck
+}
+
 function install_ycm {
 # install YouCompleteMe only if not installed or if YCM is updated
   if [[ $DEBUG_SCRIPT -ne 0 ]]; then
@@ -1401,6 +1412,7 @@ install_valgrind
 install_node
 install_neovim
 install_act
+install_cppcheck
 install_cmake_language_server
 install_bash_language_server
 install_digestif_language_server  # for latex
