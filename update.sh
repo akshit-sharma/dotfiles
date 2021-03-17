@@ -4,7 +4,7 @@ NEED_VIM_PLUGIN_INSTALL=1
 NEED_BASH_REFRESH=0
 NEED_ENTRY_REFRESH=0
 
-DEBUG_SCRIPT=1
+DEBUG_SCRIPT=0
 
 # function for returning the parent directory of this script
 function parent_directory {
@@ -67,6 +67,18 @@ function update_bashrc {
       eval $CMD
     fi
     REFRESH=1
+  fi
+}
+
+#1 command to run to get version
+#2 version to statisfied
+function version_statisfied {
+  currentver="$1"
+  requiredver="${2}"
+  if [ "$(printf '%s\n' "${requiredver}" "${currentver}" | sort -V | head -n1)" = "${requiredver}" ]; then
+    return 0 # true
+  else
+    return 1 # false
   fi
 }
 
@@ -187,13 +199,26 @@ WGET_RET="$?"
 # DOWNLOAD_FILE (3rd parameter) : file for downloading
 # DOWNLOAD_URL  (4th parameter) : URL to download the tar file from
 # DOWNLOAD_MD5  (5th parameter) : MD5 hash of DOWNLOAD_TAR, check if existing file was corrupted or incomplete
+# DOWNLOAD_SIG_URL (6th parameter) : URL to download SIG file
 function download_and_extract {
   DOWNLOAD_HOME="$1"
   DOWNLOAD_DIR="$2"
   DOWNLOAD_FILE="$3"
   DOWNLOAD_URL="$4"
   DOWNLOAD_MD5="$5"
-       
+  if [ -z "$5" ]; then
+    VERIFY_MD5=false
+  else
+    if ! ${5}; then
+      if [ -z "${6}" ]; then
+        CLEAN_PREFIX=${DOWNLOAD_HOME}/${DOWNLOAD_FILE}
+      else
+        CLEAN_PREFIX=${DOWNLOAD_HOME}/${6}
+      fi
+      VERIFY_MD5=true
+    fi
+  fi
+ 
   SCRIPT_SUCC=0
 
   if [ $WGET_RET != 0 ]; then
@@ -203,13 +228,18 @@ function download_and_extract {
   fi
 
   if [[ $DOWNLOAD_DIR == $DOWNLOAD_HOME* ]]; then
-    if [ -f "$DOWNLOAD_HOME/$DOWNLOAD_FILE" ]; then
+    if ! ${VERIFY_MD5}; then
+      echo "verifying MD5 disabled"
+      if [ -f "$DOWNLOAD_HOME/$DOWNLOAD_FILE" ]; then
+        rm -rf ${CLEAN_PREFIX}
+      fi
+    elif [ -f "$DOWNLOAD_HOME/$DOWNLOAD_FILE" ]; then
       EXISTING_MD5=`eval md5sum $DOWNLOAD_HOME/$DOWNLOAD_FILE | cut -d' ' -f1`
       if [ "$DOWNLOAD_MD5" != "$EXISTING_MD5" ]; then
         echo "will have to redownload $DOWNLOAD_FILE"
         echo "expected and existing md5 are $DOWNLOAD_MD5 and $EXISTING_MD5"
         echo "existing md5 - $DOWNLOAD_HOME/$DOWNLOAD_FILE"
-        rm $DOWNLOAD_HOME/$DOWNLOAD_FILE
+        rm -rf ${CLEAN_PREFIX}
       else
         return
       fi   
@@ -221,25 +251,18 @@ function download_and_extract {
       mkdir -p $DOWNLOAD_HOME
     fi
 
-    if [ ! -f $DOWNLOAD_HOME/$DOWNLOAD_FILE ]; then
-      echo "downloading $DOWNLOAD_FILE to $DOWNLOAD_HOME"
-      echo "wget $DOWNLOAD_URL -q -O $DOWNLOAD_HOME/$DOWNLOAD_FILE"
-      wget $DOWNLOAD_URL -q -O $DOWNLOAD_HOME/$DOWNLOAD_FILE 
-      WGET_RETURN="$?"
-      if [ $WGET_RETURN -ne "0" ]; then
-        echo "Download $DOWNLOAD_HOME/$DOWNLOAD_FILE not successful from $DOWNLOAD_URL"
-      fi
+    echo "downloading $DOWNLOAD_FILE to $DOWNLOAD_HOME"
+    echo "wget $DOWNLOAD_URL -q -O $DOWNLOAD_HOME/$DOWNLOAD_FILE"
+    wget $DOWNLOAD_URL -q -O $DOWNLOAD_HOME/$DOWNLOAD_FILE 
+    WGET_RETURN="$?"
+    if [ $WGET_RETURN == "8" ]; then
+      echo "Error from server side"
+      echo "returning........"
+      return
     fi
-
-    EXISTING_MD5=`eval md5sum $DOWNLOAD_HOME/$DOWNLOAD_FILE | cut -d' ' -f1`
-    if [ ! -f $DOWNLOAD_HOME/$DOWNLOAD_FILE ] || [ "$DOWNLOAD_MD5" != "$EXISTING_MD5" ]; then
-      echo "md5sum still not same expected(${DOWNLOAD_MD5}) and got(${EXISTING_MD5})"
-      echo "file in ${DOWNLOAD_HOME}/${DOWNLOAD_FILE} not as expected"
-      echo "download location was ${DOWNLOAD_URL} with command"
-      echo "wget ${DOWNLOAD_URL} -O ${DOWNLOAD_HOME}/${DOWNLOAD_FILE}"
+    if [ $WGET_RETURN -ne "0" ]; then
+      echo "Download $DOWNLOAD_HOME/$DOWNLOAD_FILE not successful from $DOWNLOAD_URL"
     fi
-
-
     if [ ! -f ${DOWNLOAD_HOME}/${DOWNLOAD_FILE} ]; then
       echo "downloaded file from $DOWNLOAD_URL"
       echo "not found as ${DOWNLOAD_HOME}/${DOWNLOAD_FILE}"
@@ -498,47 +521,49 @@ function install_clang_llvm {
   if [[ $DEBUG_SCRIPT -ne 0 ]]; then
     echo "installing clang+llvm"
   fi
-  if [ $WGET_RET == 0 ]; then 
-    echo "wget found"
-    LLVM_CORRECT_MD5="b3c5618fb3a5d268c371539e9f6a4b1f"
-    LLVM_PREBINARY_VER="9.0.0"
-    LLVM_PREBINARY_DIR="clang+llvm-${LLVM_PREBINARY_VER}-x86_64-linux-gnu-ubuntu-16.04"
-    LLVM_PREBINARY_TAR="${LLVM_PREBINARY_DIR}.tar.xz"
-    LLVM_PREBINARY_URL="http://releases.llvm.org/${LLVM_PREBINARY_VER}/${LLVM_PREBINARY_TAR}"
-    LLVM_INSTALL="1"
-    
-    if [ ! -L "$SCRIPTPATH/faaltu/clang+llvm" ]; then
-      # symlink not found, worst case download and install
-      LLVM_INSTALL="0"
-    else
-      # symlink found, checking version next
-      LLVM_INSTALL_VER=`eval $SCRIPTPATH/faaltu/clang+llvm/bin/clang --version | head -n1 | cut -d' ' -f3`
-      if [ "$LLVM_INSTALL_VER" != "$LLVM_PREBINARY_VER" ]; then
-        # version different need removal, download and install
-        LLVM_INSTALL="0"
-      else
-        # up-to date
-        echo "LLVM up-to date"
-      fi
-    fi
-    if [ $LLVM_INSTALL == 0 ]; then
-      if [ -L $SCRIPTPATH/faaltu/clang+llvm ]; then
-        rm $SCRIPTPATH/faaltu/clang+llvm
-      fi
-      download_and_extract $SCRIPTPATH/faaltu $SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR $LLVM_PREBINARY_TAR $LLVM_PREBINARY_URL $LLVM_CORRECT_MD5
-    fi
-    if [ ! -L $SCRIPTPATH/faaltu/clang+llvm ]; then
-      ln -sT $SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR $SCRIPTPATH/faaltu/clang+llvm
-    else 
-      LLVM_CURRENT_LINK=`eval readlink -f $SCRIPTPATH/faaltu/clang+llvm`
-      if [ "$LLVM_CURRENT_LINK" != "$SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR" ]; then
-        rm $SCRIPTPATH/faaltu/clang+llvm
-        ln -sT $SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR $SCRIPTPATH/faaltu/clang+llvm
-      fi
-    fi
-  else 
+  if [ $WGET_RET -ne 0 ]; then 
     echo "wget not found, cannot download LLVM Pre Binary"
   fi
+
+  echo "wget found"
+  LLVM_PREBINARY_VER="11.0.1"
+  LLVM_PREBINARY_DIR="clang+llvm-${LLVM_PREBINARY_VER}-x86_64-linux-gnu-ubuntu-16.04"
+  LLVM_PREBINARY_TAR="${LLVM_PREBINARY_DIR}.tar.xz"
+  LLVM_PREBINARY_URL="https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_PREBINARY_VER}/${LLVM_PREBINARY_TAR}"
+  LLVM_CLEAN_PREFIX="clang+llvm-*"
+  LLVM_INSTALL=false
+
+  CLANG_HOME=${SCRIPTPATH}/faaltu/clang+llvm
+  cmd="${CLANG_HOME}/bin/clang -dumpversion"
+  currentver=$($cmd)
+
+  if [ ! -L "${CLANG_HOME}" ]; then
+    LLVM_INSTALL=true 
+  else
+    if [ ! -f ${CLANG_HOME}/bin/clang ]; then
+      LLVM_INSTALL=true
+    elif $(version_statisfied "$currentver" "$LLVM_PREBINARY_VER"); then
+      echo "clang_llvm version statisfied"
+      echo "returning......"
+      return
+    else
+      LLVM_INSTALL=true
+    fi
+  fi
+
+  if [ $LLVM_INSTALL = true ]; then
+    download_and_extract $SCRIPTPATH/faaltu $SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR $LLVM_PREBINARY_TAR $LLVM_PREBINARY_URL false ${LLVM_CLEAN_PREFIX}
+  fi
+  if [ ! -L $SCRIPTPATH/faaltu/clang+llvm ]; then
+    ln -sT $SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR $SCRIPTPATH/faaltu/clang+llvm
+  else 
+    LLVM_CURRENT_LINK=`eval readlink -f $SCRIPTPATH/faaltu/clang+llvm`
+    if [ "$LLVM_CURRENT_LINK" != "$SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR" ]; then
+      rm $SCRIPTPATH/faaltu/clang+llvm
+      ln -sT $SCRIPTPATH/faaltu/$LLVM_PREBINARY_DIR $SCRIPTPATH/faaltu/clang+llvm
+    fi
+  fi
+
 }
 
 # install git large file system (git lfs) if not installed or version updated

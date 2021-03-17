@@ -2,6 +2,7 @@ import os
 import os.path
 import fnmatch
 import logging
+from pathlib import Path
 # import ycm_core
 import re
 
@@ -27,7 +28,7 @@ CPP_BASE_FLAGS = [
         '-fexceptions',
         '-ferror-limit=10000',
         '-DNDEBUG',
-        '-std=c++1z',
+        '-std=c++11',
         '-xc++',
         '-isystem/usr/lib/',
         '-isystem/usr/include/'
@@ -74,7 +75,12 @@ HEADER_DIRECTORIES = [
         'include'
         ]
 
-BUILD_DIRECTORY = 'build'
+BUILD_DIRECTORY = [
+        'build',
+        'Build',
+        'cmake-build-debug',
+        'cmake-build-release'
+        ]
 
 def IsSourceFile(filename):
     extension = os.path.splitext(filename)[1]
@@ -177,20 +183,26 @@ def FlagsForCompilationDatabase(root, filename):
         import ycm_core
         # Last argument of next function is the name of the build folder for
         # out of source projects
-        compilation_db_path = FindNearest(root, 'compile_commands.json', BUILD_DIRECTORY)
-        compilation_db_dir = os.path.dirname(compilation_db_path)
-        logging.debug("Set compilation database directory to " + compilation_db_dir)
-        compilation_db =  ycm_core.CompilationDatabase(compilation_db_dir)
-        if not compilation_db:
-            logging.info("Compilation database file found but unable to load")
-            return None
-        compilation_info = GetCompilationInfoForFile(compilation_db, filename)
-        if not compilation_info:
-            logging.info("No compilation info for " + filename + " in compilation database")
-            return None
-        return MakeRelativePathsInFlagsAbsolute(
-                compilation_info.compiler_flags_,
-                compilation_info.compiler_working_dir_)
+        found = False
+        for build in BUILD_DIRECTORY:
+            if Path(root).joinpath(build, 'compile_commands.json').is_file():
+                compilation_db_path = FindNearest(root, 'compile_commands.json', BUILD_DIRECTORY)
+                compilation_db_dir = os.path.dirname(compilation_db_path)
+                logging.debug("Set compilation database directory to " + compilation_db_dir)
+                compilation_db =  ycm_core.CompilationDatabase(compilation_db_dir)
+                if not compilation_db:
+                    logging.info("Compilation database file found but unable to load")
+                    continue
+                compilation_info = GetCompilationInfoForFile(compilation_db, filename)
+                if not compilation_info:
+                    logging.info("No compilation info for " + filename + " in compilation database")
+                    continue
+                logging.info("Found compilation datafile in " + compilation_db_dir)
+                return MakeRelativePathsInFlagsAbsolute(
+                        compilation_info.compiler_flags_,
+                        compilation_info.compiler_working_dir_)
+        assert(found == False) # should be false
+        return None
     except Exception as e:
         logging.debug("value of e is {}".format(str(e)))
         logging.debug("Inside except of FlagsForCompilationDatabase in .ycm_extra_conf.py")

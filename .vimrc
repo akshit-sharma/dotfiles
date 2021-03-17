@@ -5,6 +5,7 @@ set background=dark
 
 let user_home = '$HOME'
 let config_home = '$DOTFILES_SCRIPT_PARENT'
+let clang_home = '$DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm'
 
 " set the runtime path to include Vundle and initialize
 " git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
@@ -224,7 +225,7 @@ set tags+=~/.vim/tags/cpp_gcc_7
 set tags+=.git/tags;./tags;
 
 " build tags of your own project with ctrl-F11
-map <C-F11> :!ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q --exclude=.git .<CR> 
+map <C-F11> :!ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q --exclude=.git ..<CR> 
 map <S-F11> :!cd .git && ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q --exclude=.git .. && cd ..<CR>  
 
 " " OmniCppComplete
@@ -241,13 +242,13 @@ map <S-F11> :!cd .git && ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extr
 " set completeopt=menuone,menu,longest,preview
  
 " YCM (YouCompleteMe)
-let g:ycm_compilation_database_folder = 'build'
-let g:ycm_server_log_level = 'debug'
-let g:ycm_enable_diagnostic_signs = 0
-let g:ycm_enable_diagnostic_highlighting = 0
+let g:ycm_log_level = 'info' " 'debug'
+let g:ycm_enable_diagnostic_signs = 1 " 0
+let g:ycm_enable_diagnostic_highlighting = 1 " 0
 let g:ycm_always_populate_location_list = 0 "default 0
 let g:ycm_open_loclist_on_ycm_diags = 0 "default 1
-" let g:ycm_global_ycm_extra_conf = expand(config_home).'/.ycm_extra_conf.py'
+let g:ycm_clangd_binary_path = expand(clang_home).'/bin/clangd'
+let g:ycm_global_ycm_extra_conf = expand(config_home).'/.ycm_extra_conf.py'
 " let g:ycm_confirm_extra_conf = 1 " (for now, asks everytime instead of just once)
 let g:ycm_key_invoke_completion = '<C-space>'
 let g:ycm_autoclose_preview_after_completion = 0
@@ -264,26 +265,31 @@ nnoremap <Leader>ci :YcmCompleter GoToInclude<CR>
 " autocmd FileType cuda set ft=cpp
 
 " ALE Lint 
-let clang_home = '$DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm'
 let g:ale_completion_enabled = 0
 let g:ale_linters = {
-      \ 'c' : ['clang','clangd','clangtidy'],
-      \ 'cpp' : ['clang','clangd','clangtidy'],
-      \ 'cuda' : ['clang','clangd','clangtidy','nvcc'],
+      \ 'c' : 'all',
+      \ 'cpp' : 'all',
+      \ 'cuda' : 'all',
       \ }
 let g:ale_fixers = {
-  \ 'c' : ['clang-format'],
-  \ 'cpp' : ['clang-format'],
-  \ 'cuda' : ['clang-format'],
-  \ 'cmake' : ['cmakeformat'],
+  \ 'c' : 'all',
+  \ 'cpp' : 'all',
+  \ 'cuda' : 'all',
+  \ 'cmake' : 'all',
   \ }
 let g:ale_lint_on_save = 1
 let g:ale_fix_on_save = 1
 let g:ale_set_highlights = 0 " Disable highligting
-let g:ale_c_build_dir_names = ['build','Build','bin']
+let g:ale_c_build_dir_names = ['build','Build','bin','cmake-build-debug','cmake-build-release']
 let g:ale_c_parse_compile_commands = 1
 let g:ale_c_clang_executable = expand(clang_home).'/bin/clang'
 let g:ale_cpp_clang_executable = expand(clang_home).'/bin/clang++'
+let g:ale_cpp_clang_options = ""
+let g:ale_c_gcc_executable = "gcc-9"
+let g:ale_cpp_gcc_executable = "g++-9"
+let g:ale_cpp_gcc_options = ""
+let g:ale_c_clangcheck_executable = expand(clang_home).'/bin/clang-check'
+let g:ale_cpp_clangcheck_executable = expand(clang_home).'/bin/clang-check'
 let g:ale_c_clangd_executable = expand(clang_home).'/bin/clangd'
 let g:ale_cpp_clangd_executable = expand(clang_home).'/bin/clangd'
 let g:ale_c_clangformat_executable = expand(clang_home).'/bin/clang-format'
@@ -300,6 +306,7 @@ let g:ale_cmake_cmakeformat_options = '-c '.expand(config_home).'/.clang-format.
 " let g:clang_format#code_style = 'llvm'
 " let g:clang_format#style_options = {
 "       \ "AccessModifierOffset" : -2,
+"       \ "AlignAfterOpenBracket" : "BAS_AlwaysBreak",
 "       \ "AllowShortIfStatementsOnASingleLine" : "true",
 "       \ "AlwaysBreakTemplateDeclarations" : "true",
 "       \ "AlignConsecutiveAssignments" : "true",
@@ -516,3 +523,7 @@ map <Leader><Leader>s <F4>
 " goto definition
 map <Leader><Leader>d <F12>
 
+set softtabstop=2
+set tabstop=2
+set shiftwidth=2
+set expandtab
