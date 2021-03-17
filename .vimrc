@@ -63,7 +63,7 @@ Plugin 'tpope/vim-git'
 " Plugin 'vim-syntastic/syntastic'  gives unwanted space at { (possible issue with brackets)
 
 " " cpp autocomplete
-Plugin 'Valloric/YouCompleteMe'
+Plugin 'Valloric/YouCompleteMe', { 'commit':'d98f896' }
 
 " YCM-Generator
 Plugin 'rdnetto/YCM-Generator'
@@ -273,14 +273,14 @@ let g:ale_linters = {
       \ }
 let g:ale_fixers = {
   \ 'c' : 'all',
-  \ 'cpp' : 'all',
+  \ 'cpp' : ['clang-format', 'clangtidy', 'uncrustify', 'trim_whitespace'],
   \ 'cuda' : 'all',
   \ 'cmake' : 'all',
   \ }
 let g:ale_lint_on_save = 1
 let g:ale_fix_on_save = 1
 let g:ale_set_highlights = 0 " Disable highligting
-let g:ale_c_build_dir_names = ['build','Build','bin','cmake-build-debug','cmake-build-release']
+let g:ale_c_build_dir_names = ['cmake-build-debug','cmake-build-release','build','Build','bin']
 let g:ale_c_parse_compile_commands = 1
 let g:ale_c_clang_executable = expand(clang_home).'/bin/clang'
 let g:ale_cpp_clang_executable = expand(clang_home).'/bin/clang++'
@@ -288,6 +288,7 @@ let g:ale_cpp_clang_options = ""
 let g:ale_c_gcc_executable = "gcc-9"
 let g:ale_cpp_gcc_executable = "g++-9"
 let g:ale_cpp_gcc_options = ""
+let g:ale_cpp_cppcheck_options = ""
 let g:ale_c_clangcheck_executable = expand(clang_home).'/bin/clang-check'
 let g:ale_cpp_clangcheck_executable = expand(clang_home).'/bin/clang-check'
 let g:ale_c_clangd_executable = expand(clang_home).'/bin/clangd'

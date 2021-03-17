@@ -417,10 +417,9 @@ function install_vim {
     fi
 
     VIM_MD5="b35e794140c196ff59b492b56c1e73db"
-    VIM_MAJOR_VER="8"
-    VIM_MINOR_VER="0"
-    VIM_DIR="vim${VIM_MAJOR_VER}${VIM_MINOR_VER}"
-    VIM_TAR="vim-${VIM_MAJOR_VER}.${VIM_MINOR_VER}.tar.bz2"
+    VIM_VER="8.0"
+    VIM_DIR="vim${VIM_VER}"
+    VIM_TAR="vim-${VIM_VER}.tar.bz2"
     VIM_URL="https://ftp.nluug.nl/pub/vim/unix/${VIM_TAR}"
 
     VIM_INSTALL="1"
@@ -428,7 +427,7 @@ function install_vim {
     if [ ! -d ${SCRIPTPATH}/faaltu/vim/bin ]; then
       VIM_INSTALL="0"
     else
-      VIM_INSTALL_VER=`eval ${SCRIPTPATH}/faaltu/vim/bin/vim --version | head -n1 | cut -d' ' -f5`
+      VIM_CURRENT_VER=`eval ${SCRIPTPATH}/faaltu/vim/bin/vim --version | head -n1 | cut -d' ' -f5`
       if [ "${VIM_INSTALL_VER}" != "${VIM_MAJOR_VER}.${VIM_MINOR_VER}" ]; then
         VIM_INSTALL="0"
       else
@@ -877,10 +876,10 @@ function install_ycm {
         YCM_OLD_HASH=$(cat $SCRIPTPATH/faaltu/ycm.hash)
       fi
       if [ "$YCM_HASH" != "$YCM_OLD_HASH" ]; then
-        python3 $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer 
+        CC=${SCRIPTPATH}/faaltu/clang+llvm/bin/clang CXX=${SCRIPTPATH}/faaltu/clang+llvm/bin/clang++ python3 $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer --clangd-completer --cmake-path /home/akshitsharma/Softwares/cmake/bin/cmake
         if [ "$?" != "0" ]; then
           echo "error running"
-          echo "python3 $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer"
+          echo "python3 $HOME/.vim/bundle/YouCompleteMe/install.py --clang-completer --clangd-completer"
           echo "returning......"
           return  
         fi

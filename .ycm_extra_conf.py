@@ -76,10 +76,10 @@ HEADER_DIRECTORIES = [
         ]
 
 BUILD_DIRECTORY = [
-        'build',
-        'Build',
         'cmake-build-debug',
-        'cmake-build-release'
+        'cmake-build-release',
+        'build',
+        'Build'
         ]
 
 def IsSourceFile(filename):
