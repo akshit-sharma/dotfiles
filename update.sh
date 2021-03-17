@@ -783,21 +783,33 @@ function install_brew {
     mkdir ${SCRIPTPATH}/faaltu/homebrew
   fi
 
-    echo "brew installaton not working"
-    echo "returning..."
+  BREW_VER="3.0.6"
+  BREW_URL="https://github.com/Homebrew/brew/archive/${BREW_VER}.tar.gz"
+  BREW_EXTRACT_DIR=${SCRIPTPATH}/faaltu/brew-${BREW_VER}
+  BREW_CLEAN_PREFIX="brew-*"
+  BREW_LINK=${SCRIPTPATH}/faaltu/brew
+
+  cmd="$HOME/.linuxbrew/bin/brew --version | head -n1 | cut -d' ' -f2 | cut -d'-' -f1"
+  currentver=$($cmd)
+
+  if [ ! -f ${BREW_LINK} ]; then
+    echo "${BREW_LINK} not found"
+  elif $(version_statisfied "$currentver" "$BREW_VER"); then
+    echo "homebrew version statisfied"
+    echo "returning......"
     return
+  else
+    rm ${BREW_LINK}
+  fi
 
-  BREW_MD5="c28a9e6918e776f8aa18e718e81b386c"
-  BREW_URL="https://github.com/Homebrew/brew/tarball/master"
-  BREW_EXTRACT_DIR=${SCRIPTPATH}/faaltu/homebrew/.linuxbrew
-  
-  download_and_extract ${SCRIPTPATH}/faaltu/homebrew/ ${BREW_EXTRACT_DIR} homebrew.tar.gz ${BREW_URL} ${BREW_MD5}
+  download_and_extract ${SCRIPTPATH}/faaltu/ ${BREW_EXTRACT_DIR} brew-${BREW_VER}.tar.gz ${BREW_URL} false ${BREW_CLEAN_PREFIX}
 
-  if [ -d ${SCRIPTPATH}/faaltu/homebrew/Homebrew-brew-* ]; then
-    if [[ $DEBUG_SCRIPT -ne 0 ]]; then
-      echo "moving Homebrew-brew-* to .linuxbrew"
-    fi
-    mv ${SCRIPTPATH}/faaltu/homebrew/Homebrew-brew-* ${SCRIPTPATH}/faaltu/homebrew/.linuxbrew
+  if [ ! -L ${BREW_LINK} ]; then
+    ln -sT ${BREW_EXTRACT_DIR} ${BREW_LINK}
+  fi
+
+  if [ ! -L ${HOME}/.linuxbrew ]; then
+    ln -sT ${BREW_LINK} ${HOME}/.linuxbrew
   fi
 
 }
