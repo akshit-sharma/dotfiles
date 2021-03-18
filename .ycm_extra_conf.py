@@ -185,22 +185,20 @@ def FlagsForCompilationDatabase(root, filename):
         # out of source projects
         found = False
         for build in BUILD_DIRECTORY:
-            if Path(root).joinpath(build, 'compile_commands.json').is_file():
-                compilation_db_path = FindNearest(root, 'compile_commands.json', BUILD_DIRECTORY)
-                compilation_db_dir = os.path.dirname(compilation_db_path)
-                logging.debug("Set compilation database directory to " + compilation_db_dir)
-                compilation_db =  ycm_core.CompilationDatabase(compilation_db_dir)
-                if not compilation_db:
-                    logging.info("Compilation database file found but unable to load")
-                    continue
-                compilation_info = GetCompilationInfoForFile(compilation_db, filename)
-                if not compilation_info:
-                    logging.info("No compilation info for " + filename + " in compilation database")
-                    continue
-                logging.info("Found compilation datafile in " + compilation_db_dir)
-                return MakeRelativePathsInFlagsAbsolute(
-                        compilation_info.compiler_flags_,
-                        compilation_info.compiler_working_dir_)
+            compilation_db_path = FindNearest(root, 'compile_commands.json', build)
+            compilation_db_dir = os.path.dirname(compilation_db_path)
+            compilation_db =  ycm_core.CompilationDatabase(compilation_db_dir)
+            if not compilation_db:
+              logging.info("Compilation database file found but unable to load")
+              continue
+            compilation_info = GetCompilationInfoForFile(compilation_db, filename)
+            if not compilation_info:
+                logging.info("No compilation info for " + filename + " in compilation database")
+                continue
+            logging.info("Found compilation datafile in " + compilation_db_dir)
+            return MakeRelativePathsInFlagsAbsolute(
+                    compilation_info.compiler_flags_,
+                    compilation_info.compiler_working_dir_)
         assert(found == False) # should be false
         return None
     except Exception as e:
@@ -215,6 +213,7 @@ def FlagsForFile(filename):
     if compilation_db_flags:
         logging.debug("compilation_db_flags is setting final_flags")
         final_flags = compilation_db_flags
+        logging.debug("type of final_flags is set to " + type(final_flags).__name__)
     else:
         if IsSourceFile(filename):
             extension = os.path.splitext(filename)[1]
