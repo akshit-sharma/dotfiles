@@ -96,6 +96,8 @@ Plugin 'dhruvasagar/vim-table-mode'
 " syntaxx file and snippets for dockers dockerfile
 Plugin 'ekalinin/Dockerfile.vim'
 
+Plugin 'SirVer/ultisnips'
+
 " " vim-coverage
 " " Add maktaba and coverage to the runtimepath.
 " " (The latter must be installed before it can be used.)
@@ -273,12 +275,14 @@ let g:ale_linters = {
       \ 'c' : 'all',
       \ 'cpp' : 'all',
       \ 'cuda' : 'all',
+      \ 'rust' : ['analyzer', 'cargo', 'rls', 'rustc'],
       \ }
 let g:ale_fixers = {
   \ 'c' : 'all',
-  \ 'cpp' : ['clang-format', 'clangtidy', 'uncrustify', 'trim_whitespace'],
+  \ 'cpp' : ['clang-format', 'clangtidy', 'uncrustify', 'remove_trailing_lines', 'trim_whitespace'],
   \ 'cuda' : 'all',
   \ 'cmake' : ['cmakeformat', 'remove_trailing_lines', 'trim_whitespace'],
+  \ 'rust' : ['remove_trailing_lines', 'rustfmt', 'trim_whitespace'],
   \ }
 let g:ale_lint_on_save = 1
 let g:ale_fix_on_save = 0
@@ -531,3 +535,34 @@ set softtabstop=2
 set tabstop=2
 set shiftwidth=2
 set expandtab
+
+" YCM KEYBINDINGS
+function! YcmStuff() 
+    nnoremap si :YcmCompleter GoToDefinition<cr>
+    nnoremap sk :YcmRestartServer<cr>
+    nnoremap <F1> :YcmCompleter FixIt<cr>
+    nnoremap K :YcmCompleter GetDoc<cr>
+    nnoremap ; :YcmCompleter GetType<cr>
+endfunction
+
+function! Rusty()
+    nnoremap <C-e> :terminal cargo run<cr>
+    inoremap <C-e> <esc>:terminal cargo run<cr>
+endfunction 
+
+augroup rust
+    autocmd!
+    autocmd FileType rust call Rusty()
+	autocmd FileType rust call YcmStuff()
+augroup end
+
+" YouCompleteMe and UltiSnips compatibility.
+let g:ycm_use_ultisnips_completer = 1
+let g:ycm_key_list_select_completion=[]
+let g:ycm_key_list_previous_completion=[]
+
+" Expand snippets from UltiSnips with tab
+let g:UltiSnipsExpandTrigger="<Tab>"
+let g:UltiSnipsJumpForwardTrigger="<Tab>"
+let g:UltiSnipsJumpBackwardTrigger="<c-tab>"
+let g:UltiSnipsSnippetDirectories = ['UltiSnips']

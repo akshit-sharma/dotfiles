@@ -237,6 +237,15 @@ def FlagsForFile(filename):
 
 
 def Settings( **kwargs ):
+    if kwargs['language'] == 'rust':
+        return {
+                'ls': {
+                    'rust': {
+                        'all_features': True,
+                        'racer_completion': True,
+                        }
+                    }
+                }
     import ycm_core
     filename = kwargs['filename']
     return FlagsForFile(filename)
