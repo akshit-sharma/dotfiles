@@ -279,10 +279,10 @@ let g:ale_linters = {
       \ }
 let g:ale_fixers = {
   \ 'c' : 'all',
-  \ 'cpp' : ['clang-format', 'clangtidy', 'uncrustify', 'remove_trailing_lines', 'trim_whitespace'],
+  \ 'cpp' : ['clang-format', 'clangtidy', 'uncrustify', 'trim_whitespace'],
   \ 'cuda' : 'all',
-  \ 'cmake' : ['cmakeformat', 'remove_trailing_lines', 'trim_whitespace'],
-  \ 'rust' : ['remove_trailing_lines', 'rustfmt', 'trim_whitespace'],
+  \ 'cmake' : ['cmakeformat', 'trim_whitespace'],
+  \ 'rust' : ['rustfmt', 'trim_whitespace'],
   \ }
 let g:ale_lint_on_save = 1
 let g:ale_fix_on_save = 0
