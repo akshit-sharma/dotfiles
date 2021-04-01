@@ -98,6 +98,9 @@ Plugin 'ekalinin/Dockerfile.vim'
 
 Plugin 'SirVer/ultisnips'
 
+" Tagbar: class outline viewer for vim
+Plugin 'preservim/tagbar'
+
 " " vim-coverage
 " " Add maktaba and coverage to the runtimepath.
 " " (The latter must be installed before it can be used.)
@@ -195,6 +198,8 @@ nnoremap <C-n> :NERDTree<CR>
 
 " map ctrl-b to ctrl-w (tmux uses ctrl-b)
 map <C-b> <C-w>
+
+nmap <F8> :TagbarToggle<CR>
 
 " can toggle comment with ctrl-t
 ":nnoremap <C-x> :V<CR>:gc<CR>
@@ -415,15 +420,6 @@ let g:lightline = {
 " let g:syntastic_check_on_open = 1
 " let g:syntastic_check_on_wq = 0
 
-
-" nice abbreviations
-ab #d #define
-ab #i #include
-
-" abbreviations to draw comments
-ab #b /*******************************************************************************
-ab #e ******************************************************************************/
-ab #l /******************************************************************************/
 
 "highlight TooMuchChars ctermbg=155 guibg=#afff5f
 " highlight TooMuchChars cterm=underline

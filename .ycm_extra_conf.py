@@ -215,6 +215,7 @@ def FlagsForFile(filename):
         final_flags = compilation_db_flags
         logging.debug("type of final_flags is set to " + type(final_flags).__name__)
     else:
+        logging.debug("IsSourceFile({}) = {}".format(filename, IsSourceFile(filename)))
         if IsSourceFile(filename):
             extension = os.path.splitext(filename)[1]
             if extension in C_SOURCE_EXTENSIONS:
@@ -230,6 +231,7 @@ def FlagsForFile(filename):
         include_flags = FlagsForInclude(root)
         if include_flags:
             final_flags = final_flags + include_flags
+        logging.info("flags: {}".format(final_flags))
     return {
             'flags': final_flags,
             'do_cache': True
