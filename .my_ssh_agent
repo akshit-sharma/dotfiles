@@ -69,17 +69,21 @@ function sshagent_init {
       RET_SSH_KEYS=$?
 
       if [ $RET_SSH_KEYS -eq 0 ]; then
-        echo "No keys found in ssh_agent"
-        echo "press s to skip adding all keys"
-        read to_skip
-        # add all keys containing the hostname
-        if [ "$to_skip" != "s" ] && [ "$to_skip" != "S" ] \
-           && [ "$to_skip" != "skip" ] && [ "$to_skip" != "Skip" ]; then
+        if [ "${HOSTNAME}" == "DreadKStealth" ]; then
           find $HOME/.ssh | grep -v '.pub' | grep id_${HOSTNAME} | xargs ssh-add
-        elif [ "$to_skip" != "skip" ] && [ "$to_skip" != "Skip" ]; then
-          find $HOME/.ssh | grep -v '.pub' | grep id_${HOSTNAME} | grep github | xargs ssh-add
         else
-          SKIP_UPDATE=true
+          echo "No keys found in ssh_agent"
+          echo "press s to skip adding all keys"
+          read to_skip
+          # add all keys containing the hostname
+          if [ "$to_skip" != "s" ] && [ "$to_skip" != "S" ] \
+             && [ "$to_skip" != "skip" ] && [ "$to_skip" != "Skip" ]; then
+            find $HOME/.ssh | grep -v '.pub' | grep id_${HOSTNAME} | xargs ssh-add
+          elif [ "$to_skip" != "skip" ] && [ "$to_skip" != "Skip" ]; then
+            find $HOME/.ssh | grep -v '.pub' | grep id_${HOSTNAME} | grep github | xargs ssh-add
+          else
+            SKIP_UPDATE=true
+          fi
         fi
       else 
         echo "No ssh keys found in $HOME/.ssh starting with id_${HOSTNAME}"
