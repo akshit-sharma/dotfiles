@@ -79,7 +79,9 @@ BUILD_DIRECTORY = [
         'cmake-build-debug',
         'cmake-build-release',
         'build',
-        'Build'
+        'Build',
+        'build-rpi-zero',
+        'Build-rpi-zero'
         ]
 
 def IsSourceFile(filename):
@@ -247,6 +249,10 @@ def Settings( **kwargs ):
                         'racer_completion': True,
                         }
                     }
+                }
+    elif kwargs['language'] == 'python':
+        return {
+                'interpreter_path': 'python3'
                 }
     import ycm_core
     filename = kwargs['filename']
