@@ -858,6 +858,17 @@ function install_cppcheck {
   brew install cppcheck
 }
 
+function install_gperftools {
+  if [[ $DEBUG_SCRIPT -ne 0 ]]; then
+    echo "installing gperftools"
+  fi
+  type pprof
+  if [ "$?" == 0 ]; then
+    return
+  fi
+  brew install gpertools
+}
+
 function install_ycm {
 # install YouCompleteMe only if not installed or if YCM is updated
   if [[ $DEBUG_SCRIPT -ne 0 ]]; then
@@ -1408,6 +1419,7 @@ install_doxygen
 install_breathe_and_sphnix
 install_vcpkg
 install_valgrind
+install_gperftools
 install_node
 install_neovim
 install_act
