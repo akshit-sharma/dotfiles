@@ -1209,6 +1209,9 @@ fi
 
 home_dir_symlink .vimrc .
 home_dir_symlink nvim .config
+home_dir_symlink yapf .config
+home_dir_symlink .flake8 .
+home_dir_symlink .pylintrc .
 home_dir_symlink .my_ssh_agent .
 home_dir_symlink .my_profile .
 home_dir_symlink .my_bashrc .

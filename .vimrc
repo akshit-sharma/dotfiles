@@ -288,11 +288,11 @@ let g:ale_fixers = {
   \ 'cpp' : ['clang-format', 'clangtidy', 'uncrustify', 'trim_whitespace'],
   \ 'cuda' : 'all',
   \ 'cmake' : ['cmakeformat', 'trim_whitespace'],
-  \ 'python' : ['autopep8', 'yapf'],
+  \ 'python' : 'yapf',
   \ 'rust' : ['rustfmt', 'trim_whitespace'],
   \ }
 let g:ale_lint_on_save = 1
-let g:ale_fix_on_save = 0
+let g:ale_fix_on_save = 1
 let g:ale_set_highlights = 0 " Disable highligting
 let g:ale_c_build_dir_names = ['cmake-build-debug','cmake-build-release','build','Build','bin','build-rpi-zero','Build-rpi-zero']
 let g:ale_c_parse_compile_commands = 1

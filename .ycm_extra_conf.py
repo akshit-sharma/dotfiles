@@ -121,7 +121,8 @@ def FindNearest(path, target, build_folder=None):
 
     parent = os.path.dirname(os.path.abspath(path));
     if(parent == path):
-        raise RuntimeError("Could not find " + target);
+        return None # could no find compile_commands.json
+        # raise RuntimeError("Could not find " + target);
 
     if(build_folder):
         candidate = os.path.join(parent, build_folder, target)
@@ -188,6 +189,8 @@ def FlagsForCompilationDatabase(root, filename):
         found = False
         for build in BUILD_DIRECTORY:
             compilation_db_path = FindNearest(root, 'compile_commands.json', build)
+            if not compilation_db_path:
+                continue
             compilation_db_dir = os.path.dirname(compilation_db_path)
             compilation_db =  ycm_core.CompilationDatabase(compilation_db_dir)
             if not compilation_db:
