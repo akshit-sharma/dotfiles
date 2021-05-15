@@ -311,11 +311,9 @@ let g:ale_c_clangformat_executable = expand(clang_home).'/bin/clang-format'
 let g:ale_cpp_clangformat_executable = expand(clang_home).'/bin/clang-format'
 let g:ale_c_clangtidy_executable = expand(clang_home).'/bin/clang-tidy'
 let g:ale_cpp_clangtidy_executable = expand(clang_home).'/bin/clang-tidy'
-let g:ale_c_clangtidy_checks = ['bugprone-*','cppcoreguidelines-*','clang_analyzer-*','llvm-*','misc-*','modernize-*','performance-*','portability-*','readability-*','-modernize-use-trailing-return-type']
-let g:ale_c_clangtidy_extra_options='--config="{CheckOptions: [{key: readability-braces-around-statements.ShortStatementLines, value: 2}]}"'
+let g:ale_c_clangtidy_checks = ['bugprone-*','cppcoreguidelines-*','clang_analyzer-*','llvm-*','misc-*','modernize-*','performance-*','portability-*','readability-*','-modernize-use-trailing-return-type','-readability-braces-around-statements']
 let g:ale_c_clangtidy_fix_errors=0
-let g:ale_cpp_clangtidy_checks = ['bugprone-*','cppcoreguidelines-*','clang_analyzer-*','llvm-*','misc-*','modernize-*','performance-*','portability-*','readability-*','-modernize-use-trailing-return-type']
-let g:ale_cpp_clangtidy_extra_options='--config="{CheckOptions: [{key: readability-braces-around-statements.ShortStatementLines, value: 2}]}"'
+let g:ale_cpp_clangtidy_checks = ['bugprone-*','cppcoreguidelines-*','clang_analyzer-*','llvm-*','misc-*','modernize-*','performance-*','portability-*','readability-*','-modernize-use-trailing-return-type','-readability-braces-around-statements']
 let g:ale_cpp_clangtidy_fix_errors=0
 let g:ale_cmake_cmakelint_executable = expand(user_home).'/.local/bin/cmakelint'
 let g:ale_cmake_cmakelint_options = '--config='.expand(config_home).'/.cmakelintrc'
