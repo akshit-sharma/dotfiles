@@ -1,0 +1,13 @@
+*
+!.gitignore
+!/colors/
+!/colors/**
+!/ftplugin/
+!/ftplugin/**
+!/syntax/
+!/syntax/**
+!/templates/
+!/templates/**
+!vimrc
+!vimrc.old
+

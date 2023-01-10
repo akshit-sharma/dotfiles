@@ -1,0 +1,162 @@
+#!/bin/bash
+# configuration file synced across devices
+# don't make any system specific changes in this
+# system specific changes goes in ~/.my_vars
+
+PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ '
+
+SW_HOME=$HOME/Softwares
+LIB_HOME=$HOME/Libraries
+
+PATH=$HOME/bin:$PATH
+
+PATH=$SW_HOME/gcc/bin:$PATH LD_LIBRARY_PATH=$SW_HOME/gcc/lib64:$LD_LIBRARY_PATH
+
+PATH=$SW_HOME/valgrind/bin:$PATH
+
+VIRTUAL_ENV="~/venv/"
+
+COMPUTECPP_HOME=$LIB_HOME/computecpp-sdk
+COMPUTECPP_DIR=$LIB_HOME/ComputeCpp
+
+CMAKE_HOME=$SW_HOME/cmake
+PATH=$CMAKE_HOME/bin:$PATH
+if [ -f ${CMAKE_HOME}/bin/cmake ]; then
+  CMAKE_ROOT=${CMAKE_HOME}
+  export CMAKE_ROOT
+fi
+
+DOXYGEN_HOME=$SW_HOME/doxygen
+PATH=$DOXYGEN_HOME/bin:$PATH
+
+GTEST_DIR=$SW_HOME/googletest
+
+BREW_HOME=$HOME/.linuxbrew
+PATH=$BREW_HOME/bin:$PATH
+LD_LIBRARY_PATH=$BREW_HOME/lib64:$LD_LIBRARY_PATH
+
+PATH=$HOME/.local/bin:$PATH
+
+if [ -d $SW_HOME/gcc/bin/ ]; then
+  PATH=$PATH:$SW_HOME/gcc/bin
+fi
+
+PATH=$PATH:$SW_HOME/vcpkg
+if [ -d $SW_HOME/vcpkg ]; then
+ VCPKG_ROOT=$SW_HOME/vcpkg/
+ export VCPKG_ROOT
+fi
+
+if [ -f /usr/lib/x86_64-linux-gnu/libOpenCL.so.1 ]; then
+  INTEL_OPENCL_LIBRARY=/usr/lib/x86_64-linux-gnu/libOpenCL.so.1
+fi
+
+if [ -f $LIB_HOME/vulkansdk/setup-env.sh ]; then
+  source $LIB_HOME/vulkansdk/setup-env.sh
+fi
+
+DOT_CLANG_HOME=$HOME/dotfiles/faaltu/clang+llvm
+
+if [ -d ${VIM_HOME} ]; then
+  VIM_HOME=$HOME/.local/vim
+  PATH=$VIM_HOME/bin:$PATH
+fi
+
+NVIM_HOME=${SW_HOME}/nvim-linux64
+PATH=${NVIM_HOME}/bin:${PATH}
+
+LUAROCKS_HOME=$HOME/.luarocks
+PATH=$LUAROCKS_HOME/bin:$PATH
+
+alias venv="source $VIRTUAL_ENV/bin/activate"
+
+
+alias iccpp="export CUDA_VISIBLE_DEVICES=\"\""       # not working on nvidia gpu for now
+alias vccpp="export PATH=$COMPUTECPP_DIR:$PATH"
+
+alias ycmgen='$HOME/.vim/bundle/YCM-Generator/config_gen.py --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .'
+
+alias cpp_project='$DOTFILES_SCRIPT_PARENT/cpp'
+
+# if cppStarterTemplate %{directory} then copy the template from ~/dotfiles/cppStarterTemplate to %{directory}
+# replace instance `hello' with %{directory} in the $directory/CMakeLists.txt and $directory/src/CMakelists.txt
+function cppStarterTemplate() {
+  if [ -z "$1" ]; then
+    echo "Usage: cppStarterTemplate <directory>"
+    return
+  fi
+  directory=$1
+  if [ -d "$directory" ]; then
+    echo "Directory $directory already exists"
+    return
+  fi
+  cp -r $DOTFILES_SCRIPT_PARENT/cppStarterTemplate $directory
+  # dir is $directory with first letter in lower case
+  dir=$(echo $directory | sed 's/\(.\)\(.*\)/\L\1\E\2/')
+  sed -i "s/hello/$dir/g" $directory/CMakeLists.txt
+  sed -i "s/hello/$dir/g" $directory/src/CMakeLists.txt
+  git -C $directory init
+  git -C $directory add .
+  git -C $directory commit -m "Initial commit"
+  git -C $directory branch -M main
+}
+
+JAVA_HOME=/opt/java/jdk1.8.0_351
+PATH=$JAVA_HOME/bin:$PATH
+LD_LIBRARY_PATH=$JAVA_HOME/lib:$LD_LIBRARY_PATH
+
+GRADLE_HOME=/opt/gradle/gradle-7.5.1
+PATH=${GRADLE_HOME}/bin:$PATH
+
+VISUAL=nvim
+EDITOR="$VISUAL"
+
+export VISUAL
+export EDITOR
+
+#export VIRTUAL_ENV
+export PS1
+export PATH
+export COMPUTECPP_HOME
+export COMPUTECPP_DIR
+export INTEL_OPENCL_LIBRARY
+export GTEST_DIR
+export DOT_CLANG_HOME
+
+eval "`dircolors ~/.mydircolors`"
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('${HOME}/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "${HOME}/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "${HOME}/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="${HOME}/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+
+if type brew &>/dev/null
+then
+  HOMEBREW_PREFIX="$(brew --prefix)"
+  if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]
+  then
+    source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+  else
+    for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*
+    do
+      [[ -r "${COMPLETION}" ]] && source "${COMPLETION}"
+    done
+  fi
+fi
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+source $HOME/.my_vars

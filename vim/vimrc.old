@@ -1,0 +1,521 @@
+set nocompatible  		" be iMproved, required
+filetype off 	    		" required
+
+set background=dark
+
+let user_home = '$HOME'
+let config_home = '$DOTFILES_SCRIPT_PARENT'
+let clang_home = '$DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm'
+
+" set the runtime path to include Vundle and initialize
+" git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+" call vundle#begin("~/some/path/here")
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" The NERD tree
+Plugin 'scrooloose/nerdtree'
+
+" cpp enhanced highlight
+Plugin 'octol/vim-cpp-enhanced-highlight'
+
+" fuzzy file and buffer finder
+Plugin 'ctrlpvim/ctrlp.vim'
+
+" make status bar prettier
+Plugin 'itchyny/lightline.vim'
+
+" syntax-aware plugin for easy commenting
+Plugin 'tomtom/tcomment_vim'
+
+" jump to words
+Plugin 'easymotion/vim-easymotion'
+
+" show git modifications
+Plugin 'airblade/vim-gitgutter'
+
+" Rainbow brackets
+Plugin 'luochen1990/rainbow'
+
+" " vim-cmake-syntax
+" Plugin 'pboettch/vim-cmake-syntax'
+ Plugin 'vhdirk/vim-cmake'
+
+" vimwiki
+Plugin 'vimwiki/vimwiki'
+
+" fugitive for git wrapper
+Plugin 'tpope/vim-fugitive'
+" for vim version < 7.2
+Plugin 'tpope/vim-git'
+
+" " cpp autocomplete
+Plugin 'Valloric/YouCompleteMe', { 'commit':'d98f896' }
+
+" YCM-Generator
+Plugin 'rdnetto/YCM-Generator'
+
+" latex plugin for vim
+Plugin 'lervag/vimtex'
+
+" plugin for openning file with line number
+Plugin 'lervag/file-line'
+
+" Gutentags 
+Plugin 'ludovicchabant/vim-gutentags'
+"
+" " vim-cmake 
+Plugin 'sigidagi/vim-cmake-project'
+" " vimux
+Plugin 'benmills/vimux'
+
+" " Asynchronous linting/fixing for Vim and Language Server Protocol
+ Plugin 'dense-analysis/ale'
+
+" vim table mode
+Plugin 'dhruvasagar/vim-table-mode'
+
+" syntaxx file and snippets for dockers dockerfile
+Plugin 'ekalinin/Dockerfile.vim'
+
+Plugin 'SirVer/ultisnips'
+
+" Tagbar: class outline viewer for vim
+Plugin 'preservim/tagbar'
+
+" " vim-coverage
+" " Add maktaba and coverage to the runtimepath.
+" " (The latter must be installed before it can be used.)
+" Plugin 'google/vim-maktaba'
+" Plugin 'google/vim-coverage'
+" " Also add Glaive, which is used to configure coverage's maktaba flags. See
+" " `:help :Glaive` for usage.
+" Plugin 'google/vim-glaive'
+
+" All of your Plugins must be added before the following line
+call vundle#end() 		" required
+
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+
+" call glaive#Install()
+" " Optional: Enable coverage's default mappings on the <Leader>C prefix.
+" Glaive coverage plugin[mappings]
+
+filetype plugin indent on 	" required
+
+" To ignore plugin indent changes, instead use:
+" filetype plugin on
+"
+" Brief help
+" :PluginList       - list configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal for unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details for wifi for FAQ
+" Put your non-Plugin stuff after this line
+
+" highlighting with vulkan1.0.vim
+autocmd FileType cpp,c source ~/.vim/syntax/vulkan1.0.vim
+autocmd FileType cuda,cu source ~/.vim/syntax/cuda.vim
+
+" For cuda files
+" Highlight keywords from CUDA Runtime API
+let g:cuda_runtime_api_highlight = 1
+" Highlight keywords from CUDA Driver API
+let g:cuda_driver_api_highlight = 1
+" Highlight keywords from CUDA Thrust library
+let g:cuda_thrust_highlight = 1
+" Disable highlighting of CUDA kernel calls
+let g:cuda_no_kernel_highlight = 1
+
+" highlighting with opengl.vim
+"autocmd FileType cpp,c source ~/.vim/syntax/opengl.vim
+
+"autocmd FileType *.py set shiftwidth=2|set softtabstop=2|set tabstop=2|set expandtab
+
+colo jellybeans
+syntax on
+
+function! s:DiffWithSaved()
+  let filetype=&ft
+  diffthis
+  vnew | r # | normal! 1Gdd
+  diffthis
+  exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
+endfunction
+com! DiffSaved call s:DiffWithSaved()
+
+if has("autocmd")
+  augroup templates
+    autocmd BufNewFile *.sh 0r ~/.vim/templates/skeleton.sh
+    autocmd BufNewFile *.tex 0r ~/.vim/templates/skeleton.tex
+    autocmd BufNewFile CMakeLists.txt 0r ~/.vim/templates/skeleton.cmake
+    autocmd BufNewFile conanfile.txt 0r ~/.vim/templates/conanfile.txt
+  augroup END
+endif
+
+" use indentation of previous line
+set autoindent
+
+" use intelligent indentation for C
+set smartindent
+
+" configure tabwidth and insert spaces instead of tabs
+set tabstop=2         " tab width is 2 spaces
+set shiftwidth=2      " indent also with 2 spaces
+set expandtab         " expand tabs to spaces
+set softtabstop=2
+
+" warp lines at 160 chars, 80 is somewhat antiquated with nowadays displays
+set textwidth=160
+
+" turn line numbers on
+set number
+
+" highlight matching braces
+set showmatch
+
+" NERDTree linked to ctrl-n
+nnoremap <C-n> :NERDTree<CR>
+
+" map ctrl-b to ctrl-w (tmux uses ctrl-b)
+map <C-b> <C-w>
+
+nmap <F8> :TagbarToggle<CR>
+
+" can toggle comment with ctrl-t
+":nnoremap <C-x> :V<CR>:gc<CR>
+
+" optional features for octol/vim-cpp-enhanced-highlight
+let g:cpp_class_scope_highlight = 1
+let g:cpp_member_variable_highlight = 1
+let g:cpp_class_decl_highlight = 1
+let g:cpp_concepts_highlight = 1
+let g:cpp_no_function_highlight = 1
+let g:cpp_experimental_template_highlight = 1
+let g:cpp_experimental_simple_template_highlight = 1
+
+" ctrlp
+let g:ctrlp_custom_ignore = {
+      \ 'dir': '\v[\/]\.(git|hg|svn)|build|Build|bin$',
+      \ 'file': '\v\.(exe|so|dll|out)$',
+      \ }
+let g:ctrl_user_command = {
+      \ 'types' : {
+              \ 1: [ '.git', 'cd %s && git ls-files . -co --exclude-standard' ],
+              \ },
+      \ 'fallback': 'find %s -type f'
+      \ }
+
+" vim have issue with flagging braces as errors (workaround)
+let c_no_curly_error=1
+
+" for cpp_gcc_7
+set tags+=~/.vim/tags/cpp_gcc_7
+
+" for working project
+set tags+=.git/tags;./tags;
+
+" build tags of your own project with ctrl-F11
+map <C-F11> :!ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q --exclude=.git ..<CR> 
+map <S-F11> :!cd .git && ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q --exclude=.git .. && cd ..<CR>  
+
+
+" " OmniCppComplete
+" let OmniCpp_NamespaceSearch = 1
+" let OmniCpp_GlobalScopeSearch = 1
+" let OmniCpp_ShowAccess = 1
+" let OmniCpp_ShowPrototypeInAbbr = 1 " show function parameters
+" let OmniCpp_MayCompleteDot = 1      " autocomplete after .
+" let OmniCpp_MayCompleteArrow = 1    " autocomplete after ->
+" let OmniCpp_MaycompleteScope = 1    " autocomplete after ::
+" let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"] " check if I need this
+" " automatically open and close the popup menu / preview window
+" au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
+" set completeopt=menuone,menu,longest,preview
+ 
+" YCM (YouCompleteMe)
+let g:ycm_log_level = 'debug'
+let g:ycm_enable_diagnostic_signs = 1 " 0
+let g:ycm_enable_diagnostic_highlighting = 1 " 0
+let g:ycm_always_populate_location_list = 0 "default 0
+let g:ycm_open_loclist_on_ycm_diags = 0 "default 1
+let g:ycm_clangd_binary_path = expand(clang_home).'/bin/clangd'
+let g:ycm_global_ycm_extra_conf = expand(config_home).'/.ycm_extra_conf.py'
+" let g:ycm_confirm_extra_conf = 1 " (for now, asks everytime instead of just once)
+let g:ycm_key_invoke_completion = '<C-space>'
+let g:ycm_autoclose_preview_after_completion = 0
+let g:ycm_autoclose_preview_after_insertion = 1
+let g:ycm_max_diagnostics_to_display = 100
+nnoremap <Leader><C-k> :lprevious<CR>
+nnoremap <Leader><C-j> :lnext<CR>
+nnoremap <Leader>cl :YcmCompleter GoToDeclaration<CR>
+nnoremap <Leader>cf :YcmCompleter GoToDefinition<CR>
+nnoremap <Leader>cg :YcmCompleter GoToImprecise<CR>
+nnoremap <Leader>ci :YcmCompleter GoToInclude<CR>
+" Map cuda files to c++ so that Ycm can parse 
+"autocmd BufNewFile, BufRead *.cu set filetype=cpp
+" autocmd FileType cuda set ft=cpp
+
+" ALE Lint 
+let g:ale_completion_enabled = 0
+let g:ale_linters = {
+      \ 'c' : 'all',
+      \ 'cpp' : 'all',
+      \ 'cuda' : 'all',
+      \ 'python' : ['flake8', 'pylint'],
+      \ 'rust' : ['analyzer', 'cargo', 'rls', 'rustc'],
+      \ }
+let g:ale_fixers = {
+  \ 'c' : 'all',
+  \ 'cpp' : ['clang-format', 'uncrustify', 'trim_whitespace'],
+  \ 'cuda' : 'all',
+  \ 'cmake' : ['cmakeformat', 'trim_whitespace'],
+  \ 'python' : 'yapf',
+  \ 'rust' : ['rustfmt', 'trim_whitespace'],
+  \ }
+let g:ale_lint_on_save = 1
+let g:ale_fix_on_save = 1
+let g:ale_set_highlights = 0 " Disable highligting
+let g:ale_c_build_dir_names = ['cmake-build-combined', 'cmake-build-debug','cmake-build-release','build','Build','bin','build-rpi-zero','Build-rpi-zero']
+let g:ale_c_parse_compile_commands = 1
+let g:ale_c_clang_executable = expand(clang_home).'/bin/clang'
+let g:ale_cpp_clang_executable = expand(clang_home).'/bin/clang++'
+let g:ale_cpp_clang_options = ""
+let g:ale_c_gcc_executable = "gcc-9"
+let g:ale_cpp_gcc_executable = "g++-9"
+let g:ale_cpp_gcc_options = ""
+let g:ale_cpp_cppcheck_options = ""
+let g:ale_c_clangcheck_executable = expand(clang_home).'/bin/clang-check'
+let g:ale_cpp_clangcheck_executable = expand(clang_home).'/bin/clang-check'
+let g:ale_c_clangd_executable = expand(clang_home).'/bin/clangd'
+let g:ale_cpp_clangd_executable = expand(clang_home).'/bin/clangd'
+let g:ale_c_clangformat_executable = expand(clang_home).'/bin/clang-format'
+let g:ale_cpp_clangformat_executable = expand(clang_home).'/bin/clang-format'
+let g:ale_c_clangtidy_executable = expand(clang_home).'/bin/clang-tidy'
+let g:ale_cpp_clangtidy_executable = expand(clang_home).'/bin/clang-tidy'
+let g:ale_c_clangtidy_checks = ['bugprone-*','cppcoreguidelines-*','clang_analyzer-*','llvm-*','-llvm-header-guard','misc-*','modernize-*','performance-*','portability-*','readability-*','-modernize-use-trailing-return-type','-readability-braces-around-statements']
+let g:ale_c_clangtidy_fix_errors=0
+let g:ale_cpp_clangtidy_checks = ['bugprone-*','cppcoreguidelines-*','clang_analyzer-*','llvm-*','-llvm-header-guard','misc-*','modernize-*','performance-*','portability-*','readability-*','-modernize-use-trailing-return-type','-readability-braces-around-statements']
+let g:ale_cpp_clangtidy_fix_errors=0
+let g:ale_cmake_cmakelint_executable = expand(user_home).'/.local/bin/cmakelint'
+let g:ale_cmake_cmakelint_options = '--config='.expand(config_home).'/.cmakelintrc'
+let g:ale_cmake_cmakeformat_executable = expand(user_home).'/.local/bin/cmake-format'
+let g:ale_cmake_cmakeformat_options = '-c '.expand(config_home).'/.clang-format.yml'
+
+" switch between header/source with F4
+map <F4> :e %:p:s,.h$,.X123X,:s,:.cpp$,.h,:s,.X123X$,.cpp,<CR>
+
+" build using makeprg with <F7>
+map <F7> :make<CR>
+
+" build using makeprg with <S-F7>
+map <S-F7> :make clean<CR>
+
+" " toggle quickfix window with <F9>
+" noremap <F9> :call asyncrun#quickfix_toggle(8)<CR>
+" map <Leader>a :call asyncrun#quickfix_toggle(8)<CR>
+
+map <Leader><Space>d :DiffSaved<CR>
+
+" for ctags jumps
+map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+map <Leader><C-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
+map <Leader><S-C-]> :sp <CR>:exec("tag ".expand("<cword>"))<CR>
+
+" Configuration for easymotion
+let g:EasyMotion_leader_key='f'
+" <Leader>f{char} to move to {char}
+map <Plug>(easymotion-prefix)f <Plug>(easymotion-bd-f)
+map <Plug>(easymotion-prefix)f <Plug>(easymotion-overwin-f)
+" s{char}{char} to move to {char}{char}
+nmap <Plug>(easymotion-prefix)s <Plug>(easymotion-overwin-f2)
+" Move to line
+map <Plug>(easymotion-prefix)L <Plug>(easymotion-bd-jk)
+nmap <Plug>(easymotion-prefix)L <Plug>(easymotion-overwin-line)
+" Move to word
+map <Plug>(easymotion-prefix)w <Plug>(easymotion-bd-w)
+nmap <Plug>(easymotion-prefix)w <Plug>(easymotion-overwin-w)
+
+" toggle scrollbind use `:set scb?` to see current state
+map <Leader>S :set scb!<CR>
+
+" 0 if you want to enable it later via :RainbowToggle
+let g:rainbow_active = 1
+
+let g:rainbow_conf = {
+  \  'separately': {
+  \       'cmake': 0,
+  \    }
+  \ }
+
+" Always show statusline
+set laststatus=2
+let g:lightline = {
+  \   'active': {
+  \     'left': [['mode', 'paste'], [ 'readonly', 'filename', 'modified', 'gitbranch' ]],
+  \     'right': [['lineinfo'], ['percent'], ['fileformat', 'fileencoding', 'filetype']]
+  \   },
+  \   'component_function' : {
+  \     'gitbranch': 'fugitive#head'
+  \   }
+  \ }
+
+" " for syntastic for syntax checking
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
+
+
+"highlight TooMuchChars ctermbg=155 guibg=#afff5f
+" highlight TooMuchChars cterm=underline
+
+" " Define autocmd for some highlighting *before* the colorscheme is loaded
+" augroup VimrcColors
+" au!
+"   autocmd ColorScheme * highlight ExtraWhitespace ctermbg=darkgreen   guibg=#444444
+"   autocmd ColorScheme * highlight Tab             ctermbg=darkblue    guibg=darkblue
+" augroup END
+
+" au BufWinEnter * let w:m1=matchadd('TooMuchChars', '\%>80v.\+', -1)
+
+" for tab navigation
+nnoremap <Leader>th :tabfirst<CR>
+nnoremap <Leader>tk :tabnext<CR>
+nnoremap <Leader>tj :tabprev<CR>
+nnoremap <Leader>tl :tablast<CR>
+nnoremap <Leader>tt :tabedit<Space>
+nnoremap <Leader>tn :tabnext<Space>
+nnoremap <Leader>tm :tabm<Space>
+nnoremap <Leader>td :tabclose<CR>
+nnoremap <Leader>tn :tabnew<CR>
+nnoremap <Leader>ts :tab<Space> split<CR>
+" for navigation with ctrl modifier
+nnoremap <C-S-tab>  :tabprevious<CR>
+nnoremap <C-tab>    :tabnext<CR>
+"nnoremap <C-t>      :tabnew<CR>             Ctrl-t used in ctags
+inoremap <C-S-tab>  <Esc>:tabprevious<CR>i
+inoremap <C-tab>    <Esc>:tabnext<CR>i
+"inoremap <C-t>      <Esc>:tabnew<CR>        Ctrl-t used in ctags
+" open files always in new tabs
+"autocmd VimEnter * tab all
+"autocmd BufAdd * exe 'tablast | tabe "' . expand ( "<afile") . '"'
+
+nnoremap <Leader>y :YcmGenerateConfig --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
+inoremap <Leader>y <Esc>:YcmGenerateConfig --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
+nnoremap <C-y> :YcmGenerateConfig --verbose --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
+inoremap <C-y> <Esc>:YcmGenerateConfig --verbose --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
+nnoremap <Leader>Y :CCGenerateConfig --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
+inoremap <Leader>Y <Esc>:CCGenerateConfig --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
+nnoremap <C-Y> :CCGenerateConfig --verbose --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
+inoremap <C-Y> <Esc>:CCGenerateConfig --verbose --compiler $DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm/bin/clang .<CR>
+
+" nnoremap <Leader>Y :SyntasticToggleMode<CR>
+" inoremap <Leader>Y :SyntasticToggleMode<CR>
+
+" mouse does not select line numbers # default is c
+set mouse=a
+
+" open NERDTree by default
+"autocmd VimEnter * NERDTree
+"autocmd BufEnter * NERDTreeMirror
+"autocmd VimEnter * wincmd 
+
+let g:vimtex_complete_enabled = 1
+let g:vimtex_complete_close_braces = 1
+let g:vimtex_complete_img_use_tail = 1
+let g:vimtex_complete_recursive_bib = 1
+let g:vimtex_quickfix_mode = 2
+let g:vimtex_view_method = 'zathura'
+" let g:vimtex_compiler_latexmk_engines = 'lualatex'
+" let g:vimtex_view_general_viewer = 'zathura'
+" let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
+" let g:vimtex_view_general_options_latexmk = '--unique'
+let g:vimtex_compiler_latexmk = { 'build_dir' : 'build' }
+if !exists('g:ycm_semantic_triggers')
+  let g:ycm_semantic_triggers = {}
+endif
+if exists('g:vimtex#re#youcompleteme')
+  let g:ycm_semantic_triggers.tex = g:vimtex#re#youcompleteme
+endif
+
+
+" enable gtags module
+"let g:gutentags_modules = ['ctags', 'gtags_cscope']
+let g:gutentags_modules = ['ctags']
+let g:gutentags_project_root = ['.git']
+let g:gutentags_cache_dir = expand('~/.cache/tags')
+ let g:gutentags_auto_add_gtags_cscope = 0
+let g:gutentags_plus_nomap = 1
+noremap <leader>gs :GscopeFind s <C-R><C-W><cr>
+noremap <leader>gg :GscopeFind g <C-R><C-W><cr>
+noremap <leader>gc :GscopeFind c <C-R><C-W><cr>
+noremap <leader>gt :GscopeFind t <C-R><C-W><cr>
+noremap <leader>ge :GscopeFind e <C-R><C-W><cr>
+noremap <leader>gf :GscopeFind f <C-R>=expand("<cfile>")<cr><cr>
+noremap <leader>gi :GscopeFind i <C-R>=expand("<cfile>")<cr><cr>
+noremap <leader>gd :GscopeFind d <C-R><C-W><cr>
+noremap <leader>ga :GscopeFind a <C-R><C-W><cr>
+      
+set backspace=indent,eol,start
+
+" alias for some fn commands
+" make 
+map <Leader><Leader>m <F7>
+" make clean
+map <Leader><Leader>M <S-F7>
+" ctags
+map <Leader><Leader>c <C-F11>
+" ctags in ./.git/tags
+map <Leader><Leader>C <S-F11>
+" switch between header/source file
+map <Leader><Leader>s <F4>
+" goto definition
+map <Leader><Leader>d <F12>
+
+set softtabstop=2
+set tabstop=2
+set shiftwidth=2
+set expandtab
+
+" YCM KEYBINDINGS
+function! YcmStuff() 
+    nnoremap si :YcmCompleter GoToDefinition<cr>
+    nnoremap sk :YcmRestartServer<cr>
+    nnoremap <F1> :YcmCompleter FixIt<cr>
+    nnoremap K :YcmCompleter GetDoc<cr>
+    nnoremap ; :YcmCompleter GetType<cr>
+endfunction
+
+function! Rusty()
+    nnoremap <C-e> :terminal cargo run<cr>
+    inoremap <C-e> <esc>:terminal cargo run<cr>
+endfunction 
+
+augroup rust
+    autocmd!
+    autocmd FileType rust call Rusty()
+	autocmd FileType rust call YcmStuff()
+augroup end
+
+" YouCompleteMe and UltiSnips compatibility.
+let g:ycm_use_ultisnips_completer = 1
+let g:ycm_key_list_select_completion=[]
+let g:ycm_key_list_previous_completion=[]
+
+" Expand snippets from UltiSnips with tab
+let g:UltiSnipsExpandTrigger="<Tab>"
+let g:UltiSnipsJumpForwardTrigger="<Tab>"
+let g:UltiSnipsJumpBackwardTrigger="<c-tab>"
+let g:UltiSnipsSnippetDirectories = ['UltiSnips']
+

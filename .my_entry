@@ -1,0 +1,7 @@
+#! /bin/bash
+# directory called from ~/.bashrc
+
+source ~/.my_bashrc
+
+source ~/.my_ssh_agent
+

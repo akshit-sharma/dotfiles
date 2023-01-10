@@ -1,0 +1,7 @@
+require('lsp_configs.fidget')
+require('lsp_configs.nvim-lightbulb')
+require('lsp_configs.lsp-zero')
+--require('lsp_configs.lsp')
+--require('lsp_configs.mason')
+--require('lsp_configs.mason_lspconfig')
+--require('lsp_configs.config')

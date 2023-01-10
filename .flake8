@@ -1,0 +1,5 @@
+[flake8]
+ignore = W191
+exclude = .git,__pycache__,docs/source/conf.py,old,build,dist, *migrations*,.env,env,venv
+indent_size = 2
+indent_size_str = "\t"

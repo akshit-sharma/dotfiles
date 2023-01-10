@@ -1,0 +1,101 @@
+#!/bin/bash
+# detecting existing sshagent
+
+env=~/.ssh/agent.env
+
+agent_load_env () { test -f "$env" && . "$env" >| /dev/null ; }
+
+agent_start () {
+    (umask 077; ssh-agent >| "$env")
+    . "$env" >| /dev/null ; }
+
+function ssh_agent_init() {
+
+run_state=$1
+
+if [ ! "$SSH_AUTH_SOCK" ] || [ $run_state = 2 ]; then
+    agent_start
+    find $HOME/.ssh | grep -v '.pub' | grep "id_${HOSTNAME}\|id_rsa\|id_ed25519" | xargs ssh-add
+elif [ "$SSH_AUTH_SOCK" ] && [ $run_state = 1 ]; then
+    find $HOME/.ssh | grep -v '.pub' | grep "id_${HOSTNAME}\|id_rsa\|id_ed25519" | xargs ssh-add
+fi
+
+unset env
+
+}
+
+function should_run_ssh_agent() {
+  run_state=$1
+
+  RET_SSH_KEYS=$?
+
+  if [ ! "$SSH_AUTH_SOCK" ] || [ $run_state = 2 ]; then
+    agent_start
+  fi
+
+  ssh_keys=$(find $HOME/.ssh | grep -v '.pub' | grep "id_${HOSTNAME}\|id_rsa\|id_ed25519")
+  added_keys=$(ssh-add -l | awk '{print $3}')
+  added_keys=$(echo $added_keys | sed 's|has||g')
+
+  passwordless_ssh_keys=$(echo "$ssh_keys" | xargs -I {} grep -L "ENCRYPTED" {})
+  if [ ! -z "$passwordless_ssh_keys" ]; then
+    # remove keys in ssh-add -l from passwordless_ssh_keys
+    for key in $(echo "${added_keys}"); do
+      passwordless_ssh_keys=$(echo $remaining_ssh_keys | sed "s|$key||g")
+    done
+    if [ ! -z "$passwordless_ssh_keys" ]; then
+      echo "$passwordless_ssh_keys" | xargs ssh-add
+    fi
+    # for each key in passwordless_ssh_keys, add it to ssh-agent
+#    for key in $passwordless_ssh_keys; do
+#      ssh-add $key
+#    done
+  fi
+
+  remaining_ssh_keys=$(echo "$ssh_keys" | xargs -I {} grep -l "ENCRYPTED" {})
+  # remove keys in ssh-add -l from remaining_ssh_keys
+  for key in $(echo "${added_keys}"); do
+    remaining_ssh_keys=$(echo $remaining_ssh_keys | sed "s|$key||g")
+  done
+
+  # if remaining_ssh_keys is empty, return
+  if [ -z "$remaining_ssh_keys" ]; then
+    return 0
+  fi
+
+  echo "following keys not found in ssh_agent:"
+  echo "$remaining_ssh_keys"
+  echo "press s to skip adding all keys"
+  read to_skip
+  # add all keys containing the hostname
+  if [ "$to_skip" != "s" ] && [ "$to_skip" != "S" ] \
+     && [ "$to_skip" != "skip" ] && [ "$to_skip" != "Skip" ]; then
+    if [ ! -z "$remaining_ssh_keys" ]; then
+      echo "$remaining_ssh_keys" | xargs ssh-add
+    fi
+#    for key in $remaining_ssh_keys; do
+#      ssh-add $key
+#    done
+  else
+    SKIP_UPDATE=true
+  fi
+
+}
+
+SKIP_UPDATE=false
+
+agent_load_env
+
+# agent_run_state: 0=agent running w/ key; 1=agent w/o key; 2=agent not running
+agent_run_state=$(ssh-add -l >| /dev/null 2>&1; echo $?)
+
+should_run_ssh_agent $agent_run_state
+
+unset env
+
+if [ ! -z "$DOTFILES_SCRIPT_PARENT" ]; then
+  source ~/.my_profile " " $SKIP_UPDATE
+else
+  source ~/.my_profile $DOTFILES_SCRIPT_PARENT $SKIP_UPDATE
+fi
+

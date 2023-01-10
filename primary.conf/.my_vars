@@ -1,0 +1,18 @@
+
+# for hidapi
+LIBDIR=/usr/local/lib
+LD_LIBRARY_PATH=$LIBDIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+
+BOOST_ROOT=/usr/local/boost
+LD_LIBRARY_PATH=$BOOST_ROOT/lib:$LD_LIBRARY_PATH
+
+QT_HOME=/usr/local/Qt/5.2.1
+PATH=QT_HOME/gcc_64/bin:$PATH
+
+alias vkenv='source $HOME/Libraries/vulkan/1.1.77.0/setup-env.sh'
+
+alias xub='ssh -i ~/.ssh/id_xubuntu_kubuntu '
+
+export PATH
+export BOOST_ROOT
+

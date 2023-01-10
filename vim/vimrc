@@ -1,0 +1,104 @@
+set nocompatible  		" be iMproved, required
+filetype off 	    		" required
+
+set background=dark
+
+let user_home = '$HOME'
+let config_home = '$DOTFILES_SCRIPT_PARENT'
+let clang_home = '$DOTFILES_SCRIPT_PARENT/faaltu/clang+llvm'
+
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+      \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
+
+" src: https://gist.github.com/kkoomen/68319b08ab843ce67cf7b282b0b2fd24
+function! OnVimEnter() abort
+  " Run PlugUpdate every week automatically when entering vim.
+  if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+    PlugInstall --sync | source $MYVIMRC
+  endif
+  if exists('g:plug_home')
+    let l:filename = printf('%s/.plug_last_update', g:plug_home)
+    if filereadable(l:filename) == 0
+      call writefile([], l:filename)
+    endif
+
+    let l:this_week = strftime('%Y-%V')
+    let l:contents = readfile(l:filename)
+    if index(l:contents, l:this_week) < 0
+      call execute('PlugUpdate')
+      call writefile([l:this_week], l:filename, 'a')
+    endif
+  endif
+endfunction
+
+autocmd VimEnter * call OnVimEnter()
+
+call plug#begin('~/.vim/plugged')
+
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'tomtom/tcomment_vim'
+
+call plug#end()
+
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+
+filetype plugin indent on 	" required
+
+" To ignore plugin indent changes, instead use:
+" filetype plugin on
+"
+" Brief help
+" :PluginList       - list configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal for unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details for wifi for FAQ
+" Put your non-Plugin stuff after this line
+
+colo jellybeans
+syntax on
+
+function! s:DiffWithSaved()
+  let filetype=&ft
+  diffthis
+  vnew | r # | normal! 1Gdd
+  diffthis
+  exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
+endfunction
+com! DiffSaved call s:DiffWithSaved()
+
+if has("autocmd")
+  augroup templates
+    autocmd BufNewFile *.sh 0r ~/.vim/templates/skeleton.sh
+    autocmd BufNewFile *.tex 0r ~/.vim/templates/skeleton.tex
+    autocmd BufNewFile CMakeLists.txt 0r ~/.vim/templates/skeleton.cmake
+    autocmd BufNewFile conanfile.txt 0r ~/.vim/templates/conanfile.txt
+  augroup END
+endif
+
+" use indentation of previous line
+set autoindent
+
+" use intelligent indentation for C
+set smartindent
+
+" configure tabwidth and insert spaces instead of tabs
+set tabstop=2         " tab width is 2 spaces
+set shiftwidth=2      " indent also with 2 spaces
+set expandtab         " expand tabs to spaces
+set softtabstop=2
+
+" warp lines at 160 chars, 80 is somewhat antiquated with nowadays displays
+set textwidth=160
+
+" turn line numbers on
+set number
+
+" highlight matching braces
+set showmatch
+
+map <Leader><Space>d :DiffSaved<CR>
+

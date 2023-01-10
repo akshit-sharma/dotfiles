@@ -1,0 +1,123 @@
+#!/bin/bash
+# configuration file synced across devices
+# don't make any system specific changes in this
+# system specific changes goes in ~/.my_vars
+
+PROFILE_DEBUG=0
+
+if [ $DOTFILES_SCRIPT_PARENT ]; then
+  SCRIPTPATH=$DOTFILES_SCRIPT_PARENT
+  if [[ $PROFILE_DEBUG -eq 1 ]]; then
+    echo "\$DOTFILES_SCRIPT_PARENT already set to $DOTFILES_SCRIPT_PARENT"
+  fi
+fi
+
+#echo "arguments to this script are $@"
+
+SKIP_UPDATE=false
+
+if [ -d "$SCRIPTPATH" ]; then
+  if [[ $PROFILE_DEBUG -eq 1 ]]; then
+    echo "SCRIPTPATH already set to $SCRIPTPATH"
+  fi
+else
+  # if called by other script
+  if [ $SHLVL -gt 1 ]; then
+    echo "Called by other script"
+   if [ -z "$2" ]; then
+     if [ -z "$DOTFILES_SCRIPT_PARENT" ]; then
+       SCRIPTPATH=$1
+       echo "\$1 is $1"
+     fi
+   else
+     if [ -z "$DOTFILES_SCRIPT_PARENT" ]; then
+       SCRIPTPATH=$DOTFILES_SCRIPT_PARENT
+        echo "\$DOTFILES_SCRIPT_PARENT is $DOTFILES_SCRIPT_PARENT"
+     fi
+   fi
+  fi
+fi
+
+if [ ! -z "$2" ]; then
+ if [ "$2" == "true" ]; then
+   SKIP_UPDATE=true
+   echo "skipping auto-update"
+ fi
+fi
+
+ping google.com -c 1 -t 100 > /dev/null
+NET_AVAILABLE="$?"
+if [ $NET_AVAILABLE != 0 ]; then
+  SKIP_UPDATE=true
+  echo "Ping returned ${NET_AVAILABLE}"
+  echo "Internet not available, skipping update"
+fi
+
+REPO_DIR=$SCRIPTPATH
+
+if [ "$SKIP_UPDATE" != "true" ]; then
+  if [[ $PROFILE_DEBUG -eq 1 ]]; then
+    echo "REPO_DIR set to $REPO_DIR"
+  fi
+  git -C $REPO_DIR remote update > /dev/null
+
+  UPSTREAM='@{u}'
+  #' small work around for cleaner syntax in vim
+  LOCAL=$(git -C $REPO_DIR rev-parse @)
+  REMOTE=$(git -C $REPO_DIR rev-parse "$UPSTREAM")
+  BASE=$(git -C $REPO_DIR merge-base @ "$UPSTREAM")
+
+  RUN_ACTUAL_SCRIPT=0
+  ##if not called by other script
+  #if [[ $SHLVL -lt 2 ]]; then
+  #  RUN_ACTUAL_SCRIPT=1
+  #fi
+  #echo "Run set to  $RUN_ACTUAL_SCRIPT"
+
+  if [ $LOCAL = $BASE ] && [[ ! ($LOCAL = $REMOTE) ]]; then
+
+    if [[ $PROFILE_DEBUG -eq 1 ]]; then
+      echo "Need to pull"
+    fi
+
+    git -C $REPO_DIR pull origin master
+    RET_GIT_PULL=$?
+
+    if [ "$RET_GIT_PULL" == "0" ]; then
+      bash -e $REPO_DIR/update.sh "PROFILE_REFRESH"
+    else
+      echo "non-zero($RET_GIT_PULL) from git pull"
+      echo "Possibly a conflict"
+      bash -e $REPO_DIR/update.sh "0"
+    fi
+
+  elif [ $REMOTE = $BASE ] || [ $LOCAL = $REMOTE ] || [ $RUN_ACTUAL_SCRIPT -eq 1 ]; then
+
+    if [ $RUN_ACTUAL_SCRIPT -eq 0 ]; then
+      if [ $LOCAL = $REMOTE ]; then
+        if [[ $PROFILE_DEBUG -eq 1 ]]; then
+          echo "Up-to-date"
+        fi
+
+      elif [ $REMOTE = $BASE ]; then
+        if [[ $PROFILE_DEBUG -eq 1 ]]; then
+          echo "Need to push"
+        fi
+        git -C $HOME/dotfiles push origin master
+
+      fi
+#      clear
+    fi
+
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ '
+
+  else
+
+    echo "Diverged"
+
+  fi
+
+fi
+
+source $HOME/.my_bashrc
+

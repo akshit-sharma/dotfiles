@@ -1,0 +1,17 @@
+{
+  "clangd.trace.file": "/tmp/clangd.log",
+  "clangd.compilationDatabasePath": "cmake-build-debug",
+  "clangd.compilationDatabaseCandidates": [
+    "cmake-build-debug",
+    "cmake-build-release",
+    "build",
+    "Build",
+    "cmake-build-relwithdebinfo",
+    "cmake-build-profile"
+  ],
+  "clangd.fallbackFlags": [
+    "--std=c++17",
+    "--cuda-gpu-arch=sm_80"
+  ],
+  "suggest.noselect": true
+}

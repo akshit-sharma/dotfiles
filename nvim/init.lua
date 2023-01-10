@@ -1,0 +1,7 @@
+require('globals')
+require('options')
+require('customFunctions')
+require('plugins')
+require('keymappings')
+require('plugin_configs')
+require('lsp_configs')
