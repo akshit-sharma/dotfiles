@@ -1477,6 +1477,10 @@ Call[$d]
 RemoteApp[$d]
 RemoteObj[$d]
 
+[DirSelect Dialog]
+DirSelectDialog Size[$d]
+History Items[$d]
+
 [General]
 BrowserApplication[$d]
 ColorScheme[$d]

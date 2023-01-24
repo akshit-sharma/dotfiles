@@ -12,6 +12,7 @@ key_mapper('n', 'j', 'gj')
 key_mapper('n', 'k', 'gk')
 
 key_mapper('i', '<C-j>', 'copilot#Accept("<CR>")', { silent=true, expr=true })
+key_mapper('n', '<C-j>', 'copilot#Accept("<CR>")', { silent=true, expr=true })
 vim.g.copilot_no_tab_map = true
 
 key_mapper('n', '<Leader><C-t>', ':lua TerminalOnce()<CR>', NOREMAP_SILENT)
