@@ -8,7 +8,6 @@ lsp.preset('recommended')
 
 lsp.ensure_installed({
   'clangd',
-  'sumneko_lua',
   'cmake',
   'pyright',
   'vimls',
