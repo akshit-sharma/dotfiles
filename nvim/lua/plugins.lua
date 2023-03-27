@@ -188,21 +188,29 @@ packer.startup(function(use)
         "nvim-lua/plenary.nvim",
         "nvim-telescope/telescope.nvim"
       },
-    config = {
-      question_sign = "🤔",
-      answer_sign = "🤖",
-      chat_input = {
-        prompt = "👉",
-      },
-    },
-    keymaps = {
-      close = { "<C-c>", "<Esc>" },
-      yank_last = "<C-y>",
-      scroll_up = "<C-u>",
-      scroll_down = "<C-d>",
-      toggle_settings = "<C-o>",
-      cycle_windows = "<Tab>",
-    },
+      config = function()
+        require("chatgpt").setup({
+          question_sign = "🤔",
+          answer_sign = "🤖",
+          chat_input = {
+            prompt = "👉",
+          },
+          keymaps = {
+            close = { "<C-c>", "<Esc>" },
+            submit = "<C-w>",
+            yank_last = "<C-y>",
+            scroll_up = "<C-u>",
+            scroll_down = "<C-d>",
+            toggle_settings = "<C-o>",
+            cycle_windows = "<Tab>",
+
+            new_session = "<C-n>",
+            select_session = "<Space>",
+            rename_session = "<C-r>",
+            delete_session = "<C-d>",
+          },
+        })
+      end,
   })
 
   use { 'lervag/vimtex', config = getConfig('vimtex') }
