@@ -63,6 +63,8 @@ lsp.set_preferences({
   }
 })
 
+local navbuddy = require('nvim-navbuddy')
+
 lsp.on_attach(function(client, bufnr)
   local opts = {buffer = bufnr, remap = false}
 
@@ -70,6 +72,8 @@ lsp.on_attach(function(client, bufnr)
       vim.cmd.LspStop('eslint')
       return
   end
+
+  navbuddy.attach(client, bufnr)
 
   -- print offset_encoding
   print(client.offset_encoding)
