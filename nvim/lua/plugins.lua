@@ -242,11 +242,26 @@ packer.startup(function(use)
   }
 
   use {
+    'SmiteshP/nvim-navic',
+    requires = {
+      'neovim/nvim-lspconfig',
+    }
+  }
+
+  use {
     'SmiteshP/nvim-navbuddy',
     requires = {
       'neovim/nvim-lspconfig',
       'SmiteshP/nvim-navic',
       'MunifTanjim/nui.nvim',
+    }
+  }
+
+  use {
+    'freddiehaddad/feline.nvim',
+    requires = {
+      'nvim-tree/nvim-web-devicons',
+--      'lewis6991/gitsigns.nvim',
     }
   }
 

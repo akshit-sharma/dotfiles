@@ -45,6 +45,7 @@ key_mapper('n', '<Tab>', ':BufferNext<CR>')
 key_mapper('n', '<S-Tab>', ':BufferPrevious<CR>')
 key_mapper('n', '<C-Tab>', ':tabnext<CR>')
 key_mapper('n', '<C-S-Tab>', ':tabprevious<CR>')
+key_mapper('n', '<Leader>o', ':Navbuddy<CR>')
 
 --[[
 
