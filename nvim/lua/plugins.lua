@@ -283,6 +283,10 @@ packer.startup(function(use)
     end,
   }
 
+  use {
+    'wsdjeg/vim-fetch',
+  }
+
   if packer_bootstrap then
     require('packer').sync()
   end
