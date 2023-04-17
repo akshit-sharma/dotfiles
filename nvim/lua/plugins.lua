@@ -44,16 +44,24 @@ local venv_install = function()
 
   local virtualenv_stream = io.popen(virtualenv .. " --version")
   if virtualenv_stream == nil then
-    print("Installing virtualenv")
+    vim.notify("Installing virtualenv", vim.log.levels.INFO)
     local install_stream = io.popen("pip3 install --user virtualenv")
-    install_stream:close()
+    if install_stream == nil then
+      vim.notify("Error installing virtualenv", vim.log.levels.ERROR)
+    else
+      install_stream:close()
+    end
   else
     virtualenv_stream:close()
   end
 
   if fn.empty(fn.glob(venv_path)) > 0 then
-    print("Installing venv")
+    vim.notify("Installing venv", vim.log.levels.INFO)
     local install_stream = io.popen(virtualenv .. " " .. venv_path)
+    if install_stream == nil then
+      vim.notify("Error installing venv", vim.log.levels.ERROR)
+      return
+    end
     install_stream:close()
   end
 
@@ -112,43 +120,43 @@ local packer_bootstrap = pluginUpdate()
 require('plugin_configs.nvim-notify')
 
 local packer = require('packer')
-packer.startup(function(use)
-    use 'wbthomason/packer.nvim'
-    use 'nvim-lua/plenary.nvim'
+packer.startup({function(use)
+  use 'wbthomason/packer.nvim'
+  use 'nvim-lua/plenary.nvim'
 
-    use 'ryanoasis/vim-devicons'
+  use 'ryanoasis/vim-devicons'
 
-    use { 'hrsh7th/cmp-nvim-lsp' }
+  use { 'hrsh7th/cmp-nvim-lsp' }
 
-    use { 'rcarriga/nvim-notify' }
-    use { 'vigoux/notifier.nvim' }
+  use { 'rcarriga/nvim-notify' }
+  use { 'vigoux/notifier.nvim' }
 
-    use {
-      'weilbith/nvim-code-action-menu',
-      cmd = 'CodeActionMenu'
-    }
+  use {
+    'weilbith/nvim-code-action-menu',
+    cmd = 'CodeActionMenu'
+  }
 
-    use {
-      'j-hui/fidget.nvim',
-      'kosayoda/nvim-lightbulb'
-    }
+  use {
+    'j-hui/fidget.nvim',
+    'kosayoda/nvim-lightbulb'
+  }
 
-    use {
-      'p00f/clangd_extensions.nvim'
-    }
+  use {
+    'p00f/clangd_extensions.nvim'
+  }
 
-    use {
-      'ms-jpq/coq_nvim'
-    }
+  use {
+    'ms-jpq/coq_nvim'
+  }
 
---    use 'rstacruz/vim-closer'
+  --    use 'rstacruz/vim-closer'
 
-    -- Diagnostics
-    use 'folke/trouble.nvim'
-    use 'folke/todo-comments.nvim'
+  -- Diagnostics
+  use 'folke/trouble.nvim'
+  use 'folke/todo-comments.nvim'
 
-    use {
-      'nvim-treesitter/nvim-treesitter',
+  use {
+    'nvim-treesitter/nvim-treesitter',
     run = function()
       local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
       ts_update()
@@ -172,8 +180,8 @@ packer.startup(function(use)
     requires = { {'nvim-lua/plenary.nvim'} }
   }
   use({
-      "nvim-telescope/telescope-fzf-native.nvim",
-      run = "make",
+    "nvim-telescope/telescope-fzf-native.nvim",
+    run = "make",
   })
   use("nvim-telescope/telescope-file-browser.nvim")
   use("benfowler/telescope-luasnip.nvim")
@@ -183,41 +191,41 @@ packer.startup(function(use)
   -- Packer
   use({
     "jackMort/ChatGPT.nvim",
-      requires = {
-        "MunifTanjim/nui.nvim",
-        "nvim-lua/plenary.nvim",
-        "nvim-telescope/telescope.nvim"
-      },
-      config = function()
-        require("chatgpt").setup({
-          question_sign = "🤔",
-          answer_sign = "🤖",
-          chat_input = {
-            prompt = "👉",
-          },
-          keymaps = {
-            close = { "<C-c>", "<Esc>" },
-            submit = "<C-w>",
-            yank_last = "<C-y>",
-            scroll_up = "<C-u>",
-            scroll_down = "<C-d>",
-            toggle_settings = "<C-o>",
-            cycle_windows = "<Tab>",
+    requires = {
+      "MunifTanjim/nui.nvim",
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim"
+    },
+    config = function()
+      require("chatgpt").setup({
+        question_sign = "🤔",
+        answer_sign = "🤖",
+        chat_input = {
+          prompt = "👉",
+        },
+        keymaps = {
+          close = { "<C-c>", "<Esc>" },
+          submit = "<C-w>",
+          yank_last = "<C-y>",
+          scroll_up = "<C-u>",
+          scroll_down = "<C-d>",
+          toggle_settings = "<C-o>",
+          cycle_windows = "<Tab>",
 
-            new_session = "<C-n>",
-            select_session = "<Space>",
-            rename_session = "<C-r>",
-            delete_session = "<C-d>",
-          },
-        })
-      end,
+          new_session = "<C-n>",
+          select_session = "<Space>",
+          rename_session = "<C-r>",
+          delete_session = "<C-d>",
+        },
+      })
+    end,
   })
 
   use { 'lervag/vimtex', config = getConfig('vimtex') }
 
   use { 'ojroques/nvim-hardline' }
 
---  use { 'romgrk/barbar.nvim', config = getConfig('barbar'), requires = 'nvim-tree/nvim-web-devicons' }
+  --  use { 'romgrk/barbar.nvim', config = getConfig('barbar'), requires = 'nvim-tree/nvim-web-devicons' }
 
   use {
     'VonHeikemen/lsp-zero.nvim',
@@ -261,7 +269,7 @@ packer.startup(function(use)
     'freddiehaddad/feline.nvim',
     requires = {
       'nvim-tree/nvim-web-devicons',
---      'lewis6991/gitsigns.nvim',
+      --      'lewis6991/gitsigns.nvim',
     }
   }
 
@@ -290,6 +298,12 @@ packer.startup(function(use)
   if packer_bootstrap then
     require('packer').sync()
   end
-end)
+end,
+config = {
+  display = {
+    open_cmd = 'botright 65vnew \\[packer\\]'
+  },
+}
+})
 
 
