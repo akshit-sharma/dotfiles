@@ -188,6 +188,8 @@ packer.startup({function(use)
   use("nvim-telescope/telescope-symbols.nvim")
   use("nvim-telescope/telescope-packer.nvim")
 
+  use("liuchengxu/vista.vim")
+
   -- Packer
   use({
     "jackMort/ChatGPT.nvim",
