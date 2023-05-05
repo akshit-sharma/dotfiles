@@ -102,6 +102,7 @@ function cppStarterTemplate() {
 }
 
 JAVA_HOME=/opt/java/jdk1.8.0_351
+JAVA_HOME=/opt/java/jdk-17.0.7
 PATH=$JAVA_HOME/bin:$PATH
 LD_LIBRARY_PATH=$JAVA_HOME/lib:$LD_LIBRARY_PATH
 

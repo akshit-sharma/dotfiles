@@ -151,6 +151,8 @@ packer.startup({function(use)
 
   --    use 'rstacruz/vim-closer'
 
+  use 'numToStr/Comment.nvim'
+
   -- Diagnostics
   use 'folke/trouble.nvim'
   use 'folke/todo-comments.nvim'
