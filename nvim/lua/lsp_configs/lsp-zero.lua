@@ -80,7 +80,7 @@ lsp.on_attach(function(client, bufnr)
   end
 
   -- print offset_encoding
-  print(client.offset_encoding)
+--  print(client.offset_encoding)
 
   vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
   vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)

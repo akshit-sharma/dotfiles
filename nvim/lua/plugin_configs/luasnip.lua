@@ -1,11 +1,14 @@
-local ok, luasnip = pcall(require, "luasnip")
+local ok, ls = pcall(require, "luasnip")
 if not ok then
-  vim.notify("Failed to load luasnip" .. luasnip, vim.log.levels.ERROR)
+  vim.notify("Failed to load luasnip" .. ls, vim.log.levels.ERROR)
   return
 end
 
-local ok, ls = pcall(require, "luasnip")
-local ok, types = pcall(require, "luasnip.util.types")
+local ok_types, types = pcall(require, "luasnip.util.types")
+if not ok_types then
+  vim.notify("Failed to load luasnip types" .. types, vim.log.levels.ERROR)
+  return
+end
 
 ls.config.set_config({
   history = true,
@@ -23,9 +26,7 @@ ls.config.set_config({
 })
 
 vim.keymap.set({"n", "i", "s"}, "<A-k>", function()
-  vim.notify("inside expand_or_jumpable")
   if ls.expand_or_jumpable() then
-    vim.notify("expand_or_jumpable")
     return ls.expand_or_jump()
   end
 end, { noremap = true, silent = true })
@@ -50,11 +51,12 @@ end, { noremap = true, silent = true })
 
 vim.keymap.set("n", "<leader><leader>s", "<cmd>source ~/.config/nvim/snippets/luasnip.lua<CR>")
 
-local ok, lua_loader = pcall(require, "luasnip.loaders.from_lua")
-if not ok then
+local ok_loader, lua_loader = pcall(require, "luasnip.loaders.from_lua")
+if not ok_loader then
   vim.notify("Failed to load luasnip loader" .. lua_loader, vim.log.levels.ERROR)
   return
 end
 
+ls.filetype_extend("js", {"ejs"})
 lua_loader.load({paths = '~/.config/nvim/snippets/'})
 

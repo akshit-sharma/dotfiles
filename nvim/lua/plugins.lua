@@ -167,8 +167,6 @@ packer.startup({function(use)
 
   use 'ray-x/lsp_signature.nvim'
 
-  use { 'github/copilot.vim', branch = 'release' }
-
   --use { "briones-gabriel/darcula-solid.nvim", requires = "rktjmp/lush.nvim" }
   use{
     'themercorp/themer.lua',
@@ -209,7 +207,7 @@ packer.startup({function(use)
         },
         keymaps = {
           close = { "<C-c>", "<Esc>" },
-          submit = "<C-w>",
+          --submit = "<C-w>",
           yank_last = "<C-y>",
           scroll_up = "<C-u>",
           scroll_down = "<C-d>",
@@ -277,13 +275,28 @@ packer.startup({function(use)
     }
   }
 
+--  use { 'github/copilot.vim', branch = 'release' }
+
   use {
     'zbirenbaum/copilot.lua',
-    event = 'VimEnter',
+    cmd = "Copilot",
+    event = 'InsertEnter',
     config = function()
-      vim.defer_fn(function()
-        require('copilot').setup()
-      end, 100)
+        require('copilot').setup({
+          suggestion = {
+            keymap = {
+              accept="<C-j>",
+              accept_word="<C-o>",
+              accept_line="<C-l>",
+              dismiss="<C-]>",
+              next="<A-]>",
+              prev="<A-[>",
+            }
+          },
+          filetype={
+            ["*"] = true
+          }
+        })
     end,
   }
 

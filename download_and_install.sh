@@ -19,7 +19,7 @@ fi
 
 if [ -z ${DOTFILES_SCRIPT_DIR} ]; then
   SCRIPT_PATH=$DEFAULTPATH
-else 
+else
   SCRIPT_PATH=${DOTFILES_SCRIPT_DIR}
 fi
 
@@ -40,13 +40,13 @@ if [ "$SSH_OFF" == "0" ]; then
 
   echo "testing connection"
   ssh -T git@github.com -i ${file_name}
-      
+
   if [ "$?" == "1" ]; then
     i="0"
   fi
 
   echo "value of i is $i"
-  if [ "$i" != "0" ]; then 
+  if [ "$i" != "0" ]; then
     while [ $i -ne 0 ]; do
       echo "Copy the ${file_name}.pub to Github"
       echo "Press any key to continue"

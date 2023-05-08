@@ -927,7 +927,7 @@ function install_github_neovim {
     echo "installing neovim"
   fi
   system_ver=$(nvim --version | head -n1 | cut -d' ' -f2)
-  NEOVIM_VERSION="0.7.0"
+  NEOVIM_VERSION="0.9.0"
   if (version_statisfied "$system_ver" "$NEOVIM_VERSION"); then
     if [[ $DEBUG_SCRIPT -ne 0 ]]; then
       echo "system neovim version $system_ver > $NEOVIM_VERSION statisfied"

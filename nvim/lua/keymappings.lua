@@ -15,10 +15,11 @@ key_mapper('i', '<C-j>', 'copilot#Accept("<CR>")', { silent=true, expr=true })
 local function suggestOneWord()
   local suggestion = vim.fn['copilot#Accept']("")
   local bar = vim.fn['copilot#TextQueuedForInsertion']()
-  return vim.fn.split(bar, [[[ .]\zs]])[1]
+  return vim.fn.split(bar, '[ .]\zs')[0]
 end
-
--- vim.keymap.set('i', '<C-a>', suggestOneWord(), { silent=true, expr=true })
+vim.keymap.set('i', '<C-a>', function()
+  require('copilot.suggestion').accept_word()
+end, { silent=true, expr=true })
 
 vim.g.copilot_no_tab_map = true
 

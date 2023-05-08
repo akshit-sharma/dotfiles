@@ -1,0 +1,21 @@
+name: Fresh Install
+run-name: ${{ github.actor }} is testing out GitHub Actions
+on: [push]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-22.04
+    steps:
+      - run: echo "Job was automatically triggered by a ${{ github.event_name }}"
+      - run: echo "Job is now running on ${{ runner.os }} server hosted by GitHub"
+      - run: echo "Name of branch is ${{ github.ref }} and repo is ${{ github.repository }}"
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Install sudo package
+        run: apt update && apt install -y sudo
+      - run: sudo apt update
+      - run: sudo apt install -y g++ gcc build-essential wget curl git
+      - run: |
+          cd ${{ github.workspace }}
+          ls
+      - run: bash ./update.sh
+      - run: echo "Job's status is ${{ job.status }}."
