@@ -1,32 +1,42 @@
 return {
-  s({trig="tt", dscr="Expands 'tt' to '\\texttt{}'"},
-    {t("\\texttt{"), i(1), t("}")}
-  ),
-  s({trig=';a', snippetType="autosnippet"},
-    {
-      t('\\alpha'),
-    }
-  ),
-  s({trig=';b', snippetType="autosnippet"},
-    {
-      t('\\beta'),
-    }
-  ),
-  s({trig=';g', snippetType="autosnippet"},
-    {
-      t('\\gamma'),
-    }
-  ),
-  s({trig=';m', snippetType="autosnippet"},
-    {
-      t('\\mu'),
-    }
-  ),
-  s({trig=';n', snippetType="autosnippet"},
-    {
-      t('\\nu'),
-    }
-  ),
-
-}
+  s({trig='frame', snippetType="autosnippet"}, fmt([[
+  \begin{frame}<>
+    <>
+  \end{frame}
+  ]], {
+    i(1, "Title"), i(2, "Content")
+  }, {
+    delimiters = "<>"
+  })),
+  s({trig="tt", dscr="Expands 'tt' to '\\texttt{}'"}, fmt([[
+  \texttt{<>}
+  ]], {
+    i(1, "text")
+  }, {
+    delimiters = "<>"
+  })),
+  s({trig='col', snippetType="autosnippet"}, fmt([[
+  \begin{column}[<>\textwidth]
+    <>
+  \end{column}
+  ]], {
+    i(1, "0.5"), i(2, "column")
+  }, {
+    delimiters = "<>"
+  })),
+  s({trig='cols', snippetType="autosnippet"}, fmt([[
+  \begin{columns}
+    \begin{column}[<>\textwidth]
+      <>
+    \end{column}
+    \begin{column}[<>\textwidth]
+      <>
+    \end{column}
+  \end{columns}
+  ]], {
+    i(1, "0.5"), i(2, "column1"),
+    i(3, "0.5"), i(4, "column2")
+  }, {
+    delimiters = "<>"
+  }))}
 

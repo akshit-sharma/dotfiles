@@ -48,8 +48,8 @@ lsp.setup_nvim_cmp({
 
     {name = 'nvim_lsp', keyword_length = 3, max_item_count = 10},
     {name = 'path', keyword_length = 2, max_item_count = 5},
-    {name = 'buffer', keyword_length = 2, max_item_count = 5},
     {name = 'luasnip', keyword_length = 2, max_item_count = 5},
+    {name = 'buffer', keyword_length = 2, max_item_count = 5},
   },
   mapping = cmp_mapping,
 })
@@ -73,9 +73,8 @@ lsp.on_attach(function(client, bufnr)
       vim.cmd.LspStop('eslint')
       return
   end
-
-  navbuddy.attach(client, bufnr)
   if client.server_capabilities.documentSymbolProvider then
+    navbuddy.attach(client, bufnr)
     navic.attach(client, bufnr)
   end
 

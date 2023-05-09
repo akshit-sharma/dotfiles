@@ -280,7 +280,8 @@ packer.startup({function(use)
   use {
     'zbirenbaum/copilot.lua',
     cmd = "Copilot",
-    event = 'InsertEnter',
+    --event = 'InsertEnter',
+    event = 'VimEnter',
     config = function()
         require('copilot').setup({
           suggestion = {
