@@ -13,18 +13,15 @@ treesitter_configs.setup({
         "cpp",
         "cuda",
         "glsl",
-        "go",
+        "javascript",
         "json",
         "lua",
         "rust",
         "help",
-        "toml",
         "python",
         "typescript",
         "vim",
         "yaml",
-        "zig",
-        "norg",
     },
     highlight = {
         enable = true,
@@ -119,7 +116,7 @@ if parsers.has_parser "c" and parsers.has_parser "cpp" and parsers.has_parser "c
     (compound_statement)
   ] @fold
   ]]
-  query.set_query("c", "folds", folds_query)
-  query.set_query("cpp", "folds", folds_query)
-  query.set_query("cuda", "folds", folds_query)
+  query.set("c", "folds", folds_query)
+  query.set("cpp", "folds", folds_query)
+  query.set("cuda", "folds", folds_query)
 end

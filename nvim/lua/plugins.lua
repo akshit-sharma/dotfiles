@@ -284,6 +284,7 @@ packer.startup({function(use)
     event = 'VimEnter',
     config = function()
         require('copilot').setup({
+          --[[
           suggestion = {
             keymap = {
               accept="<C-j>",
@@ -294,6 +295,7 @@ packer.startup({function(use)
               prev="<A-[>",
             }
           },
+          ]]--
           filetype={
             ["*"] = true
           }

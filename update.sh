@@ -950,6 +950,10 @@ function install_github_neovim {
   DOWNLOAD_FILE="nvim-linux64.tar.gz"
   DOWNLOAD_URL="https://github.com/neovim/neovim/releases/download/v${NEOVIM_VERSION}/nvim-linux64.tar.gz"
 
+  if [ -d "$HOME/Softwares/nvim-linux64" ]; then
+    rm -rf $HOME/Softwares/nvim-linux64
+  fi
+
   download_and_extract $DOWNLOAD_DIR/neovimTar $DOWNLOAD_DIR/neovimTar $DOWNLOAD_FILE $DOWNLOAD_URL false
   mv $DOWNLOAD_DIR/nvim-linux64 $HOME/Softwares/
 
