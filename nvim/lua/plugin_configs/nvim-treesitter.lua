@@ -110,13 +110,13 @@ vim.api.nvim_create_autocmd({'BufEnter','BufAdd','BufNew','BufNewFile','BufWinEn
 
 local parsers = require('nvim-treesitter.parsers')
 if parsers.has_parser "c" and parsers.has_parser "cpp" and parsers.has_parser "cuda" then
-  local query = require('vim.treesitter.query')
+  local ok_query, query = pcall(require, 'vim.treesitter.query')
   local folds_query = [[
   [
     (compound_statement)
   ] @fold
   ]]
-  if query ~= nil then
+  if not ok_query then
     query.set("c", "folds", folds_query)
     query.set("cpp", "folds", folds_query)
     query.set("cuda", "folds", folds_query)
