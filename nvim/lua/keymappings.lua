@@ -8,8 +8,8 @@ end
 
 key_mapper('n', vim.g.mapleader, '<NOP>')
 key_mapper('n', '<Leader>e', ':Lexplore<CR>')
-key_mapper('n', 'j', 'gj')
-key_mapper('n', 'k', 'gk')
+--key_mapper('n', 'j', 'gj')
+--key_mapper('n', 'k', 'gk')
 
 key_mapper('i', '<C-j>', 'copilot#Accept("<CR>")', { silent=true, expr=true })
 local function suggestOneWord()
@@ -17,9 +17,12 @@ local function suggestOneWord()
   local bar = vim.fn['copilot#TextQueuedForInsertion']()
   return vim.fn.split(bar, '[ .]\zs')[0]
 end
+--[[
 vim.keymap.set('i', '<C-a>', function()
   require('copilot.suggestion').accept_word()
 end, { silent=true, expr=true })
+
+--]]
 
 vim.g.copilot_no_tab_map = true
 
