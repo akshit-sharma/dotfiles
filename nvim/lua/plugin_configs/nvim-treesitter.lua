@@ -117,10 +117,10 @@ if parsers.has_parser "c" and parsers.has_parser "cpp" and parsers.has_parser "c
   ] @fold
   ]]
   if not ok_query then
+    vim.notify('query null, might want to fix', vim.log.levels.ERROR)
+  else
     query.set("c", "folds", folds_query)
     query.set("cpp", "folds", folds_query)
     query.set("cuda", "folds", folds_query)
-  else
-    vim.notify('query null, might want to fix', vim.log.levels.ERROR)
   end
 end
