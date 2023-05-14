@@ -191,6 +191,7 @@ packer.startup({function(use)
   use("liuchengxu/vista.vim")
 
   -- Packer
+  --[[
   use({
     "jackMort/ChatGPT.nvim",
     requires = {
@@ -222,6 +223,7 @@ packer.startup({function(use)
       })
     end,
   })
+  ]]--
 
   use { 'lervag/vimtex', config = getConfig('vimtex') }
 
