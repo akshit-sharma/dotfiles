@@ -17,7 +17,6 @@ treesitter_configs.setup({
         "json",
         "lua",
         "rust",
-        "help",
         "python",
         "typescript",
         "vim",
