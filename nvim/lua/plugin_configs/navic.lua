@@ -4,5 +4,4 @@ if not ok then
   return
 end
 
-navic.setup({
-})
+--navic.setup({})

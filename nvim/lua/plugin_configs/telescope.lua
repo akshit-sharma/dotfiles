@@ -51,6 +51,7 @@ TELESCOPE.load_extension("fzf")
 TELESCOPE.load_extension("luasnip")
 TELESCOPE.load_extension("file_browser")
 TELESCOPE.load_extension("packer")
+TELESCOPE.load_extension("aerial")
 --TELESCOPE.load_extension("notify")
 
 local project_files = function()

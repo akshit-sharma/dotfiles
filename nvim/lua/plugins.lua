@@ -228,6 +228,10 @@ packer.startup({function(use)
   use { 'lervag/vimtex', config = getConfig('vimtex') }
 
   use { 'ojroques/nvim-hardline' }
+  use {
+    'nvim-lualine/lualine.nvim',
+    requires = { 'nvim-tree/nvim-web-devicons'},
+  }
 
   --  use { 'romgrk/barbar.nvim', config = getConfig('barbar'), requires = 'nvim-tree/nvim-web-devicons' }
 
