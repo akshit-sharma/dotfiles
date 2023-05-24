@@ -4,22 +4,19 @@ if not ok then
   return
 end
 
-local navic = require('nvim-navic')
-
 lualine.setup {
   options = {
     theme = 'onedark',
     section_separators = '',
-    component_separators = '',
+    component_separators = '|',
   },
   sections = {
     lualine_a = {
-      { 'mode', fmt = function(str) return str:sub(1,1) end }
+      'filename'
     },
     lualine_b = {
-      {'branch', fmt = function(str) return (str ~= "main" and str or " ") end },
-      'filename',
-      'diff'
+      {'branch', fmt = function(str) return (str ~= "main" and str or ' ') end },
+      'diff',
     },
     lualine_c = {
       'navic'
