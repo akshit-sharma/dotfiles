@@ -117,19 +117,15 @@ local packer_bootstrap = pluginUpdate()
 --require('plugin_configs.themer')
 --require('plugin_configs.nvim-notify')
 
-require('plugin_configs.nvim-notify')
+--require('plugin_configs.nvim-notify')
 
 local packer = require('packer')
 packer.startup({function(use)
-  use 'wbthomason/packer.nvim'
-  use 'nvim-lua/plenary.nvim'
-
-  use 'ryanoasis/vim-devicons'
-
-  use { 'hrsh7th/cmp-nvim-lsp' }
-
-  use { 'rcarriga/nvim-notify' }
-  use { 'vigoux/notifier.nvim' }
+  use { 'wbthomason/packer.nvim' }
+  use { 'nvim-lua/plenary.nvim' }
+  use { 'ryanoasis/vim-devicons' }
+  use { 'rcarriga/nvim-notify', run=function() vim.notify=require('notify') end }
+  use { 'vigoux/notifier.nvim', config = getConfig('notifier'), }
 
   use {
     'weilbith/nvim-code-action-menu',
@@ -157,13 +153,6 @@ packer.startup({function(use)
   use 'folke/trouble.nvim'
   use 'folke/todo-comments.nvim'
 
-  use {
-    'nvim-treesitter/nvim-treesitter',
-    run = function()
-      local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
-      ts_update()
-    end,
-  }
 
   use 'ray-x/lsp_signature.nvim'
 
@@ -173,74 +162,54 @@ packer.startup({function(use)
   }
 
   use { 'stevearc/aerial.nvim' }
-  use { 'simrat39/symbols-outline.nvim' }
+  use {
+    'simrat39/symbols-outline.nvim',
+    config = function()
+      require('symbols-outline').setup()
+    end,
+  }
 
   use {
-    'nvim-telescope/telescope.nvim', tag = '0.1.0',
-    requires = { {'nvim-lua/plenary.nvim'} }
-  }
-  use({
-    "nvim-telescope/telescope-fzf-native.nvim",
-    run = "make",
-  })
-  use("nvim-telescope/telescope-file-browser.nvim")
-  use("benfowler/telescope-luasnip.nvim")
-  use("nvim-telescope/telescope-symbols.nvim")
-  use("nvim-telescope/telescope-packer.nvim")
-
-  use("liuchengxu/vista.vim")
-
-  -- Packer
-  --[[
-  use({
-    "jackMort/ChatGPT.nvim",
+    'nvim-telescope/telescope.nvim', tag = '0.1.1',
     requires = {
-      "MunifTanjim/nui.nvim",
-      "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim"
-    },
-    config = function()
-      require("chatgpt").setup({
-        question_sign = "🤔",
-        answer_sign = "🤖",
-        chat_input = {
-          prompt = "👉",
-        },
-        keymaps = {
-          close = { "<C-c>", "<Esc>" },
-          --submit = "<C-w>",
-          yank_last = "<C-y>",
-          scroll_up = "<C-u>",
-          scroll_down = "<C-d>",
-          toggle_settings = "<C-o>",
-          cycle_windows = "<Tab>",
-
-          new_session = "<C-n>",
-          select_session = "<Space>",
-          rename_session = "<C-r>",
-          delete_session = "<C-d>",
-        },
-      })
+      {'nvim-lua/plenary.nvim'},
+      {'folke/trouble.nvim'},
+      {'nvim-tree/nvim-web-devicons'},
+      {"nvim-telescope/telescope-fzf-native.nvim", run = "make", },
+      {"nvim-telescope/telescope-file-browser.nvim"},
+      {"benfowler/telescope-luasnip.nvim"},
+      {"nvim-telescope/telescope-symbols.nvim"},
+      {"nvim-telescope/telescope-packer.nvim"},
+    }
+  }
+  use {
+    'nvim-treesitter/nvim-treesitter',
+    run = function()
+      local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
+      ts_update()
     end,
-  })
-  ]]--
-
-  use { 'lervag/vimtex', config = getConfig('vimtex') }
-
-  use { 'ojroques/nvim-hardline' }
+    requires = {
+      {'ThePrimeagen/refactoring.nvim'}
+    }
+  }
   use {
     'nvim-lualine/lualine.nvim',
     requires = { 'nvim-tree/nvim-web-devicons'},
   }
 
+  use { "liuchengxu/vista.vim" }
+
+  use { 'lervag/vimtex', config = getConfig('vimtex') }
+
   --  use { 'romgrk/barbar.nvim', config = getConfig('barbar'), requires = 'nvim-tree/nvim-web-devicons' }
 
   use {
     'VonHeikemen/lsp-zero.nvim',
+    branch = 'v2.x',
     requires = {
       -- LSP Support
       {'neovim/nvim-lspconfig'},
-      {'williamboman/mason.nvim'},
+      {'williamboman/mason.nvim', run = function() pcall(vim.cmd, 'MasonUpdate') end, },
       {'williamboman/mason-lspconfig.nvim'},
 
       -- Autocompletion
@@ -258,26 +227,11 @@ packer.startup({function(use)
   }
 
   use {
-    'SmiteshP/nvim-navic',
-    requires = {
-      'neovim/nvim-lspconfig',
-    }
-  }
-
-  use {
     'SmiteshP/nvim-navbuddy',
     requires = {
       'neovim/nvim-lspconfig',
       'SmiteshP/nvim-navic',
       'MunifTanjim/nui.nvim',
-    }
-  }
-
-  use {
-    'freddiehaddad/feline.nvim',
-    requires = {
-      'nvim-tree/nvim-web-devicons',
-      --      'lewis6991/gitsigns.nvim',
     }
   }
 

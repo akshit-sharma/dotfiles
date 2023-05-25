@@ -4,18 +4,7 @@ if not ok then
   return
 end
 
-notify.setup({
-  stages = 'fade_in_slide_out',
-  timeout = 5000,
-  background_colour = '#000000',
-  icons = {
-    ERROR = ' ',
-    WARN = ' ',
-    INFO = ' ',
-    DEBUG = ' ',
-    TRACE = ' ',
-  },
-})
+notify.setup()
 
 local banned_message =  { "warning: multiple different client offset_encodings detected for buffer, this is not supported yet" }
 
