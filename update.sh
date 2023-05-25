@@ -1338,7 +1338,7 @@ if [ -L $HOME/.vimrc ]; then
   rm $HOME/.vimrc
 fi
 
-home_dir_symlink nvim .config
+#home_dir_symlink nvim .config
 home_dir_symlink yapf .config
 home_dir_symlink .flake8 .
 home_dir_symlink .pylintrc .
